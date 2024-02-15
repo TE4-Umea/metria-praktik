@@ -6,7 +6,10 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import Select from 'ol/interaction/Select.js';
+import { Fill, Stroke, Style } from 'ol/style.js';
 import GeoJSON from 'ol/format/GeoJSON';
+import { click } from 'ol/events/condition';
 
 @Component({
   selector: 'app-map',
@@ -53,6 +56,22 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private handleMapClick(event: any): void {
+    const selectedStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(0, 106, 167, 0.3)',
+      }),
+      stroke: new Stroke({
+        color: 'rgba(0, 106, 167, 0.7)',
+        width: 2,
+      }),
+    })
+
+    const mapReference = this.map
+    this.map?.on('click', function (event) {
+      const select = new Select({ condition: click, style: selectedStyle })
+      mapReference?.addInteraction(select)
+    })
+
     console.log(`Zoom level: ${this.map?.getView().getZoom()}`);
     console.log(`Map coordinates (wgs84): ${toLonLat(event.coordinate)}`);
     console.log(`Pixel coordinates (top-left): ${event.pixel}`);
