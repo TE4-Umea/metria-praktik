@@ -4,6 +4,7 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
+import SWEDEN_MAP from ''
 
 @Component({
   selector: 'app-map',
