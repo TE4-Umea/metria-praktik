@@ -38,7 +38,7 @@ export class MapComponent implements OnInit, OnDestroy {
         }),
         new VectorLayer({
           source: new VectorSource({
-            url: 'assets/kommuner._wgs84geojson.json',
+            url: 'assets/sweden.json',
             format: new GeoJSON()
           })
         })
