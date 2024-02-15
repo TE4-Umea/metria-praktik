@@ -4,6 +4,9 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
 
 @Component({
   selector: 'app-map',
@@ -32,6 +35,12 @@ export class MapComponent implements OnInit, OnDestroy {
       layers: [
         new TileLayer({
           source: new OSM()
+        }),
+        new VectorLayer({
+          source: new VectorSource({
+            url: 'assets/kommuner._wgs84geojson.json',
+            format: new GeoJSON()
+          })
         })
       ],
       view: new View({
