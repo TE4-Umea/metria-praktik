@@ -70,8 +70,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.map?.on('click', function (event) {
       const select = new Select({ condition: click, style: selectedStyle })
       mapReference?.addInteraction(select)
-      console.log(select.getFeatures().array_[0])
-      // console.log(select.getFeatures().getArray())
+      console.log(select.features_)
+      // console.log(JSON.parse(JSON.stringify(select.getFeatures())))
+      console.log(Object.keys(select.getFeatures()))
     })
 
 
