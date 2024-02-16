@@ -56,6 +56,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private handleMapClick(event: any): void {
+    let hasSelected = false
     const selectedStyle = new Style({
       fill: new Fill({
         color: 'rgba(0, 106, 167, 0.3)',
@@ -68,16 +69,15 @@ export class MapComponent implements OnInit, OnDestroy {
 
     const mapReference: Map | undefined = this.map
     this.map?.on('click', function (event) {
-      const select = new Select({ condition: click, style: selectedStyle })
-      mapReference?.addInteraction(select)
-
-      mapReference?.forEachFeatureAtPixel(event.pixel, function (feature) {
-        // Log the name of the state
-        console.log(feature.get('name'));
-      })
-      // console.log(select['features_'].array_[0].values_['name'])
-      // console.log(JSON.parse(JSON.stringify(select.getFeatures())))
-    });
+      if (hasSelected === false) {
+        hasSelected = true
+        const select = new Select({ condition: click, style: selectedStyle })
+        mapReference?.addInteraction(select)
+        mapReference?.forEachFeatureAtPixel(event.pixel, function (feature) {
+          console.log(feature.get('name'));
+        })
+      }
+    })
 
 
     console.log(`Zoom level: ${this.map?.getView().getZoom()}`);
