@@ -66,14 +66,18 @@ export class MapComponent implements OnInit, OnDestroy {
       }),
     })
 
-    const mapReference = this.map
+    const mapReference: Map | undefined = this.map
     this.map?.on('click', function (event) {
       const select = new Select({ condition: click, style: selectedStyle })
       mapReference?.addInteraction(select)
-      console.log(select.features_)
+
+      mapReference?.forEachFeatureAtPixel(event.pixel, function (feature) {
+        // Log the name of the state
+        console.log(feature.get('name'));
+      })
+      // console.log(select['features_'].array_[0].values_['name'])
       // console.log(JSON.parse(JSON.stringify(select.getFeatures())))
-      console.log(Object.keys(select.getFeatures()))
-    })
+    });
 
 
     console.log(`Zoom level: ${this.map?.getView().getZoom()}`);
