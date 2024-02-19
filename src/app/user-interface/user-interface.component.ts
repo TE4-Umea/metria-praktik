@@ -1,9 +1,10 @@
 import { Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
 
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [],
+    imports: [CommonModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss'
 })
@@ -23,8 +24,13 @@ export class UserInterfaceComponent {
     level: number = 1
 
     showDropdown: boolean = false
+    showMenu: boolean = false
 
     toggleDropdown(): void {
+        this.showDropdown = !this.showDropdown 
+    }  
 
-    }
+    toggleMenu(): void {
+        this.showMenu = !this.showMenu
+    }  
 }

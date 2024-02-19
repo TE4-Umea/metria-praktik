@@ -1,3 +1,27 @@
+.top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+
+    padding: 20px;
+    width: calc(100vw - 40px);
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.statistics {
+    background-color: var(--color-main);
+    color: var(--color-fg);
+
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px;
+    border-radius: var(--border-radius-1);
+    box-shadow: var(--shadow-1);
+}
+
 .show {
-    display: block;
+    display: flex;
 }

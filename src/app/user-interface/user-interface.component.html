@@ -1,33 +1,34 @@
-<div>
-    <button (click)="toggleDropdown()">Menu</button>
-    <!-- <div *ngIf="showDropdown" [ngClass]="{ 'show': showDropdown }"> -->
-    <ul>
-        <li>
-            Money: {{ money }}
-        </li>
-        <li>
-            Stone: {{ stone }}
-        </li>
-        <li>
-            Wood: {{ wood }}
-        </li>
-        <li>
-            Food: {{ food }}
-        </li>
-        <li>
-            Electricity: {{ electricity }}
-        </li>
-        <li>
-            Oil: {{ oil }}
-        </li>
-        <li>
-            People: {{ people }}
-        </li>
-        <li>
-            Weapons: {{ weapons }}
-        </li>
-    </ul>
-    <!-- </div> -->
+<div class="top">
+    <div>
+        <button (click)="toggleDropdown()">Statistics</button>
+        <ul *ngIf="showDropdown" [ngClass]="{'statistics': true, 'show': showDropdown }">
+            <li>
+                Money: {{ money }}
+            </li>
+            <li>
+                Stone: {{ stone }}
+            </li>
+            <li>
+                Wood: {{ wood }}
+            </li>
+            <li>
+                Food: {{ food }}
+            </li>
+            <li>
+                Electricity: {{ electricity }}
+            </li>
+            <li>
+                Oil: {{ oil }}
+            </li>
+            <li>
+                People: {{ people }}
+            </li>
+            <li>
+                Weapons: {{ weapons }}
+            </li>
+        </ul>
+    </div>
+
     <div #Information>
         <ul>
             <li>
@@ -44,14 +45,15 @@
             </li>
         </ul>
     </div>
+
     <div #HamburgerMenu>
-        <button (click)="toggleDropdown()">Menu</button>
-        <!-- <div *ngIf="showDropdown" [ngClass]="{ 'show': showDropdown }"> -->
-        <ul>
-            <li>
-                <a href="#">Save</a>
-            </li>
-        </ul>
-        <!-- </div> -->
+        <button (click)="toggleMenu()">Menu</button>
+        <div *ngIf="showMenu" [ngClass]="{ 'show': showMenu }">
+            <ul>
+                <li>
+                    <a href="#">Save</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
