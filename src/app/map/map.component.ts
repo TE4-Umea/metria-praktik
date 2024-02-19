@@ -1,15 +1,15 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import OSM from 'ol/source/OSM';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Select from 'ol/interaction/Select.js';
-import { Fill, Stroke, Style } from 'ol/style.js';
-import GeoJSON from 'ol/format/GeoJSON';
-import { click } from 'ol/events/condition';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import Map from 'ol/Map'
+import View from 'ol/View'
+import TileLayer from 'ol/layer/Tile'
+import { fromLonLat, toLonLat } from 'ol/proj'
+import OSM from 'ol/source/OSM'
+import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
+import Select from 'ol/interaction/Select.js'
+import { Fill, Stroke, Style } from 'ol/style.js'
+import GeoJSON from 'ol/format/GeoJSON'
+import { click } from 'ol/events/condition'
 
 @Component({
     selector: 'app-map',
@@ -56,33 +56,33 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private handleMapClick(event: any): void {
-    let hasSelected = false
-    const selectedStyle = new Style({
-      fill: new Fill({
-        color: 'rgba(0, 106, 167, 0.3)',
-      }),
-      stroke: new Stroke({
-        color: 'rgba(0, 106, 167, 0.7)',
-        width: 2,
-      }),
-    })
+      let hasSelected = false
+      const selectedStyle = new Style({
+          fill: new Fill({
+              color: 'rgba(0, 106, 167, 0.3)',
+          }),
+          stroke: new Stroke({
+              color: 'rgba(0, 106, 167, 0.7)',
+              width: 2,
+          }),
+      })
 
-    const mapReference: Map | undefined = this.map
-    this.map?.on('click', function (event) {
-      if (hasSelected === false) {
-        hasSelected = true
-        const select = new Select({ condition: click, style: selectedStyle })
-        mapReference?.addInteraction(select)
-        mapReference?.forEachFeatureAtPixel(event.pixel, function (feature) {
-          console.log(feature.get('name'));
-        })
-      }
-    })
+      const mapReference: Map | undefined = this.map
+      this.map?.on('click', function (event) {
+          if (hasSelected === false) {
+              hasSelected = true
+              const select = new Select({ condition: click, style: selectedStyle })
+              mapReference?.addInteraction(select)
+              mapReference?.forEachFeatureAtPixel(event.pixel, function (feature) {
+                  console.log(feature.get('name'))
+              })
+          }
+      })
 
 
-    console.log(`Zoom level: ${this.map?.getView().getZoom()}`);
-    console.log(`Map coordinates (wgs84): ${toLonLat(event.coordinate)}`);
-    console.log(`Pixel coordinates (top-left): ${event.pixel}`);
+      console.log(`Zoom level: ${this.map?.getView().getZoom()}`)
+      console.log(`Map coordinates (wgs84): ${toLonLat(event.coordinate)}`)
+      console.log(`Pixel coordinates (top-left): ${event.pixel}`)
   }
 }
 
