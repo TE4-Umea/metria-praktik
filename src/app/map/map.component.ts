@@ -12,11 +12,11 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { click } from 'ol/events/condition';
 
 @Component({
-    selector: 'app-map',
-    standalone: true,
-    imports: [],
-    templateUrl: './map.component.html',
-    styleUrl: './map.component.scss'
+  selector: 'app-map',
+  standalone: true,
+  imports: [],
+  templateUrl: './map.component.html',
+  styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit, OnDestroy {
 
@@ -25,34 +25,37 @@ export class MapComponent implements OnInit, OnDestroy {
   map: Map | undefined
 
   ngOnInit(): void {
-      this.initMap()
+    this.initMap()
   }
 
   ngOnDestroy(): void {
-      this.map?.setTarget(undefined)
+    this.map?.setTarget(undefined)
   }
 
   private initMap(): void {
-      this.map = new Map({
-          target: this.mapElement?.nativeElement,
-          layers: [
-              new TileLayer({
-                  source: new OSM()
-              }),
-              new VectorLayer({
-                  source: new VectorSource({
-                      url: 'assets/sweden.json',
-                      format: new GeoJSON()
-                  })
-              })
-          ],
-          view: new View({
-              center: fromLonLat([20.242829157757257, 63.82811461193097]),
-              zoom: 11
+    this.map = new Map({
+      target: this.mapElement?.nativeElement,
+      layers: [
+        new TileLayer({
+          source: new OSM()
+        }),
+        new VectorLayer({
+          source: new VectorSource({
+            url: 'assets/sweden.json',
+            format: new GeoJSON()
           })
+        })
+      ],
+      view: new View({
+        center: fromLonLat([20.242829157757257, 63.82811461193097]),
+        zoom: 7,
+        maxZoom: 7,
+        minZoom: 5,
+        extent: [-2002513.341856, 7011017.966314, 6016327.095083, 11036950.728974] //West, South, East, North
       })
+    })
 
-      this.map.on('singleclick', this.handleMapClick.bind(this))
+    this.map.on('singleclick', this.handleMapClick.bind(this))
   }
 
   private handleMapClick(event: any): void {
