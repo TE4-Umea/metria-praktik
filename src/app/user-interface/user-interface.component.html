@@ -1,1 +1,57 @@
-<p>user-interface works!</p>
+<div>
+    <button (click)="toggleDropdown()">Menu</button>
+    <!-- <div *ngIf="showDropdown" [ngClass]="{ 'show': showDropdown }"> -->
+    <ul>
+        <li>
+            Money: {{ money }}
+        </li>
+        <li>
+            Stone: {{ stone }}
+        </li>
+        <li>
+            Wood: {{ wood }}
+        </li>
+        <li>
+            Food: {{ food }}
+        </li>
+        <li>
+            Electricity: {{ electricity }}
+        </li>
+        <li>
+            Oil: {{ oil }}
+        </li>
+        <li>
+            People: {{ people }}
+        </li>
+        <li>
+            Weapons: {{ weapons }}
+        </li>
+    </ul>
+    <!-- </div> -->
+    <div #Information>
+        <ul>
+            <li>
+                Weather: {{ weather }}
+            </li>
+            <li>
+                Date: {{ date }}
+            </li>
+            <li>
+                Round: {{ round }}
+            </li>
+            <li>
+                Level: {{ level }}
+            </li>
+        </ul>
+    </div>
+    <div #HamburgerMenu>
+        <button (click)="toggleDropdown()">Menu</button>
+        <!-- <div *ngIf="showDropdown" [ngClass]="{ 'show': showDropdown }"> -->
+        <ul>
+            <li>
+                <a href="#">Save</a>
+            </li>
+        </ul>
+        <!-- </div> -->
+    </div>
+</div>
