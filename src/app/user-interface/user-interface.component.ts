@@ -1,36 +1,27 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-
+import { MapComponent } from '../map/map.component'
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, MapComponent],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss'
 })
 export class UserInterfaceComponent {
-    money: number = 0
-    stone: number = 0
-    wood: number = 0
-    food: number = 0
-    electricity: number = 0
-    oil: number = 0
-    people: number = 0
-    weapons: number = 0
+    resources: { [resource: string]: number } = { Money: 0, Stone: 0, Wood: 0, Metal: 0, Food: 0, Electricity: 0, Oil: 0, People: 0, Weapons: 0 }
 
-    weather: string = 'Sunny'
-    date: string = '2021-01-01'
-    round: number = 1
-    level: number = 1
+    information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
 
     showDropdown: boolean = false
     showMenu: boolean = false
+    showBuildings: boolean = false
 
     toggleDropdown(): void {
-        this.showDropdown = !this.showDropdown 
-    }  
+        this.showDropdown = !this.showDropdown
+    }
 
     toggleMenu(): void {
         this.showMenu = !this.showMenu
-    }  
+    }
 }

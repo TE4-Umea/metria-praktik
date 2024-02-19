@@ -2,50 +2,19 @@
     <div>
         <button (click)="toggleDropdown()">Statistics</button>
         <ul *ngIf="showDropdown" [ngClass]="{'statistics': true, 'show': showDropdown }">
-            <li>
-                Money: {{ money }}
-            </li>
-            <li>
-                Stone: {{ stone }}
-            </li>
-            <li>
-                Wood: {{ wood }}
-            </li>
-            <li>
-                Food: {{ food }}
-            </li>
-            <li>
-                Electricity: {{ electricity }}
-            </li>
-            <li>
-                Oil: {{ oil }}
-            </li>
-            <li>
-                People: {{ people }}
-            </li>
-            <li>
-                Weapons: {{ weapons }}
+            <li *ngFor="let resource of resources | keyvalue">
+                {{ resource.key }}: {{ resource.value }}
             </li>
         </ul>
     </div>
 
     <div #Information>
         <ul>
-            <li>
-                Weather: {{ weather }}
-            </li>
-            <li>
-                Date: {{ date }}
-            </li>
-            <li>
-                Round: {{ round }}
-            </li>
-            <li>
-                Level: {{ level }}
+            <li *ngFor="let info of information | keyvalue">
+                {{ info.key }}: {{ info.value }}
             </li>
         </ul>
     </div>
-
     <div #HamburgerMenu>
         <button (click)="toggleMenu()">Menu</button>
         <div *ngIf="showMenu" [ngClass]="{ 'show': showMenu }">
@@ -55,5 +24,15 @@
                 </li>
             </ul>
         </div>
+    </div>
+</div>
+<div *ngIf="showBuildings">
+    <div>
+        <ul>
+            <h1>hej</h1>
+            <!-- <li *ngFor="let building of buildings | keyvalue">
+                {{ building.key }}: {{ building.value }}
+            </li> -->
+        </ul>
     </div>
 </div>
