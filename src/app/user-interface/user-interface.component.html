@@ -1,1 +1,38 @@
-<p>user-interface works!</p>
+<div class="top">
+    <div>
+        <button (click)="toggleDropdown()">Statistics</button>
+        <ul *ngIf="showDropdown" [ngClass]="{'statistics': true, 'show': showDropdown }">
+            <li *ngFor="let resource of resources | keyvalue">
+                {{ resource.key }}: {{ resource.value }}
+            </li>
+        </ul>
+    </div>
+
+    <div #Information>
+        <ul>
+            <li *ngFor="let info of information | keyvalue">
+                {{ info.key }}: {{ info.value }}
+            </li>
+        </ul>
+    </div>
+    <div #HamburgerMenu>
+        <button (click)="toggleMenu()">Menu</button>
+        <div *ngIf="showMenu" [ngClass]="{ 'show': showMenu }">
+            <ul>
+                <li>
+                    <a href="#">Save</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div *ngIf="showBuildings">
+    <div>
+        <ul>
+            <h1>hej</h1>
+            <!-- <li *ngFor="let building of buildings | keyvalue">
+                {{ building.key }}: {{ building.value }}
+            </li> -->
+        </ul>
+    </div>
+</div>
