@@ -1,10 +1,12 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MapComponent } from '../map/map.component'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
+
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [CommonModule, MapComponent],
+    imports: [CommonModule, MapComponent, MatSlideToggleModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss'
 })
