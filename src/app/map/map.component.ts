@@ -1,5 +1,4 @@
-import { UserInterfaceComponent } from '../user-interface/user-interface.component'
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core'
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
@@ -15,11 +14,13 @@ import { click } from 'ol/events/condition'
 @Component({
     selector: 'app-map',
     standalone: true,
-    imports: [UserInterfaceComponent],
+    imports: [],
     templateUrl: './map.component.html',
     styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit, OnDestroy {
+
+    @Output() sendVariable = new EventEmitter()
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
@@ -69,8 +70,9 @@ export class MapComponent implements OnInit, OnDestroy {
         })
 
         const mapReference: Map | undefined = this.map
-        this.map?.on('click', function (event) {
+        this.map?.on('click', (event) => {
             if (hasSelected === false) {
+                this.sendVariable.emit(true)
                 hasSelected = true
                 const select = new Select({ condition: click, style: selectedStyle })
                 mapReference?.addInteraction(select)
@@ -85,5 +87,9 @@ export class MapComponent implements OnInit, OnDestroy {
         console.log(`Map coordinates (wgs84): ${toLonLat(event.coordinate)}`)
         console.log(`Pixel coordinates (top-left): ${event.pixel}`)
     }
+}
+
+function onSelectedProduct(product: any) {
+    throw new Error('Function not implemented.')
 }
 
