@@ -9,10 +9,10 @@
     --shadow-1: 0px 4px 10px #0b0b0b6c;
 }
 
-h1, h2, h3, h4, p, ul, li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.dp-flex {
+    display: flex;
 }
+
 html, body { height: 100%; }
+
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
