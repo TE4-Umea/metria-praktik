@@ -1,0 +1,64 @@
+<form class="container">
+    <h2 class="dialog-title">Create your account</h2>
+    <mat-form-field appearance="outline" [style.width.%]=100>
+        <mat-label>Enter your username</mat-label>
+        <input matInput type="text" [formControl]="usernameFormControl" required>
+
+        @if (usernameFormControl.hasError('minlength') && !usernameFormControl.hasError('required') ) {
+        <mat-error>Username must be atleast <strong>3</strong> characters long</mat-error>
+        }
+        @if (usernameFormControl.hasError('maxlength')) {
+        <mat-error>Username cannot exceed <strong>20</strong> characters</mat-error>
+        }
+
+        @if (usernameFormControl.hasError('required')) {
+        <mat-error>Username is <strong>required</strong></mat-error>
+        }
+    </mat-form-field>
+
+
+
+    <mat-form-field appearance="outline" [style.width.%]=100>
+        <mat-label>Enter your password</mat-label>
+        <input matInput [type]="passwordHide ? 'password' : 'text'" [formControl]="passwordFormControl" required>
+        <button type="button" mat-icon-button matSuffix (click)="passwordHide = !passwordHide"
+            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="passwordHide">
+            <mat-icon>{{passwordHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+
+        @if (passwordFormControl.hasError('minlength') && !passwordFormControl.hasError('required') ) {
+        <mat-error>Password must be atleast <strong>8</strong> characters long</mat-error>
+        }
+        @if (passwordFormControl.hasError('maxlength')) {
+        <mat-error>Password cannot exceed <strong>20</strong> characters</mat-error>
+        }
+
+        @if (passwordFormControl.hasError('required')) {
+        <mat-error>Password is <strong>required</strong></mat-error>
+        }
+    </mat-form-field>
+
+
+
+    <mat-form-field appearance="outline" [style.width.%]=100>
+        <mat-label>Confirm password</mat-label>
+        <input matInput [type]="confirmPasswordHide ? 'password' : 'text'" [formControl]="confirmPasswordFormControl"
+            required>
+        <button type="button" mat-icon-button matSuffix (click)="confirmPasswordHide = !confirmPasswordHide"
+            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="confirmPasswordHide">
+            <mat-icon>{{confirmPasswordHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        @if (confirmPasswordFormControl.hasError('minlength') && !confirmPasswordFormControl.hasError('required') ) {
+        <mat-error>Password must be atleast <strong>8</strong> characters long</mat-error>
+        }
+        @if (confirmPasswordFormControl.hasError('maxlength')) {
+        <mat-error>Password cannot exceed <strong>20</strong> characters</mat-error>
+        }
+
+        @if (confirmPasswordFormControl.hasError('required')) {
+        <mat-error>Password is <strong>required</strong></mat-error>
+        }
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" (click)="submitSignUp()">Sign up</button>
+</form>
