@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
+import { HttpClient, HttpClientModule } from '@angular/common/http'
 
 
 @Component({
@@ -16,8 +17,7 @@ import { MatButtonModule } from '@angular/material/button'
     styleUrl: './starting-screen.component.scss'
 })
 export class StartingScreenComponent {
-    constructor(public dialog: MatDialog) {
-    }
+    constructor(public dialog: MatDialog) { }
 
     openSignUp(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.dialog.open(SignUpDialog, {
@@ -41,25 +41,35 @@ export class StartingScreenComponent {
     templateUrl: 'sign-up-dialog.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
 })
 export class SignUpDialog {
-    constructor(public dialogRef: MatDialogRef<SignUpDialog>) { }
+    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private http: HttpClient) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
 
-    usernameFormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
+    usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
 
-    passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
+    passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
-    confirmPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
+    confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignUp() {
-        console.log(this.passwordFormControl.value)
-        console.log(this.confirmPasswordFormControl.value)
-        console.log(this.passwordFormControl.value === this.confirmPasswordFormControl.value)
-        
+        console.log(typeof this.passwordFormControl.value)
+        console.log(typeof this.confirmPasswordFormControl.value)
+        console.log(this.passwordFormControl.value !== this.confirmPasswordFormControl.value)
+        if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
+            const passwordDoesNotMatchError: string = 'Password does not match'
+            console.log(passwordDoesNotMatchError)
+        }
+        else {
+            this.http.post('http//localhost:8080/register_user/', (this.usernameFormControl, this.passwordFormControl)).subscribe((response) => {
+                console.log(response)
+                return response
+            })
+            console.log('User registered')
+        }
     }
 }
 
@@ -69,17 +79,22 @@ export class SignUpDialog {
     templateUrl: 'sign-in-dialog.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
 })
 export class SignInDialog {
-    constructor(public dialogRef: MatDialogRef<SignInDialog>) { }
+    constructor(public dialogRef: MatDialogRef<SignInDialog>, private http: HttpClient) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
 
-    usernameFormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
+    usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
 
-    passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
+    passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
+    submitSignIn() {
+        this.http.post('http//localhost:8080/login/', (this.usernameFormControl, this.passwordFormControl)).subscribe((response) => {
+            console.log(response)
+        })
+    }
 }
 
