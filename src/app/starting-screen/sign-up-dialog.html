@@ -60,5 +60,11 @@
         }
     </mat-form-field>
 
+    @if(usernameFormControl.errors || passwordFormControl.errors || confirmPasswordFormControl.errors) {
+    <button mat-flat-button disabled type="submit">Sign up</button>
+    } @else{
     <button mat-flat-button color="primary" type="submit" (click)="submitSignUp()">Sign up</button>
+    }
+
+    <p *ngIf="!checkPasswordMatching" [ngClass]="{'error': !checkPasswordMatching }">Passwords must match</p>
 </form>

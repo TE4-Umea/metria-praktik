@@ -9,3 +9,24 @@
     margin-top: 2px;
     text-align: center;
 }
+
+.error {
+    color: var(--mat-form-field-error-text-color);
+    margin-bottom: 0;
+    text-align: center;
+    animation: showError 0.25s ease-in 1;
+    margin-top: 14px;
+}
+
+@keyframes showError {
+    0% {
+        opacity: 0;
+        font-size: 95%;
+        margin-top: 0px;
+    }
+
+    100% {
+        opacity: 1;
+        margin-top: 14px;
+    }
+}
