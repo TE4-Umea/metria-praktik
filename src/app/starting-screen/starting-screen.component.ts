@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Injectable, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatInputModule } from '@angular/material/input'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -7,17 +7,38 @@ import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angu
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
+import { BehaviorSubject } from 'rxjs'
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthService {
+    private _logInToken = new BehaviorSubject<string>('')
+    logInToken$ = this._logInToken.asObservable()
+
+    setLogInToken(logInToken: string) {
+        this._logInToken.next(logInToken)
+    }
+}
 
 
 @Component({
     selector: 'app-starting-screen',
     standalone: true,
-    imports: [MatButtonModule],
+    imports: [MatButtonModule, CommonModule],
     templateUrl: './starting-screen.component.html',
     styleUrl: './starting-screen.component.scss'
 })
-export class StartingScreenComponent {
-    constructor(public dialog: MatDialog) { }
+export class StartingScreenComponent implements OnInit {
+    constructor(public dialog: MatDialog, private authService: AuthService) { }
+    logInToken: string = ''
+
+    ngOnInit() {
+        this.authService.logInToken$.subscribe(token => {
+            this.logInToken = token
+        })
+    }
 
     openSignUp(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.dialog.open(SignUpDialog, {
@@ -82,7 +103,7 @@ export class SignUpDialog {
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
 })
 export class SignInDialog {
-    constructor(public dialogRef: MatDialogRef<SignInDialog>, private http: HttpClient) { }
+    constructor(public dialogRef: MatDialogRef<SignInDialog>, private http: HttpClient, private authService: AuthService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -92,9 +113,11 @@ export class SignInDialog {
     passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignIn() {
-        this.http.post('http//localhost:8080/login/', (this.usernameFormControl, this.passwordFormControl)).subscribe((response) => {
-            console.log(response)
-        })
+        // this.http.post('http//localhost:8080/login/', (this.usernameFormControl, this.passwordFormControl)).subscribe((logInToken) => {
+        const logInToken: string = 'hej'
+        console.log(logInToken.toString())
+        this.authService.setLogInToken(logInToken.toString())
+        // })
     }
 }
 
