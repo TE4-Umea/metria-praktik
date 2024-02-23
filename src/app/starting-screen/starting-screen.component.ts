@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Input, input } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatInputModule } from '@angular/material/input'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -48,6 +48,7 @@ export class SignUpDialog {
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
+    checkPasswordMatching: boolean = true
 
     usernameFormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
 
@@ -59,7 +60,12 @@ export class SignUpDialog {
         console.log(this.passwordFormControl.value)
         console.log(this.confirmPasswordFormControl.value)
         console.log(this.passwordFormControl.value === this.confirmPasswordFormControl.value)
-        
+
+        this.checkPasswordMatching = this.passwordFormControl.value === this.confirmPasswordFormControl.value
+
+        if (this.checkPasswordMatching) {
+            this.dialogRef.close()
+        }
     }
 }
 

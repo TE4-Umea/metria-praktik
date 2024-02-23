@@ -38,5 +38,9 @@
         }
     </mat-form-field>
 
+    @if(usernameFormControl.errors || passwordFormControl.errors) {
+    <button mat-flat-button disabled type="submit">Sign up</button>
+    } @else{
     <button mat-flat-button color="primary" type="submit">Sign in</button>
+    }
 </form>
