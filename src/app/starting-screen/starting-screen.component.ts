@@ -6,8 +6,9 @@ import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
-import { HttpClient, HttpClientModule } from '@angular/common/http'
+import { SignUpService } from '../sign-up.service'
 import { BehaviorSubject } from 'rxjs'
+import { HttpClientModule } from '@angular/common/http'
 
 
 @Injectable({
@@ -63,9 +64,10 @@ export class StartingScreenComponent implements OnInit {
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: [SignUpService]
 })
 export class SignUpDialog {
-    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private http: HttpClient) { }
+    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private signUpService: SignUpService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -77,19 +79,15 @@ export class SignUpDialog {
     confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignUp() {
-        console.log(typeof this.passwordFormControl.value)
-        console.log(typeof this.confirmPasswordFormControl.value)
-        console.log(this.passwordFormControl.value !== this.confirmPasswordFormControl.value)
+        console.log(this.passwordFormControl.value === this.confirmPasswordFormControl.value)
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
             const passwordDoesNotMatchError: string = 'Password does not match'
             console.log(passwordDoesNotMatchError)
         }
         else {
-            this.http.post('http//localhost:8080/register_user/', (this.usernameFormControl, this.passwordFormControl)).subscribe((response) => {
-                console.log(response)
-                return response
+            this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
+                console.log(data)
             })
-            console.log('User registered')
         }
     }
 }
@@ -100,10 +98,10 @@ export class SignUpDialog {
     templateUrl: 'sign-in-dialog.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
 })
 export class SignInDialog {
-    constructor(public dialogRef: MatDialogRef<SignInDialog>, private http: HttpClient, private authService: AuthService) { }
+    constructor(public dialogRef: MatDialogRef<SignInDialog>, private authService: AuthService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -113,10 +111,9 @@ export class SignInDialog {
     passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignIn() {
-        // this.http.post('http//localhost:8080/login/', (this.usernameFormControl, this.passwordFormControl)).subscribe((logInToken) => {
-        const logInToken: string = 'hej'
-        console.log(logInToken.toString())
-        this.authService.setLogInToken(logInToken.toString())
+        // this.http.post('http://jupiter.umea-ntig.se:4893/login/', (this.usernameFormControl.value, this.passwordFormControl.value)).subscribe((logInToken) => {
+        //     console.log('Log in token: ', logInToken)
+        //     this.authService.setLogInToken(logInToken.toString())
         // })
     }
 }
