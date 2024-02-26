@@ -8,10 +8,12 @@ export class SignUpService {
     constructor(private http: HttpClient) { }
 
     signUp(username: string, password: string) {
-        const headers = new HttpHeaders()
-        headers.append('Content-Type', 'application/json')
-        headers.append('Authorization', 'Basic ' + btoa(username + ':' + password))
+        const url = 'http://jupiter.umea-ntig.se:4893/register_user'
+        const token = btoa(username + ':' + password)
+        const header = {
+            headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
+        }
 
-        return this.http.post('http://jupiter.umea-ntig.se:4893/register_user', { headers }, { responseType: 'text' })
+        return this.http.post(url, null, header)
     }
 }
