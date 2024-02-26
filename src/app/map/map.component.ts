@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
@@ -10,7 +10,7 @@ import Select from 'ol/interaction/Select.js'
 import { Fill, Stroke, Style } from 'ol/style.js'
 import GeoJSON from 'ol/format/GeoJSON'
 import { click } from 'ol/events/condition'
-
+import { SetShowBuildings } from '../service'
 @Component({
     selector: 'app-map',
     standalone: true,
@@ -19,8 +19,7 @@ import { click } from 'ol/events/condition'
     styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit, OnDestroy {
-
-    @Output() sendVariable = new EventEmitter()
+    constructor(private setShowBuildings: SetShowBuildings) { }
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
@@ -59,6 +58,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     map: Map | undefined
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private handleMapClick(event: any): void {
         let hasSelected: boolean = false
         const selectedStyle = new Style({
@@ -74,7 +74,7 @@ export class MapComponent implements OnInit, OnDestroy {
         const mapReference: Map | undefined = this.map
         this.map?.on('click', (event) => {
             if (hasSelected === false) {
-                this.sendVariable.emit(true)
+                this.setShowBuildings.setShowBuildings(true)
                 hasSelected = true
                 const select = new Select({ condition: click, style: selectedStyle })
                 mapReference?.addInteraction(select)
