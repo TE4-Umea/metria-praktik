@@ -12,6 +12,6 @@ export class SignUpService {
         headers.append('Content-Type', 'application/json')
         headers.append('Authorization', 'Basic ' + btoa(username + ':' + password))
 
-        return this.http.post('http://jupiter.umea-ntig.se:4893/register_user', { headers })
+        return this.http.post('http://jupiter.umea-ntig.se:4893/register_user', { headers }, { responseType: 'text' })
     }
 }
