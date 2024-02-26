@@ -71,6 +71,7 @@ export class SignUpDialog {
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
+    checkPasswordMatching: boolean = true
 
     usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
 
@@ -80,6 +81,7 @@ export class SignUpDialog {
 
     submitSignUp() {
         console.log(this.passwordFormControl.value === this.confirmPasswordFormControl.value)
+
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
             const passwordDoesNotMatchError: string = 'Password does not match'
             console.log(passwordDoesNotMatchError)
