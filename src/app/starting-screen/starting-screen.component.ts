@@ -117,6 +117,7 @@ export class SignInDialog {
     submitSignIn() {
         this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
             console.log('JWT Token:', data)
+
         })
         // this.http.post('http://jupiter.umea-ntig.se:4893/login/', (this.usernameFormControl.value, this.passwordFormControl.value)).subscribe((logInToken) => {
         //     console.log('Log in token: ', logInToken)
