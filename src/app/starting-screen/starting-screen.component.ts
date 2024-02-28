@@ -134,8 +134,10 @@ export class SignInDialog {
     submitSignIn() {
         this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
             const encrypted = btoa(data as string)
-            document.cookie = encrypted + '; samesite=strict; max-age=86400;'
-            console.log(atob(document.cookie as string))
+            document.cookie = 'token=' + encrypted + '; samesite=strict; max-age=86400;'
+
+            const cookie = document.cookie.split('=')
+            console.log(atob(cookie[1]))
         })
 
     }
