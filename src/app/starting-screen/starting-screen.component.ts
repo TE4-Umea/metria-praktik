@@ -149,7 +149,7 @@ export class LogoutDialog {
     constructor(public dialogRef: MatDialogRef<LogoutDialog>) { }
 
     submitLogout() {
-        document.cookie = 'expires=Thu, 01 Jan 1970 00:00:00 UTC;'
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     }
 
     closeLogout() {
