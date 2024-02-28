@@ -35,9 +35,27 @@ export class StartingScreenComponent implements OnInit {
     constructor(public dialog: MatDialog, private authService: AuthService) { }
     logInToken: string = ''
 
+
+
     ngOnInit() {
         this.authService.logInToken$.subscribe(token => {
             this.logInToken = token
+        })
+    }
+
+    openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
+        this.dialog.open(LogoutDialog, {
+            width: '380px',
+            enterAnimationDuration,
+            exitAnimationDuration,
+        })
+    }
+
+    openLobbySettings(enterAnimationDuration: string, exitAnimationDuration: string): void {
+        this.dialog.open(LobbySettings, {
+            width: '380px',
+            enterAnimationDuration,
+            exitAnimationDuration,
         })
     }
 
@@ -115,10 +133,49 @@ export class SignInDialog {
 
     submitSignIn() {
         this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((logInToken) => {
-            console.log('JWT Token:', logInToken)
             this.authService.setLogInToken(logInToken.toString())
         })
 
     }
 }
 
+@Component({
+    selector: 'lobby-settings',
+    templateUrl: 'lobby-settings.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: []
+})
+export class LobbySettings {
+    constructor(public dialogRef: MatDialogRef<LobbySettings>) { }
+
+}
+
+@Component({
+    selector: 'logout-dialog',
+    templateUrl: 'logout-dialog.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: []
+})
+export class LogoutDialog {
+    constructor(public dialogRef: MatDialogRef<LogoutDialog>, private authService: AuthService) { }
+    logInToken: string = ''
+
+    ngOnInit() {
+        this.authService.logInToken$.subscribe(token => {
+            this.logInToken = token
+        })
+    }
+
+    submitLogout() {
+        this.authService.setLogInToken('')
+    }
+
+    closeLogout() {
+        this.dialogRef.close()
+    }
+
+}
