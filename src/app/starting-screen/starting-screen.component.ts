@@ -6,11 +6,10 @@ import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
-import { SignUpService } from '../sign-up.service'
+import { SignUpService } from '../http.service'
 import { BehaviorSubject } from 'rxjs'
 import { HttpClientModule } from '@angular/common/http'
-import { SignInService } from '../sign-in.service'
-
+import { SignInService } from '../http.service'
 
 @Injectable({
     providedIn: 'root'
@@ -36,9 +35,27 @@ export class StartingScreenComponent implements OnInit {
     constructor(public dialog: MatDialog, private authService: AuthService) { }
     logInToken: string = ''
 
+
+
     ngOnInit() {
         this.authService.logInToken$.subscribe(token => {
             this.logInToken = token
+        })
+    }
+
+    openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
+        this.dialog.open(LogoutDialog, {
+            width: '380px',
+            enterAnimationDuration,
+            exitAnimationDuration,
+        })
+    }
+
+    openLobbySettings(enterAnimationDuration: string, exitAnimationDuration: string): void {
+        this.dialog.open(LobbySettings, {
+            width: '380px',
+            enterAnimationDuration,
+            exitAnimationDuration,
         })
     }
 
@@ -120,10 +137,47 @@ export class SignInDialog {
             document.cookie = encrypted + '; samesite=strict; max-age=86400;'
             console.log(atob(document.cookie as string))
         })
-        // this.http.post('http://jupiter.umea-ntig.se:4893/login/', (this.usernameFormControl.value, this.passwordFormControl.value)).subscribe((logInToken) => {
-        //     console.log('Log in token: ', logInToken)
-        //     this.authService.setLogInToken(logInToken.toString())
-        // })
+
     }
 }
 
+@Component({
+    selector: 'lobby-settings',
+    templateUrl: 'lobby-settings.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: []
+})
+export class LobbySettings {
+    constructor(public dialogRef: MatDialogRef<LobbySettings>) { }
+
+}
+
+@Component({
+    selector: 'logout-dialog',
+    templateUrl: 'logout-dialog.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: []
+})
+export class LogoutDialog {
+    constructor(public dialogRef: MatDialogRef<LogoutDialog>, private authService: AuthService) { }
+    logInToken: string = ''
+
+    ngOnInit() {
+        this.authService.logInToken$.subscribe(token => {
+            this.logInToken = token
+        })
+    }
+
+    submitLogout() {
+        this.authService.setLogInToken('')
+    }
+
+    closeLogout() {
+        this.dialogRef.close()
+    }
+
+}
