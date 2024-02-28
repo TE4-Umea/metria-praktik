@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { SignUpService } from '../sign-up.service'
 import { BehaviorSubject } from 'rxjs'
 import { HttpClientModule } from '@angular/common/http'
+import { SignInService } from '../sign-in.service'
 
 
 @Injectable({
@@ -100,19 +101,24 @@ export class SignUpDialog {
     templateUrl: 'sign-in-dialog.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: [SignInService]
 })
 export class SignInDialog {
-    constructor(public dialogRef: MatDialogRef<SignInDialog>, private authService: AuthService) { }
+    constructor(public dialogRef: MatDialogRef<SignInDialog>, private authService: AuthService, private signInService: SignInService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
 
-    usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)])
+    usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
-    passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
+    passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
     submitSignIn() {
+        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
+            console.log('JWT Token:', data)
+
+        })
         // this.http.post('http://jupiter.umea-ntig.se:4893/login/', (this.usernameFormControl.value, this.passwordFormControl.value)).subscribe((logInToken) => {
         //     console.log('Log in token: ', logInToken)
         //     this.authService.setLogInToken(logInToken.toString())
