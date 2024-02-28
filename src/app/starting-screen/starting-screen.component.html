@@ -1,11 +1,11 @@
 <h1>Welcome to the game</h1>
 
-<div *ngIf="logInToken.length === 0">
+<div *ngIf="documentCookie.length === 0">
     <button mat-button color="primary" (click)="openSignIn('450ms', '350ms')">Log in</button>
 
     <button mat-flat-button color="primary" (click)="openSignUp('450ms', '350ms')">Sign up</button>
 </div>
-<div *ngIf="logInToken.length >= 1">
+<div *ngIf="documentCookie.length >= 1">
 
     <button mat-button color="primary" (click)="openLobbySettings('450ms', '350ms')">Play multiplayer</button>
 

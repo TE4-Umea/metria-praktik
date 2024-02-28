@@ -1,4 +1,4 @@
-import { Component, Injectable, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatInputModule } from '@angular/material/input'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -7,21 +7,10 @@ import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angu
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
 import { SignUpService } from '../http.service'
-import { BehaviorSubject } from 'rxjs'
 import { HttpClientModule } from '@angular/common/http'
 import { SignInService } from '../http.service'
 
-@Injectable({
-    providedIn: 'root'
-})
-export class AuthService {
-    private _logInToken = new BehaviorSubject<string>('')
-    logInToken$ = this._logInToken.asObservable()
 
-    setLogInToken(logInToken: string) {
-        this._logInToken.next(logInToken)
-    }
-}
 
 
 @Component({
@@ -31,17 +20,9 @@ export class AuthService {
     templateUrl: './starting-screen.component.html',
     styleUrl: './starting-screen.component.scss'
 })
-export class StartingScreenComponent implements OnInit {
-    constructor(public dialog: MatDialog, private authService: AuthService) { }
-    logInToken: string = ''
-
-
-
-    ngOnInit() {
-        this.authService.logInToken$.subscribe(token => {
-            this.logInToken = token
-        })
-    }
+export class StartingScreenComponent {
+    constructor(public dialog: MatDialog) { }
+    documentCookie: string = atob(document.cookie as string)
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.dialog.open(LogoutDialog, {
@@ -122,7 +103,7 @@ export class SignUpDialog {
     providers: [SignInService]
 })
 export class SignInDialog {
-    constructor(public dialogRef: MatDialogRef<SignInDialog>, private authService: AuthService, private signInService: SignInService) { }
+    constructor(public dialogRef: MatDialogRef<SignInDialog>, private signInService: SignInService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -163,17 +144,10 @@ export class LobbySettings {
     providers: []
 })
 export class LogoutDialog {
-    constructor(public dialogRef: MatDialogRef<LogoutDialog>, private authService: AuthService) { }
-    logInToken: string = ''
-
-    ngOnInit() {
-        this.authService.logInToken$.subscribe(token => {
-            this.logInToken = token
-        })
-    }
+    constructor(public dialogRef: MatDialogRef<LogoutDialog>) { }
 
     submitLogout() {
-        this.authService.setLogInToken('')
+        document.cookie = 'expires=Thu, 01 Jan 1970 00:00:00 UTC;'
     }
 
     closeLogout() {
