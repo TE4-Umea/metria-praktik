@@ -132,8 +132,10 @@ export class SignInDialog {
     passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
     submitSignIn() {
-        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((logInToken) => {
-            this.authService.setLogInToken(logInToken.toString())
+        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
+            const encrypted = btoa(data as string)
+            document.cookie = encrypted + '; samesite=strict; max-age=86400;'
+            console.log(atob(document.cookie as string))
         })
 
     }
