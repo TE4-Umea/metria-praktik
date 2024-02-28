@@ -6,11 +6,10 @@ import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
-import { SignUpService } from '../sign-up.service'
+import { SignUpService } from '../http.service'
 import { BehaviorSubject } from 'rxjs'
 import { HttpClientModule } from '@angular/common/http'
-import { SignInService } from '../sign-in.service'
-
+import { SignInService } from '../http.service'
 
 @Injectable({
     providedIn: 'root'
@@ -115,14 +114,11 @@ export class SignInDialog {
     passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
     submitSignIn() {
-        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
-            console.log('JWT Token:', data)
-
+        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((logInToken) => {
+            console.log('JWT Token:', logInToken)
+            this.authService.setLogInToken(logInToken.toString())
         })
-        // this.http.post('http://jupiter.umea-ntig.se:4893/login/', (this.usernameFormControl.value, this.passwordFormControl.value)).subscribe((logInToken) => {
-        //     console.log('Log in token: ', logInToken)
-        //     this.authService.setLogInToken(logInToken.toString())
-        // })
+
     }
 }
 
