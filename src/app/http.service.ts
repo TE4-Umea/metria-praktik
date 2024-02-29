@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { BehaviorSubject } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,8 @@ export class SignUpService {
     providedIn: 'root'
 })
 export class SignInService {
+    private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
+    currentLoginStatus = this.loginStatus.asObservable()
     constructor(private http: HttpClient) { }
 
     signIn(username: string, password: string) {
@@ -30,10 +33,23 @@ export class SignInService {
         const header = {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
+        this.http.post(url, null, header).subscribe((data) => {
+            const encrypted = btoa(data as string)
+            document.cookie = 'token=' + encrypted + '; samesite=strict; max-age=86400;'
 
-        return this.http.post(url, null, header)
+            const cookie = document.cookie.split('=')
+            if (cookie[1] !== '') {
+                console.log('Logged in')
+                return this.loginStatus.next(true)
+            }
+        })
+    }
+
+    checkLoginStatus(): boolean {
+        return document.cookie.split('=')[1] ? true : false
     }
 }
+
 
 @Injectable({
     providedIn: 'root'

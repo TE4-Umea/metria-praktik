@@ -1,12 +1,11 @@
 <h1>Welcome to the game</h1>
 
-<div *ngIf="isLoggedIn">
+<div *ngIf="!isLoggedIn">
     <button mat-button color="primary" (click)="openSignIn('450ms', '350ms')">Log in</button>
 
     <button mat-flat-button color="primary" (click)="openSignUp('450ms', '350ms')">Sign up</button>
 </div>
-<div *ngIf="!isLoggedIn">
-
+<div *ngIf="isLoggedIn">
     <button mat-button color="primary" (click)="openLobbySettings('450ms', '350ms')">Play multiplayer</button>
 
     <button mat-flat-button color="primary" (click)="openLogout('450ms', '350ms')">Log out</button>
