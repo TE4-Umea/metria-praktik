@@ -34,3 +34,39 @@ export class SignInService {
         return this.http.post(url, null, header)
     }
 }
+
+@Injectable({
+    providedIn: 'root'
+})
+export class Lobby {
+    constructor(private http: HttpClient) { }
+    url = 'http://jupiter.umea-ntig.se:4893/lobby/'
+
+    createLobby(username: string, data: { [key: string]: string }) {
+        const body = {
+            username: username,
+            data: data
+        }
+
+        return this.http.post(this.url, body)
+    }
+
+    putLobby(username: string, data: { [key: string]: string }, id: string) {
+        const body = {
+            username: username,
+            data: data
+        }
+
+        return this.http.post(this.url + id, body)
+    }
+
+    getLobby(username: string, data: { [key: string]: string }, id: string) {
+        const body = {
+            username: username,
+            data: data
+        }
+
+        return this.http.post(this.url + id, body)
+    }
+}
+

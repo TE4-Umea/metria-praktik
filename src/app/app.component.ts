@@ -8,7 +8,8 @@ import { HttpClientModule } from '@angular/common/http'
     standalone: true,
     imports: [CommonModule, RouterOutlet, HttpClientModule],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+    styleUrl: './app.component.scss',
+    providers: []
 })
 export class AppComponent {
     title = 'metria-praktik'

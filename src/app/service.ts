@@ -12,3 +12,15 @@ export class SetShowBuildings {
         this._showBuildings.next(showBuildings)
     }
 }
+
+@Injectable({
+    providedIn: 'root'
+})
+export class SetLogInToken {
+    private _logInToken = new BehaviorSubject<boolean>(false)
+    logInToken$ = this._logInToken.asObservable()
+
+    setLogInToken(logInToken: boolean) {
+        this._logInToken.next(logInToken)
+    }
+}
