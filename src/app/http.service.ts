@@ -34,9 +34,7 @@ export class SignInService {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
         this.http.post(url, null, header).subscribe((data) => {
-            const encrypted = btoa(data as string)
-            document.cookie = 'token=' + encrypted + '; samesite=strict; max-age=86400;'
-
+            document.cookie = 'token=' + data + '; samesite=strict; max-age=86400;'
             const cookie = document.cookie.split('=')
             if (cookie[1] !== '') {
                 console.log('Logged in')
@@ -58,31 +56,30 @@ export class Lobby {
     constructor(private http: HttpClient) { }
     url = 'http://jupiter.umea-ntig.se:4893/lobby/'
 
-    createLobby(username: string, data: { [key: string]: string }) {
+    createLobby(lobbyOwner: string, players: [{ status: string, username: string }]) {
         const body = {
-            username: username,
-            data: data
+            lobbyOwner: lobbyOwner,
+            players: players,
         }
-
-        return this.http.post(this.url, body)
+        const header = {
+            headers: new HttpHeaders().set('Authorization', `Bearer ${document.cookie.split('=')[1]}`)
+        }
+        console.log('createLobby', body, header, this.url)
+        return this.http.post(this.url, body || undefined, header || undefined)
     }
 
-    putLobby(username: string, data: { [key: string]: string }, id: string) {
+    putLobby(data: object) {
         const body = {
-            username: username,
             data: data
         }
 
-        return this.http.post(this.url + id, body)
+        return this.http.put(this.url, body)
     }
 
-    getLobby(username: string, data: { [key: string]: string }, id: string) {
-        const body = {
-            username: username,
-            data: data
-        }
+    getLobby(data: object, id: string) {
 
-        return this.http.post(this.url + id, body)
+
+        return this.http.get(this.url + id, data)
     }
 }
 
