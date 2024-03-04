@@ -24,3 +24,15 @@ export class Decoder {
     }
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class SetId {
+    public _id = new BehaviorSubject<string>('')
+    id$ = this._id.asObservable()
+
+    setId(id: string) {
+        this._id.next(id)
+        console.log('setId', this._id.value, this.id$, 'hej')
+    }
+}
