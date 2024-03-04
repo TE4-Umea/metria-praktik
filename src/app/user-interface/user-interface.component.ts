@@ -4,12 +4,14 @@ import { MapComponent } from '../map/map.component'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { SetShowBuildings } from '../service'
 import { Lobby } from '../http.service'
+import { interval } from 'rxjs'
 @Component({
     selector: 'app-user-interface',
     standalone: true,
     imports: [CommonModule, MapComponent, MatSlideToggleModule],
     templateUrl: './user-interface.component.html',
-    styleUrl: './user-interface.component.scss'
+    styleUrl: './user-interface.component.scss',
+    providers: [SetShowBuildings, Lobby]
 })
 export class UserInterfaceComponent implements OnInit {
     constructor(private setShowBuildings: SetShowBuildings, private lobby: Lobby) { }
@@ -23,11 +25,9 @@ export class UserInterfaceComponent implements OnInit {
     showBuildings: boolean = false
 
     ngOnInit() {
-        setInterval(() => {
-            this.lobby.getLobby().subscribe((data) => {
-                this.resources = JSON.parse(JSON.stringify(data))
-            })
-        }), 30000
+        interval(30000).subscribe(() => {
+            this.lobby.getLobby()
+        })
         this.setShowBuildings.showBuildings$.subscribe(show => {
             this.showBuildings = show
         })
@@ -43,7 +43,9 @@ export class UserInterfaceComponent implements OnInit {
 
     onClickPutLobby() {
         const data: { [resource: string]: number } = this.resources
-        this.lobby.putLobby(data)
+        this.lobby.putLobby(data).subscribe((data) => {
+            console.log(data)
+        })
     }
 
 

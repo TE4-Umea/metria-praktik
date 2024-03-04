@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core'
+import { ChangeDetectorRef, Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { BehaviorSubject } from 'rxjs'
+import { SetId } from './service'
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +26,7 @@ export class SignUpService {
 export class SignInService {
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
     currentLoginStatus = this.loginStatus.asObservable()
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
     signIn(username: string, password: string) {
         const url = 'http://jupiter.umea-ntig.se:4893/login'
@@ -38,9 +39,15 @@ export class SignInService {
             const cookie = document.cookie.split('=')
             if (cookie[1] !== '') {
                 console.log('Logged in')
-                return this.loginStatus.next(true)
+                this.cd.detectChanges()
+                return true
+            }
+            else {
+                console.log('Not logged in')
+                return false
             }
         })
+        return true
     }
 
     checkLoginStatus(): boolean {
@@ -53,20 +60,34 @@ export class SignInService {
     providedIn: 'root'
 })
 export class Lobby {
-    constructor(private http: HttpClient) { }
+
+    constructor(private http: HttpClient, private setId: SetId) { }
     url = 'http://jupiter.umea-ntig.se:4893/lobby/'
-    id: string = ''
+    id = this.getCookie('id')
+    header = {
+        headers: new HttpHeaders().set('Authorization', `Bearer ${this.getCookie('token')}`)
+    }
+
+    getCookie(name: string) {
+        const cookies = document.cookie.split('; ')
+        for (let i = 0; i < cookies.length; i++) {
+            const parts = cookies[i].split('=')
+            if (parts[0] === name) {
+                return parts[1]
+            }
+        }
+        return null
+    }
 
     createLobby(players: [{ status: string, username: string }] | JSON | undefined) {
         const body = {
             players: players,
         }
-        const header = {
-            headers: new HttpHeaders().set('Authorization', `Bearer ${document.cookie.split('=')[1]}`)
-        }
-        console.log('createLobby', body, header, this.url)
-        return this.http.post(this.url, body, header).subscribe((data) => {
-            console.log(data)
+        console.log('createLobby', body, this.header, this.url)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return this.http.post(this.url, body, this.header).subscribe((data: any) => {
+            document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
+            // localStorage.setItem('lobbyId', data.id)
         })
     }
 
@@ -74,12 +95,16 @@ export class Lobby {
         const body = {
             data: data
         }
-
-        return this.http.put(this.url + this.id, body)
+        return this.http.put(this.url + this.id, body, this.header)
     }
 
     getLobby() {
-        return this.http.get(this.url + this.id)
+        return this.http.get(this.url + this.id, this.header).subscribe((data) => {
+            console.log(data)
+        })
+
     }
 }
+
+
 

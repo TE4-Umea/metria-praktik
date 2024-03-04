@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatInputModule } from '@angular/material/input'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -8,7 +8,6 @@ import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTit
 import { MatButtonModule } from '@angular/material/button'
 import { Lobby, SignInService, SignUpService } from '../http.service'
 import { HttpClientModule } from '@angular/common/http'
-import { Subscription } from 'rxjs'
 import { Decoder } from '../service'
 
 
@@ -20,23 +19,15 @@ import { Decoder } from '../service'
     styleUrl: './starting-screen.component.scss',
     providers: [SignInService]
 })
-export class StartingScreenComponent implements OnInit, OnDestroy {
+export class StartingScreenComponent implements OnInit {
     isLoggedIn: boolean = false
-    private loginSubscription: Subscription = new Subscription()
-    constructor(public dialog: MatDialog, private signInService: SignInService) { }
+    constructor(public dialog: MatDialog, private signInService: SignInService,) { }
     // logInToken: string = ''
 
-
-
     ngOnInit() {
-        this.loginSubscription = this.signInService.currentLoginStatus.subscribe(status => {
+        this.signInService.currentLoginStatus.subscribe(status => {
             this.isLoggedIn = status
-            console.log('Received login status update: ', status)
         })
-    }
-
-    ngOnDestroy() {
-        this.loginSubscription.unsubscribe()
     }
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -129,10 +120,6 @@ export class SignInDialog {
 
     submitSignIn() {
         this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value)
-        // setTimeout(() => {
-        //     this.startingScreenComponent.ngOnInit()
-        //     window.location.reload()
-        // }, 1000)
     }
 }
 
@@ -145,7 +132,7 @@ export class SignInDialog {
     providers: [Lobby, Decoder]
 })
 export class LobbySettings {
-    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private decoder: Decoder) { }
+    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby) { }
 
     usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
