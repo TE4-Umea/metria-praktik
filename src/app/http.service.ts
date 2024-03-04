@@ -55,17 +55,19 @@ export class SignInService {
 export class Lobby {
     constructor(private http: HttpClient) { }
     url = 'http://jupiter.umea-ntig.se:4893/lobby/'
+    id: string = ''
 
-    createLobby(lobbyOwner: string, players: [{ status: string, username: string }]) {
+    createLobby(players: [{ status: string, username: string }] | JSON | undefined) {
         const body = {
-            lobbyOwner: lobbyOwner,
             players: players,
         }
         const header = {
             headers: new HttpHeaders().set('Authorization', `Bearer ${document.cookie.split('=')[1]}`)
         }
         console.log('createLobby', body, header, this.url)
-        return this.http.post(this.url, body || undefined, header || undefined)
+        return this.http.post(this.url, body, header).subscribe((data) => {
+            console.log(data)
+        })
     }
 
     putLobby(data: object) {
@@ -73,13 +75,11 @@ export class Lobby {
             data: data
         }
 
-        return this.http.put(this.url, body)
+        return this.http.put(this.url + this.id, body)
     }
 
-    getLobby(data: object, id: string) {
-
-
-        return this.http.get(this.url + id, data)
+    getLobby() {
+        return this.http.get(this.url + this.id)
     }
 }
 

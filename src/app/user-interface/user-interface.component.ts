@@ -23,6 +23,11 @@ export class UserInterfaceComponent implements OnInit {
     showBuildings: boolean = false
 
     ngOnInit() {
+        setInterval(() => {
+            this.lobby.getLobby().subscribe((data) => {
+                this.resources = JSON.parse(JSON.stringify(data))
+            })
+        }), 30000
         this.setShowBuildings.showBuildings$.subscribe(show => {
             this.showBuildings = show
         })
@@ -36,8 +41,10 @@ export class UserInterfaceComponent implements OnInit {
         this.showMenu = !this.showMenu
     }
 
-    // onClickPutLobby() {
-    //     this.lobby.putLobby()
-    // }
+    onClickPutLobby() {
+        const data: { [resource: string]: number } = this.resources
+        this.lobby.putLobby(data)
+    }
+
 
 }

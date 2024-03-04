@@ -152,9 +152,7 @@ export class LobbySettings {
 
     submitCreateLobby() {
         const players: [{ status: string, username: string }] = [{ status: 'invited', username: this.usernameFormControl.value }]
-        this.lobby.createLobby(this.decoder.decoder(document.cookie).user_information.username, players).subscribe((data) => {
-            console.log(data)
-        })
+        this.lobby.createLobby(players)
     }
 }
 
