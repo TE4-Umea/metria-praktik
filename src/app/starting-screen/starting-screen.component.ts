@@ -6,9 +6,10 @@ import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
-import { SignInService, SignUpService } from '../http.service'
+import { Lobby, SignInService, SignUpService } from '../http.service'
 import { HttpClientModule } from '@angular/common/http'
 import { Subscription } from 'rxjs'
+import { Decoder } from '../service'
 
 
 @Component({
@@ -24,6 +25,8 @@ export class StartingScreenComponent implements OnInit, OnDestroy {
     private loginSubscription: Subscription = new Subscription()
     constructor(public dialog: MatDialog, private signInService: SignInService) { }
     // logInToken: string = ''
+
+
 
     ngOnInit() {
         this.loginSubscription = this.signInService.currentLoginStatus.subscribe(status => {
@@ -98,13 +101,9 @@ export class SignUpDialog {
             console.log(passwordDoesNotMatchError)
         }
         else {
-            // this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
-            //     console.log(data)
-            // })
-            // this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
-
-            // })
-
+            this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
+                console.log(data)
+            })
         }
     }
 }
@@ -130,10 +129,10 @@ export class SignInDialog {
 
     submitSignIn() {
         this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value)
-        setTimeout(() => {
-            this.startingScreenComponent.ngOnInit()
-            window.location.reload()
-        }, 1000)
+        // setTimeout(() => {
+        //     this.startingScreenComponent.ngOnInit()
+        //     window.location.reload()
+        // }, 1000)
     }
 }
 
@@ -143,13 +142,17 @@ export class SignInDialog {
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: []
+    providers: [Lobby, Decoder]
 })
 export class LobbySettings {
-    constructor(public dialogRef: MatDialogRef<LobbySettings>) { }
+    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private decoder: Decoder) { }
+
+    usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
+
 
     submitCreateLobby() {
-        console.log('lobby created')
+        const players: [{ status: string, username: string }] = [{ status: 'invited', username: this.usernameFormControl.value }]
+        this.lobby.createLobby(players)
     }
 }
 
