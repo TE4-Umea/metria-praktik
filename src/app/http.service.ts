@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core'
+import { ChangeDetectorRef, Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { BehaviorSubject } from 'rxjs'
+import { SetId } from './service'
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +26,7 @@ export class SignUpService {
 export class SignInService {
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
     currentLoginStatus = this.loginStatus.asObservable()
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
 
     signIn(username: string, password: string) {
         const url = 'http://jupiter.umea-ntig.se:4893/login'
@@ -34,15 +35,19 @@ export class SignInService {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
         this.http.post(url, null, header).subscribe((data) => {
-            const encrypted = btoa(data as string)
-            document.cookie = 'token=' + encrypted + '; samesite=strict; max-age=86400;'
-
+            document.cookie = 'token=' + data + '; samesite=strict; max-age=86400;'
             const cookie = document.cookie.split('=')
             if (cookie[1] !== '') {
                 console.log('Logged in')
-                return this.loginStatus.next(true)
+                this.cd.detectChanges()
+                return true
+            }
+            else {
+                console.log('Not logged in')
+                return false
             }
         })
+        return true
     }
 
     checkLoginStatus(): boolean {
@@ -55,34 +60,51 @@ export class SignInService {
     providedIn: 'root'
 })
 export class Lobby {
-    constructor(private http: HttpClient) { }
+
+    constructor(private http: HttpClient, private setId: SetId) { }
     url = 'http://jupiter.umea-ntig.se:4893/lobby/'
-
-    createLobby(username: string, data: { [key: string]: string }) {
-        const body = {
-            username: username,
-            data: data
-        }
-
-        return this.http.post(this.url, body)
+    id = this.getCookie('id')
+    header = {
+        headers: new HttpHeaders().set('Authorization', `Bearer ${this.getCookie('token')}`)
     }
 
-    putLobby(username: string, data: { [key: string]: string }, id: string) {
-        const body = {
-            username: username,
-            data: data
+    getCookie(name: string) {
+        const cookies = document.cookie.split('; ')
+        for (let i = 0; i < cookies.length; i++) {
+            const parts = cookies[i].split('=')
+            if (parts[0] === name) {
+                return parts[1]
+            }
         }
-
-        return this.http.post(this.url + id, body)
+        return null
     }
 
-    getLobby(username: string, data: { [key: string]: string }, id: string) {
+    createLobby(players: [{ status: string, username: string }] | JSON | undefined) {
         const body = {
-            username: username,
+            players: players,
+        }
+        console.log('createLobby', body, this.header, this.url)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return this.http.post(this.url, body, this.header).subscribe((data: any) => {
+            document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
+            // localStorage.setItem('lobbyId', data.id)
+        })
+    }
+
+    putLobby(data: object) {
+        const body = {
             data: data
         }
+        return this.http.put(this.url + this.id, body, this.header)
+    }
 
-        return this.http.post(this.url + id, body)
+    getLobby() {
+        return this.http.get(this.url + this.id, this.header).subscribe((data) => {
+            console.log(data)
+        })
+
     }
 }
+
+
 

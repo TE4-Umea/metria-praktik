@@ -5,15 +5,19 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { SetShowBuildings } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
+import { Lobby } from '../http.service'
+import { interval } from 'rxjs'
+
 @Component({
     selector: 'app-user-interface',
     standalone: true,
     imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective],
     templateUrl: './user-interface.component.html',
-    styleUrl: './user-interface.component.scss'
+    styleUrl: './user-interface.component.scss',
+    providers: [SetShowBuildings, Lobby]
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(private setShowBuildings: SetShowBuildings) { }
+    constructor(private setShowBuildings: SetShowBuildings, private lobby: Lobby) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -27,6 +31,9 @@ export class UserInterfaceComponent implements OnInit {
     showBuildings: boolean = false
 
     ngOnInit() {
+        interval(30000).subscribe(() => {
+            this.lobby.getLobby()
+        })
         this.setShowBuildings.showBuildings$.subscribe(show => {
             this.showBuildings = show
         })
@@ -40,11 +47,19 @@ export class UserInterfaceComponent implements OnInit {
         this.showMenu = !this.showMenu
     }
 
+
     carouselLeft(): void {
         this.ds.moveLeft()
     }
 
     carouselRight(): void {
         this.ds.moveRight()
+    }
+
+    onClickPutLobby() {
+        const data: { [resource: string]: number } = this.resources
+        this.lobby.putLobby(data).subscribe((data) => {
+            console.log(data)
+        })
     }
 }
