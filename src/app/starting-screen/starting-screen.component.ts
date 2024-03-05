@@ -6,9 +6,10 @@ import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
-import { Lobby, SignInService, SignUpService } from '../http.service'
+import { GetCookie, Lobby, SignInService, SignUpService } from '../http.service'
 import { HttpClientModule } from '@angular/common/http'
 import { Decoder } from '../service'
+import { Router } from '@angular/router'
 
 
 @Component({
@@ -20,14 +21,22 @@ import { Decoder } from '../service'
     providers: [SignInService]
 })
 export class StartingScreenComponent implements OnInit {
+    constructor(public dialog: MatDialog, private signInService: SignInService, private getCookie: GetCookie, private router: Router, private lobby: Lobby) { }
     isLoggedIn: boolean = false
-    constructor(public dialog: MatDialog, private signInService: SignInService,) { }
-    // logInToken: string = ''
+    cookieId: string = this.getCookie.getCookie('id') || ''
 
     ngOnInit() {
         this.signInService.currentLoginStatus.subscribe(status => {
             this.isLoggedIn = status
         })
+    }
+
+    continueLobby() {
+        this.router.navigate(['/lobby'])
+    }
+
+    refreshPage() {
+        this.lobby.getLobby()
     }
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -132,7 +141,7 @@ export class SignInDialog {
     providers: [Lobby, Decoder]
 })
 export class LobbySettings {
-    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby) { }
+    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private router: Router) { }
 
     usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
@@ -140,6 +149,11 @@ export class LobbySettings {
     submitCreateLobby() {
         const players: [{ status: string, username: string }] = [{ status: 'invited', username: this.usernameFormControl.value }]
         this.lobby.createLobby(players)
+        this.router.navigate(['/lobby'])
+        this.dialogRef.close()
+    }
+    cancelLobby() {
+        this.dialogRef.close()
     }
 }
 
