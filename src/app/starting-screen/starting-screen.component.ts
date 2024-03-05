@@ -8,22 +8,47 @@ import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTit
 import { MatButtonModule } from '@angular/material/button'
 import { GetCookie, Lobby, SignInService, SignUpService } from '../http.service'
 import { HttpClientModule } from '@angular/common/http'
-import { Decoder } from '../service'
 import { Router } from '@angular/router'
+import { Decoder } from '../service'
 
+@Component({
+    selector: 'lobby-invite',
+    templateUrl: 'lobby-invite.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: [Lobby]
+})
+export class LobbyInvite {
+    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private lobby: Lobby, private decoder: Decoder, private router: Router) { }
+
+    accept() {
+        const players: [{ status: string, username: string }] = [{ status: 'accepted', username: this.decoder.decoder(document.cookie).username }]
+        this.lobby.putLobby(players)
+        this.router.navigate(['/lobby'])
+        this.dialogRef.close()
+    }
+    reject() {
+        const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(document.cookie).username }]
+        this.lobby.putLobby(players)
+        this.dialogRef.close()
+    }
+}
 
 @Component({
     selector: 'app-starting-screen',
     standalone: true,
-    imports: [MatButtonModule, CommonModule],
     templateUrl: './starting-screen.component.html',
     styleUrl: './starting-screen.component.scss',
-    providers: [SignInService]
+    imports: [MatButtonModule, CommonModule, LobbyInvite],
+    providers: [SignInService, Lobby,
+        { provide: MatDialogRef, useValue: {} }],
 })
 export class StartingScreenComponent implements OnInit {
     constructor(public dialog: MatDialog, private signInService: SignInService, private getCookie: GetCookie, private router: Router, private lobby: Lobby) { }
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
+    invited: boolean = false
 
     ngOnInit() {
         this.signInService.currentLoginStatus.subscribe(status => {
@@ -35,8 +60,15 @@ export class StartingScreenComponent implements OnInit {
         this.router.navigate(['/lobby'])
     }
 
-    refreshPage() {
+    refreshPage(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.lobby.getLobby()
+        if (!this.invited) {
+            this.dialog.open(LobbyInvite, {
+                width: '380px',
+                enterAnimationDuration,
+                exitAnimationDuration,
+            })
+        }
     }
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -71,7 +103,6 @@ export class StartingScreenComponent implements OnInit {
         })
     }
 }
-
 @Component({
     selector: 'sign-up-dialog',
     templateUrl: 'sign-up-dialog.html',
@@ -138,7 +169,7 @@ export class SignInDialog {
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [Lobby, Decoder]
+    providers: [Lobby]
 })
 export class LobbySettings {
     constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private router: Router) { }

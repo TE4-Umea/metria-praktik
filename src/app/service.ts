@@ -16,23 +16,22 @@ export class SetShowBuildings {
 @Injectable({
     providedIn: 'root'
 })
-export class Decoder {
-    decoder(token: string) {
-        const base64Url = token.split('.')[1]
-        const base64 = base64Url.replace('-', '+').replace('_', '/')
-        return JSON.parse(window.atob(base64))
+export class PlayersReady {
+    private _playersReady = new BehaviorSubject<boolean>(false)
+    playersReady$ = this._playersReady.asObservable()
+
+    setPlayersReady(playersReady: boolean) {
+        this._playersReady.next(playersReady)
     }
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class SetId {
-    public _id = new BehaviorSubject<string>('')
-    id$ = this._id.asObservable()
-
-    setId(id: string) {
-        this._id.next(id)
-        console.log('setId', this._id.value, this.id$, 'hej')
+export class Decoder {
+    decoder(token: string) {
+        const base64Url = token.split('.')[1]
+        const base64 = base64Url.replace('-', '+').replace('_', '/')
+        return JSON.parse(window.atob(base64))
     }
 }
