@@ -17,10 +17,18 @@
     </div>
     <div *ngIf="isLoggedIn" [ngClass]="'starting-screen-buttons-container'">
 
-        <button [ngClass]="'starting-screen-button'" type="button" (click)="openLobbySettings('450ms', '350ms')">Play
+        <button *ngIf="cookieId == ''" [ngClass]="'starting-screen-button'" type="button"
+            (click)="openLobbySettings('450ms', '350ms')">Play
             multiplayer</button>
+
+        <button *ngIf="cookieId !== ''" [ngClass]="'starting-screen-button'" type="button"
+            (click)="continueLobby()">Continue multiplayer game</button>
 
         <button [ngClass]="'starting-screen-button'" type="button" (click)="openLogout('450ms', '350ms')">Log
             out</button>
+        <button [ngClass]="'starting-screen-button'" type="button"
+            (click)="refreshPage('450ms', '350ms')">Refresh</button>
     </div>
+
+
 </div>

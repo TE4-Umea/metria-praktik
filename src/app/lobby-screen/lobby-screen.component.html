@@ -1,0 +1,4 @@
+<h1>Multiplayer Settings</h1>
+<h2 *ngIf="!playersReady">Waiting for other players</h2>
+<button *ngIf="playersReady" (click)="startGame()">Start game</button>
+<button (click)="cancelGame()">Cancel Lobby</button>
