@@ -141,6 +141,7 @@ export class SignUpDialog {
         else {
             this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
                 console.log(data)
+                this.dialogRef.close()
             })
         }
     }
@@ -167,6 +168,7 @@ export class SignInDialog {
 
     submitSignIn() {
         this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value)
+        this.dialogRef.close()
     }
 }
 
@@ -175,15 +177,17 @@ export class SignInDialog {
     templateUrl: 'lobby-settings.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule, MatOption, MatSelectModule],
+    imports: [CommonModule, MatFormFieldModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule, MatOption, MatSelectModule],
     providers: [Lobby, Invite]
 })
 export class LobbySettings {
     constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private router: Router, private invite: Invite) { }
-    selectedValue: number = 1
+    selectedNumberOfPlayers: number = 0
+    counter(i: number) {
+        return new Array(i)
+    }
 
     usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
-
 
     submitCreateLobby() {
         const players: [{ status: string, username: string }] = [{ status: 'invited', username: this.usernameFormControl.value }]
