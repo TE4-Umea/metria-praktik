@@ -2,7 +2,7 @@
 
 :root {
     --color-fg: #F0F0F0;
-    --color-main: #1e1e1ed9; 
+    --color-main: #1a1a1ad9; 
     
     --border-radius-1: 6px;
 
@@ -13,6 +13,19 @@
     display: flex;
 }
 
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
 html, body { height: 100%; }
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.ol-zoom {
+    display: none;
+}
