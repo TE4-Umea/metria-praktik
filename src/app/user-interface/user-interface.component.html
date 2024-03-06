@@ -1,38 +1,107 @@
-<div class="top">
-    <div>
-        <button (click)="toggleDropdown()">Statistics</button>
-        <ul *ngIf="showDropdown" [ngClass]="{'statistics': true, 'show': showDropdown }">
-            <li *ngFor="let resource of resources | keyvalue">
-                {{ resource.key }}: {{ resource.value }}
-            </li>
-        </ul>
-    </div>
+<div class="top-left">
+    <button class="dropdown-button" (click)="toggleDropdown()">Statistics</button>
+    <ul *ngIf="showDropdown" [ngClass]="{'statistics': true, 'show': showDropdown }">
+        <li *ngFor="let resource of resources | keyvalue">
+            {{ resource.key }}: {{ resource.value }}
+        </li>
+    </ul>
+</div>
 
-    <div #Information>
+<div #Information class="top-middle">
+    <ul>
+        <li *ngFor="let info of information | keyvalue">
+            {{ info.key }}: {{ info.value }}
+        </li>
+    </ul>
+</div>
+
+<div #HamburgerMenu class="top-right">
+    <button class="dropdown-button" (click)="toggleMenu()">Menu</button>
+    <div *ngIf="showMenu" [ngClass]="{ 'show': showMenu }">
         <ul>
-            <li *ngFor="let info of information | keyvalue">
-                {{ info.key }}: {{ info.value }}
+            <li>
+                <a href="#">Save</a>
             </li>
         </ul>
     </div>
-    <div #HamburgerMenu>
-        <button (click)="toggleMenu()">Menu</button>
-        <div *ngIf="showMenu" [ngClass]="{ 'show': showMenu }">
-            <ul>
-                <li>
-                    <a href="#">Save</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div *ngIf="showBuildings">
-        <div>
-            <ul>
-                <h1>hej</h1>
-                <!-- <li *ngFor="let building of buildings | keyvalue">
-                    {{ building.key }}: {{ building.value }}
-                </li> -->
-            </ul>
-        </div>
-    </div>
+</div>
+
+
+
+
+<div *ngIf="showBuildings">
+
+</div>
+
+
+<div class="carousel">
+    <button class="carousel-button" (click)="carouselLeft()">
+        <img class="carousel-button-left" src="../assets/images/icons/arrow.svg">
+    </button>
+    <!-- <ul  #carouselContent class="carousel-content-holder">
+        <h1>hej</h1>
+        <li *ngFor="let building of buildings | keyvalue">
+            {{ building.key }}: {{ building.value }}
+        </li> 
+    </ul> -->
+
+    <drag-scroll #carousel class="carousel-content">
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                <img class="type-icon" src="../assets/images/icons/house.svg">
+                <div class="carousel-card-image">
+                    <img src="../assets/images/example.png">
+                </div>
+                <div class="carousel-card-content">
+                    <div>
+                        <h3>Husigt hus</h3>
+                        <p>12000 sek</p>
+                    </div>
+                    <ul>
+                        <li>Metal</li>
+                        <li>Stone</li>
+                    </ul>
+                </div>
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+        <button drag-scroll-item type="button" class="carousel-card">
+            <div class="carousel-card-inner">
+                WIDGET
+            </div>
+        </button>
+    </drag-scroll>
+
+    <button class="carousel-button" (click)="carouselRight()">
+        <img class="carousel-button-right" src="../assets/images/icons/arrow.svg">
+    </button>
 </div>
