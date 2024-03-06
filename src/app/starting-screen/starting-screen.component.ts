@@ -5,11 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog, MatDialogRef, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent } from '@angular/material/dialog'
+import { MatSelectModule } from '@angular/material/select'
 import { MatButtonModule } from '@angular/material/button'
-import { GetCookie, Lobby, SignInService, SignUpService } from '../http.service'
+import { GetCookie, Invite, Lobby, SignInService, SignUpService } from '../http.service'
 import { HttpClientModule } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { Decoder } from '../service'
+import { MatOption } from '@angular/material/core'
 
 @Component({
     selector: 'lobby-invite',
@@ -17,20 +19,20 @@ import { Decoder } from '../service'
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [Lobby]
+    providers: [Lobby, Invite]
 })
 export class LobbyInvite {
-    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private lobby: Lobby, private decoder: Decoder, private router: Router) { }
+    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private lobby: Lobby, private decoder: Decoder, private router: Router, private getCookie: GetCookie, private invite: Invite) { }
 
     accept() {
-        const players: [{ status: string, username: string }] = [{ status: 'accepted', username: this.decoder.decoder(document.cookie).username }]
-        this.lobby.putLobby(players)
+        const players: [{ status: string, username: string }] = [{ status: 'accepted', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+        this.lobby.putLobby(players, {})
         this.router.navigate(['/lobby'])
         this.dialogRef.close()
     }
     reject() {
-        const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(document.cookie).username }]
-        this.lobby.putLobby(players)
+        const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+        this.lobby.putLobby(players, {})
         this.dialogRef.close()
     }
 }
@@ -40,15 +42,14 @@ export class LobbyInvite {
     standalone: true,
     templateUrl: './starting-screen.component.html',
     styleUrl: './starting-screen.component.scss',
-    imports: [MatButtonModule, CommonModule, LobbyInvite],
-    providers: [SignInService, Lobby,
+    imports: [MatButtonModule, CommonModule, LobbyInvite, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatFormFieldModule, MatInputModule, MatIconModule, FormsModule, ReactiveFormsModule, HttpClientModule],
+    providers: [SignInService, Lobby, Invite,
         { provide: MatDialogRef, useValue: {} }],
 })
 export class StartingScreenComponent implements OnInit {
-    constructor(public dialog: MatDialog, private signInService: SignInService, private getCookie: GetCookie, private router: Router, private lobby: Lobby) { }
+    constructor(public dialog: MatDialog, private signInService: SignInService, private getCookie: GetCookie, private router: Router, private lobby: Lobby, private decoder: Decoder, private invite: Invite) { }
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
-    invited: boolean = false
 
     ngOnInit() {
         this.signInService.currentLoginStatus.subscribe(status => {
@@ -61,14 +62,19 @@ export class StartingScreenComponent implements OnInit {
     }
 
     refreshPage(enterAnimationDuration: string, exitAnimationDuration: string): void {
-        this.lobby.getLobby()
-        if (!this.invited) {
-            this.dialog.open(LobbyInvite, {
-                width: '380px',
-                enterAnimationDuration,
-                exitAnimationDuration,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.lobby.getLobby().subscribe((data: any) => {
+            console.log(data)
+            data.players.forEach((element: { status: string; username: string }) => {
+                if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                    this.dialog.open(LobbyInvite, {
+                        width: '380px',
+                        enterAnimationDuration,
+                        exitAnimationDuration,
+                    })
+                }
             })
-        }
+        })
     }
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -103,16 +109,17 @@ export class StartingScreenComponent implements OnInit {
         })
     }
 }
+
 @Component({
     selector: 'sign-up-dialog',
     templateUrl: 'sign-up-dialog.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [SignUpService, SignInService]
+    providers: [SignUpService]
 })
 export class SignUpDialog {
-    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private signUpService: SignUpService, private signInService: SignInService) { }
+    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private signUpService: SignUpService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -146,10 +153,10 @@ export class SignUpDialog {
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [SignInService, StartingScreenComponent]
+    providers: [SignInService]
 })
 export class SignInDialog {
-    constructor(public dialogRef: MatDialogRef<SignInDialog>, private signInService: SignInService, private startingScreenComponent: StartingScreenComponent) { }
+    constructor(public dialogRef: MatDialogRef<SignInDialog>, private signInService: SignInService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -168,18 +175,19 @@ export class SignInDialog {
     templateUrl: 'lobby-settings.html',
     styleUrl: './starting-screen.component.scss',
     standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [Lobby]
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule, MatOption, MatSelectModule],
+    providers: [Lobby, Invite]
 })
 export class LobbySettings {
-    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private router: Router) { }
+    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private router: Router, private invite: Invite) { }
+    selectedValue: number = 1
 
     usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
 
     submitCreateLobby() {
         const players: [{ status: string, username: string }] = [{ status: 'invited', username: this.usernameFormControl.value }]
-        this.lobby.createLobby(players)
+        this.lobby.createLobby(players, this.usernameFormControl.value)
         this.router.navigate(['/lobby'])
         this.dialogRef.close()
     }
