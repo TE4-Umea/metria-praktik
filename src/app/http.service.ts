@@ -1,24 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { BehaviorSubject } from 'rxjs'
-import { Decoder } from './service'
-
-
-@Injectable({
-    providedIn: 'root'
-})
-export class GetCookie {
-    getCookie(name: string) {
-        const cookies = document.cookie.split('; ')
-        for (let i = 0; i < cookies.length; i++) {
-            const parts = cookies[i].split('=')
-            if (parts[0] === name) {
-                return parts[1]
-            }
-        }
-        return null
-    }
-}
+import { Decoder, GetCookie } from './service'
 
 @Injectable({
     providedIn: 'root'
@@ -101,14 +84,15 @@ export class Lobby {
             players: players,
             data: data
         }
-        return this.http.put(this.url + this.id, body, this.header)
+        return this.http.put(this.url + this.id, body, this.header).subscribe((data) => {
+            console.log(data)
+        })
     }
 
     getLobby() {
         if (this.id !== '') {
             return this.http.get(this.url + this.id, this.header)
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this.invite.getInvite()
             return this.http.get(this.url + this.getCookie.getCookie('id'), this.header)
         }

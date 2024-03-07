@@ -5,7 +5,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { SetShowBuildings } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
-import { Lobby } from '../http.service'
+import { Invite, Lobby } from '../http.service'
 import { interval } from 'rxjs'
 
 @Component({
@@ -14,7 +14,7 @@ import { interval } from 'rxjs'
     imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss',
-    providers: [SetShowBuildings, Lobby]
+    providers: [SetShowBuildings, Lobby, Invite]
 })
 export class UserInterfaceComponent implements OnInit {
     constructor(private setShowBuildings: SetShowBuildings, private lobby: Lobby) { }
