@@ -1,13 +1,14 @@
 <form class="container">
     <h2 class="dialog-title">Create multiplayer game</h2>
-    <!-- <mat-form-field>
-        <mat-label>Select number of players</mat-label>
-        <mat-select [(value)]="selectedValue">
-            <mat-option *ngFor="index as i" value={{i}}>{{i}}</mat-option>
-        </mat-select>
-    </mat-form-field> -->
-    <!-- <mat-form-field *ngFor="let selected as selectedValue" appearance="outline" [style.width.%]=100> -->
+    <h4 class="dialog-title">Right now only one player works :D</h4>
     <mat-form-field appearance="outline" [style.width.%]=100>
+        <mat-label>Select number of players</mat-label>
+        <mat-select [(value)]="selectedNumberOfPlayers" name="numberOfPlayers">
+            <mat-option *ngFor="let i of [1,2,3,4]" [value]="i"> {{i}} </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngFor="let i of counter(selectedNumberOfPlayers); let item as index" appearance="outline"
+        [style.width.%]=100>
         <mat-label>Other player's username</mat-label>
         <input matInput type="text" [formControl]="usernameFormControl" required>
         @if (usernameFormControl.hasError('minlength') && !usernameFormControl.hasError('required') ) {
