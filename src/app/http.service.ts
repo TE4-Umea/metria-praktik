@@ -59,7 +59,7 @@ export class SignInService {
     providedIn: 'root'
 })
 export class Lobby {
-    constructor(private http: HttpClient, private getCookie: GetCookie, private invite: Invite) { }
+    constructor(private http: HttpClient, private getCookie: GetCookie, private invite: Invite, private decoder: Decoder) { }
     url: string = 'http://jupiter.umea-ntig.se:4893/'
     id: string = this.getCookie.getCookie('id') || ''
     header: object = {
@@ -74,16 +74,9 @@ export class Lobby {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return this.http.post(this.url + 'lobby', body, this.header).subscribe((data: any) => {
             document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.invite.getInvite().subscribe((id: any) => {
-                if (id.lobby === '') {
-                    this.invite.putInvite(username, data.id)
-                } else {
-                    console.log('Player already invited')
-                }
-            })
+            this.invite.putInvite(username, data.id)
+            this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, data.id)
         })
-
     }
 
     putLobbyData(data: object) {
