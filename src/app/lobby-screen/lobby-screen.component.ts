@@ -13,20 +13,26 @@ import { Decoder, GetCookie } from '../service'
     providers: [Lobby, Invite]
 })
 export class LobbyScreenComponent implements OnInit {
-    constructor(private router: Router, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    constructor(private router: Router, private invite: Invite, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     playersReady: boolean = false
     ready: boolean = false
 
     ngOnInit() {
+        this.getPlayerStatus()
+    }
+
+    getPlayerStatus() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.lobby.getLobby().subscribe((data: any) => {
-            data.players.forEach((element: { status: string; username: string }) => {
-                console.log(element.status)
-                if (element.status === 'ready') {
-                    this.ready = true
-                    this.playersReady = true
-                }
-            })
+        this.lobby.getLobby()?.subscribe((data: any) => {
+            if (data) {
+                data.players.forEach((element: { status: string; username: string }) => {
+                    console.log(element.status)
+                    if (element.status === 'ready') {
+                        this.ready = true
+                        this.playersReady = true
+                    }
+                })
+            }
         })
     }
 
@@ -36,7 +42,7 @@ export class LobbyScreenComponent implements OnInit {
 
     readyUp() {
         const players: [{ status: string, username: string }] = [{ status: 'ready', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobby(players, {})
+        this.lobby.putLobbyPlayers(players)
     }
 
     startGame() {
@@ -50,6 +56,7 @@ export class LobbyScreenComponent implements OnInit {
 
     cancelGame() {
         document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, [{ lobbyID: '' }])
         this.backToStartingScreen()
     }
 }
