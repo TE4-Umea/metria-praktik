@@ -31,14 +31,8 @@ export class UserInterfaceComponent implements OnInit {
     showBuildings: boolean = false
 
     ngOnInit() {
-        interval(5000).subscribe(() => {
-            this.lobby.getLobby().subscribe((data) => {
-                console.log(data)
-            })
-        })
-        this.setShowBuildings.showBuildings$.subscribe(show => {
-            this.showBuildings = show
-        })
+        this.getLobby()
+        this.toggleBuildings()
     }
 
     toggleDropdown(): void {
@@ -49,11 +43,24 @@ export class UserInterfaceComponent implements OnInit {
         this.showMenu = !this.showMenu
     }
 
-    // onClickPutLobby() {
+    toggleBuildings(): void {
+        this.setShowBuildings.showBuildings$.subscribe(show => {
+            this.showBuildings = show
+        })
+    }
+
+    getLobby() {
+        interval(5000).subscribe(() => {
+            this.lobby.getLobby()?.subscribe((data) => {
+                console.log(data)
+            })
+        })
+    }
+
+
+    // onClickPutLobbyData() {
     //     const data: { [resource: string]: number } = this.resources
-    //     this.lobby.putLobby({}, data).subscribe((data) => {
-    //         console.log(data)
-    //     })
+    //     this.lobby.putLobbyData(data)
     // }
 
     carouselLeft(): void {
