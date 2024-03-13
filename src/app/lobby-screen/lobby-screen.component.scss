@@ -1,0 +1,122 @@
+.background {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -10;
+    overflow: hidden;
+    
+}
+
+.background-image {
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    filter: grayscale(100%) sepia(200%) hue-rotate(195deg) saturate(800%) contrast(50%) brightness(50%);
+}
+
+.frame-outer {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    border: 35px solid #00000066;
+}
+
+.frame-inner {
+    width: calc(100% - 80px);
+    height: calc(100% - 80px);
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    box-sizing: border-box;
+    border:10px solid #00000066;
+}
+
+.starting-screen-containers {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  
+    flex-wrap: wrap;
+    gap: 30px;
+    
+    
+}
+
+.starting-screen-lobby{
+    color: white;
+    font-family: "Gupter", serif;
+    font-size: 20px;
+    background-color: transparent;
+    border: none;
+    text-align: center;
+}
+
+.starting-screen-button{
+    color: white;
+    font-family: "Gupter", serif;
+    font-size: 28px;
+    background-color: transparent;
+    border: none;
+    transition: 0.2s;
+}
+
+.starting-screen-button:hover {
+    cursor: pointer;
+    opacity: 60%;
+}
+
+.starting-screen-button:active {
+    transform: scale(0.95);
+}
+
+
+
+.starting-screen-lobby-container {
+    display: flex;
+    flex-direction: column;
+
+    background-color: rgba(2, 14, 30, 0.275);
+    padding-top: 60px;
+    padding-bottom: 60px;
+    padding-left: 50px;
+    padding-right: 50px; 
+
+    margin-bottom: 220px;
+}
+
+.starting-screen-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+
+    background-color: rgba(2, 14, 30, 0.275);
+    padding-top: 60px;
+    padding-bottom: 60px;
+    padding-left: 50px;
+    padding-right: 50px; 
+
+    
+}
+
+.lobby-title{
+    font-size: 50px;
+    font-weight: 200px;
+    color: white;
+    text-align: center;
+    font-family: "Gupter", serif;
+}
+
+@media screen and (min-width: 1200px) {
+    .starting-screen-button-container {
+        margin-right: 400px;
+    }
+  }
+
