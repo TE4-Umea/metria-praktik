@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatInputModule } from '@angular/material/input'
@@ -40,6 +41,9 @@ export class LobbyInvite {
     }
 
     accept() {
+        this.invite.getInvite().subscribe((data: any) => {
+            document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
+        })
         this.router.navigate(['/lobby'])
         this.dialogRef.close()
     }
@@ -82,20 +86,18 @@ export class StartingScreenComponent implements OnInit {
 
     refreshPage(enterAnimationDuration: string, exitAnimationDuration: string): void {
         if (this.cookieId === '') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.lobby.getLobby()?.subscribe((data: any) => {
-                if (data) {
-                    this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
-                    data.players.forEach((element: { status: string; username: string }) => {
-                        if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                            this.dialog.open(LobbyInvite, {
-                                width: '380px',
-                                enterAnimationDuration,
-                                exitAnimationDuration,
-                            })
-                        }
-                    })
-                }
+            this.lobby.getLobby().subscribe((data: any) => {
+                console.log(data)
+                this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
+                data.players.forEach((element: { status: string; username: string }) => {
+                    if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                        this.dialog.open(LobbyInvite, {
+                            width: '380px',
+                            enterAnimationDuration,
+                            exitAnimationDuration,
+                        })
+                    }
+                })
             })
         } else {
             this.setLobbyOwner.setAlreadyInLobby(true)

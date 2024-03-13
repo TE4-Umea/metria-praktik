@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { Decoder, GetCookie } from './service'
 
 @Injectable({
@@ -71,7 +72,6 @@ export class Lobby {
             players: players,
         }
         console.log('createLobby', body, this.header, this.url)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return this.http.post(this.url + 'lobby', body, this.header).subscribe((data: any) => {
             document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
             this.invite.putInvite(username, data.id)
@@ -97,21 +97,23 @@ export class Lobby {
         })
     }
 
-    getLobby() {
+
+
+    getLobby(): Observable<any> {
         if (this.id !== '') {
             return this.http.get(this.url + 'lobby/' + this.id, this.header)
-        } else if (this.id === '') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.invite.getInvite().subscribe((data: any) => {
-                document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
-                return this.http.get(this.url + 'lobby/' + this.getCookie.getCookie('id'), this.header)
-            })
         } else {
-            return console.log('No lobby found')
+            return new Observable(observer => {
+                this.invite.getInvite().subscribe((data: any) => {
+                    console.log(data.lobby)
+                    this.http.get(this.url + 'lobby/' + data.lobby, this.header).subscribe(result => {
+                        observer.next(result)
+                        observer.complete()
+                    })
+                })
+            })
         }
     }
-
-
 }
 
 @Injectable({
@@ -129,9 +131,8 @@ export class Invite {
             lobbyID: id
         }
         console.log(this.url + username, body, this.header)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return this.http.put(this.url + username, body, this.header).subscribe((data) => {
-            console.log('invite sent')
+            console.log('invite sent' + data)
         })
     }
 

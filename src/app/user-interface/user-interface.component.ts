@@ -51,7 +51,7 @@ export class UserInterfaceComponent implements OnInit {
 
     getLobby() {
         interval(5000).subscribe(() => {
-            this.lobby.getLobby()?.subscribe((data) => {
+            this.lobby.getLobby().subscribe((data) => {
                 console.log(data)
             })
         })

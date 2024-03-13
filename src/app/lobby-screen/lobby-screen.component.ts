@@ -24,20 +24,19 @@ export class LobbyScreenComponent implements OnInit {
 
     getPlayerStatus() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.lobby.getLobby()?.subscribe((data: any) => {
-            if (data) {
-                if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === data.lobbyOwner) {
-                    this.ready = true
-                }
-                this.lobbyOwner = data.lobbyOwner
-                data.players.forEach((element: { status: string; username: string }) => {
-                    console.log(element.status)
-                    if (element.status === 'ready') {
-                        this.ready = true
-                        this.playersReady = true
-                    }
-                })
+        this.lobby.getLobby().subscribe((data: any) => {
+            if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === data.lobbyOwner) {
+                this.ready = true
             }
+            this.lobbyOwner = data.lobbyOwner
+            data.players.forEach((element: { status: string; username: string }) => {
+                console.log(element.status)
+                if (element.status === 'ready') {
+                    this.ready = true
+                    this.playersReady = true
+                }
+            })
+
         })
     }
 
