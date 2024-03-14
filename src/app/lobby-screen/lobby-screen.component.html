@@ -1,6 +1,3 @@
-
-<h2 *ngIf="playersReady">Everyone is ready!</h2>
-
 <div [ngClass]="'background'">
     <img [ngClass]="'background-image'" src="/assets/images/skog.jpg">
     <div class="frame-outer"></div>
@@ -24,6 +21,7 @@
         </div>
 
         <h2 [ngClass]="'lobby-title'" *ngIf="!playersReady">Waiting for other players...</h2>
+      <h2 [ngClass]="'lobby-title'" *ngIf="playersReady">Everyone is ready!</h2>
     </div>
 
     <div [ngClass]="'starting-screen-button-container'">
