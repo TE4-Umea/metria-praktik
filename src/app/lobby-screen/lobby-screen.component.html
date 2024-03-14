@@ -7,17 +7,19 @@
 
 
 <div [ngClass]="'starting-screen-containers'">
-    
+
     <p [ngClass]="'lobbyowner-title'">Lobby owner: <span class="owner">{{lobbyOwner}}</span></p>
     
     <div class="containers-gap">
+
 
     <div>
         <h1 [ngClass]="'lobby-title'">IN LOBBY</h1>
         
         <div [ngClass]="'starting-screen-lobby-container'">
+
             <p [ngClass]="'starting-screen-lobby'" >No one has joined yet</p>
-            
+
         </div>
 
         <h2 [ngClass]="'lobby-title'" *ngIf="!playersReady">Waiting for other players...</h2>
@@ -27,14 +29,15 @@
     <div [ngClass]="'starting-screen-button-container'">
         <button *ngIf="playersReady" [ngClass]="'starting-screen-button'" (click)="startGame()">Start game</button>
         <button (click)="readyUp()" [ngClass]="'starting-screen-button'" *ngIf="!ready">Ready up!</button>
-        <button [ngClass]="'starting-screen-button'" (click)="backToStartingScreen()">Back to <br>main screen</button>
+        <button [ngClass]="'starting-screen-button'" (click)="this.router.navigate(['/'])">Back to <br>main
+            screen</button>
         <button [ngClass]="'starting-screen-button'" (click)="cancelGame()">Leave lobby</button>
         <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
         
         
     </div>
 
-</div>
 
 </div>
 
+</div>

@@ -93,7 +93,6 @@ export class StartingScreenComponent implements OnInit {
 
     signInServiceStatus() {
         this.signInService.currentLoginStatus.subscribe(status => {
-            console.log('status update')
             this.isLoggedIn = status
         })
 
@@ -119,6 +118,12 @@ export class StartingScreenComponent implements OnInit {
                 data.players.forEach((element: { status: string; username: string }) => {
                     if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
                         this.dialog.open(LobbyInvite, {
+                            width: '380px',
+                            enterAnimationDuration,
+                            exitAnimationDuration,
+                        })
+                    } else if (element.status === 'accepted' || element.status === 'ready' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                        this.dialog.open(AlreadyInLobby, {
                             width: '380px',
                             enterAnimationDuration,
                             exitAnimationDuration,
@@ -190,15 +195,13 @@ export class SignUpDialog {
     confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignUp() {
-        console.log(this.passwordFormControl.value === this.confirmPasswordFormControl.value)
 
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
             const passwordDoesNotMatchError: string = 'Password does not match'
             console.log(passwordDoesNotMatchError)
         }
         else {
-            this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe((data) => {
-                console.log(data)
+            this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe(() => {
                 this.dialogRef.close()
             })
         }
@@ -290,13 +293,28 @@ export class LogoutDialog {
     providers: [Lobby, Invite]
 })
 export class AlreadyInLobby {
-    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie, private router: Router, private invite: Invite) { }
+    cookieId: string = this.getCookie.getCookie('id') || ''
+
+    continue() {
+        this.setCookieId()
+        this.router.navigate(['/lobby'])
+        this.dialogRef.close()
+    }
+
+    setCookieId() {
+        this.invite.getInvite().subscribe((data: any) => {
+            document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
+        })
+    }
 
     cancelLobby() {
         const players: [{ status: string, username: string }] = [{ status: 'left', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobbyPlayers(players).subscribe(() => {
-            document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-            this.dialogRef.close()
+        this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, '').subscribe(() => {
+            this.lobby.putLobbyPlayers(players).subscribe(() => {
+                document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                this.dialogRef.close()
+            })
         })
     }
 }

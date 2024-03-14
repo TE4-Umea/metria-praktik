@@ -13,7 +13,7 @@ import { Decoder, GetCookie } from '../service'
     providers: [Lobby, Invite]
 })
 export class LobbyScreenComponent implements OnInit {
-    constructor(private router: Router, private invite: Invite, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    constructor(public router: Router, private invite: Invite, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     playersReady: boolean = false
     ready: boolean = false
     lobbyOwner: string = ''
@@ -56,13 +56,10 @@ export class LobbyScreenComponent implements OnInit {
         this.router.navigate(['/game'])
     }
 
-    backToStartingScreen() {
-        this.router.navigate(['/'])
-    }
-
     cancelGame() {
         document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, [{ lobbyID: '' }])
-        this.backToStartingScreen()
+        this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, '').subscribe(() => {
+            this.router.navigate(['/'])
+        })
     }
 }
