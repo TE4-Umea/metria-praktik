@@ -17,6 +17,8 @@ export class LobbyScreenComponent implements OnInit {
     playersReady: boolean = false
     ready: boolean = false
     lobbyOwner: string = ''
+    timeout: boolean = false
+
 
     ngOnInit() {
         this.getPlayerStatus()
@@ -41,14 +43,24 @@ export class LobbyScreenComponent implements OnInit {
     }
 
     refreshPage() {
-        window.location.reload()
+        if (this.timeout) {
+            this.timeout = false
+            this.getPlayerStatus()
+        }
+        setTimeout(() => {
+            this.timeout = true
+        }, 10000)
     }
 
     readyUp() {
-        const players: [{ status: string, username: string }] = [{ status: 'ready', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobbyPlayers(players).subscribe(() => {
+        if (this.lobbyOwner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
             this.getPlayerStatus()
-        })
+        } else {
+            const players: [{ status: string, username: string }] = [{ status: 'ready', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+            this.lobby.putLobbyPlayers(players).subscribe(() => {
+                this.getPlayerStatus()
+            })
+        }
     }
 
     startGame() {

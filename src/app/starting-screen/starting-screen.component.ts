@@ -85,17 +85,17 @@ export class StartingScreenComponent implements OnInit {
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
     username: string = ''
+    timeout: boolean = false
 
     ngOnInit() {
         this.signInServiceStatus()
-        this.getUsername()
+        this.refreshButton()
     }
 
     signInServiceStatus() {
         this.signInService.currentLoginStatus.subscribe(status => {
             this.isLoggedIn = status
         })
-
     }
 
     getUsername() {
@@ -138,6 +138,16 @@ export class StartingScreenComponent implements OnInit {
                 exitAnimationDuration,
             })
         }
+    }
+
+    refreshButton() {
+        if (this.timeout) {
+            this.getUsername()
+            this.refreshPage('450ms', '350ms')
+        }
+        setTimeout(() => {
+            this.timeout = true
+        }, 10000)
     }
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
