@@ -1,6 +1,4 @@
-<h1>Multiplayer Settings</h1>
-<h2>Lobby owner: {{lobbyOwner}}</h2>
-<h2 *ngIf="!playersReady">Waiting for other players...</h2>
+
 <h2 *ngIf="playersReady">Everyone is ready!</h2>
 
 <div [ngClass]="'background'">
@@ -10,16 +8,22 @@
 </div>
 
 
+
 <div [ngClass]="'starting-screen-containers'">
     
+    <p [ngClass]="'lobbyowner-title'">Lobby owner: <span class="owner">{{lobbyOwner}}</span></p>
+    
+    <div class="containers-gap">
+
     <div>
         <h1 [ngClass]="'lobby-title'">IN LOBBY</h1>
+        
         <div [ngClass]="'starting-screen-lobby-container'">
-            <p [ngClass]="'starting-screen-lobby'" >Diamondminecart</p>
-            <p [ngClass]="'starting-screen-lobby'" >Tyler 1</p>
-            <p [ngClass]="'starting-screen-lobby'" >Pitbull 1992</p>
+            <p [ngClass]="'starting-screen-lobby'" >No one has joined yet</p>
             
         </div>
+
+        <h2 [ngClass]="'lobby-title'" *ngIf="!playersReady">Waiting for other players...</h2>
     </div>
 
     <div [ngClass]="'starting-screen-button-container'">
@@ -28,7 +32,11 @@
         <button [ngClass]="'starting-screen-button'" (click)="backToStartingScreen()">Back to <br>main screen</button>
         <button [ngClass]="'starting-screen-button'" (click)="cancelGame()">Leave lobby</button>
         <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
+        
+        
     </div>
+
+</div>
 
 </div>
 
