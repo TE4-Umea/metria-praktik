@@ -59,8 +59,8 @@ export class SignInService {
     providedIn: 'root'
 })
 export class Lobby {
-    constructor(private http: HttpClient, private getCookie: GetCookie, private invite: Invite) { }
-    url: string = 'http://jupiter.umea-ntig.se:4893/lobby/'
+    constructor(private http: HttpClient, private getCookie: GetCookie, private invite: Invite, private decoder: Decoder) { }
+    url: string = 'http://jupiter.umea-ntig.se:4893/'
     id: string = this.getCookie.getCookie('id') || ''
     header: object = {
         headers: new HttpHeaders().set('Authorization', `Bearer ${this.getCookie.getCookie('token')}`)
@@ -72,16 +72,15 @@ export class Lobby {
         }
         console.log('createLobby', body, this.header, this.url)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return this.http.post(this.url, body, this.header).subscribe((data: any) => {
+        return this.http.post(this.url + 'lobby', body, this.header).subscribe((data: any) => {
             document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
             this.invite.putInvite(username, data.id)
+            this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, data.id)
         })
-
     }
 
-    putLobby(players: [{ status: string, username: string }], data: object) {
+    putLobbyData(data: object) {
         const body: object = {
-            players: players,
             data: data
         }
         return this.http.put(this.url + this.id, body, this.header).subscribe((data) => {
@@ -89,12 +88,26 @@ export class Lobby {
         })
     }
 
+    putLobbyPlayers(players: [{ status: string, username: string }]) {
+        const body: object = {
+            players: players
+        }
+        return this.http.put(this.url + 'updatePlayersInLobby/' + this.id, body, this.header).subscribe((data) => {
+            console.log(data)
+        })
+    }
+
     getLobby() {
         if (this.id !== '') {
-            return this.http.get(this.url + this.id, this.header)
+            return this.http.get(this.url + 'lobby/' + this.id, this.header)
+        } else if (this.id === '') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.invite.getInvite().subscribe((data: any) => {
+                document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
+                return this.http.get(this.url + 'lobby/' + this.getCookie.getCookie('id'), this.header)
+            })
         } else {
-            this.invite.getInvite()
-            return this.http.get(this.url + this.getCookie.getCookie('id'), this.header)
+            return console.log('No lobby found')
         }
     }
 
@@ -118,17 +131,13 @@ export class Invite {
         console.log(this.url + username, body, this.header)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return this.http.put(this.url + username, body, this.header).subscribe((data) => {
-            console.log('success')
+            console.log('invite sent')
         })
     }
 
     getInvite() {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return this.http.get(this.url + username, this.header).subscribe((data: any) => {
-            console.log(data)
-            document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
-        })
+        return this.http.get(this.url + username, this.header)
     }
 }
 

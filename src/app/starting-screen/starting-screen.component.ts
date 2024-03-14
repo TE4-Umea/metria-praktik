@@ -27,8 +27,11 @@ export class LobbyInvite {
     alreadyInLobby: boolean = false
 
     ngOnInit() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.setlobbyOwner.lobbyOwner$.subscribe((data: any) => {
+        this.setLobbyOwner()
+    }
+
+    setLobbyOwner() {
+        this.setlobbyOwner.lobbyOwner$.subscribe((data) => {
             this.lobbyOwner = data
         })
         this.setlobbyOwner.alreadyInLobby$.subscribe(alreadyInLobby => {
@@ -40,9 +43,10 @@ export class LobbyInvite {
         this.router.navigate(['/lobby'])
         this.dialogRef.close()
     }
+
     reject() {
         const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobby(players, {})
+        this.lobby.putLobbyPlayers(players)
         document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         this.dialogRef.close()
     }
@@ -63,6 +67,10 @@ export class StartingScreenComponent implements OnInit {
     cookieId: string = this.getCookie.getCookie('id') || ''
 
     ngOnInit() {
+        this.signInServiceStatus()
+    }
+
+    signInServiceStatus() {
         this.signInService.currentLoginStatus.subscribe(status => {
             this.isLoggedIn = status
         })
@@ -75,17 +83,19 @@ export class StartingScreenComponent implements OnInit {
     refreshPage(enterAnimationDuration: string, exitAnimationDuration: string): void {
         if (this.cookieId === '') {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.lobby.getLobby().subscribe((data: any) => {
-                this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
-                data.players.forEach((element: { status: string; username: string }) => {
-                    if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                        this.dialog.open(LobbyInvite, {
-                            width: '380px',
-                            enterAnimationDuration,
-                            exitAnimationDuration,
-                        })
-                    }
-                })
+            this.lobby.getLobby()?.subscribe((data: any) => {
+                if (data) {
+                    this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
+                    data.players.forEach((element: { status: string; username: string }) => {
+                        if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                            this.dialog.open(LobbyInvite, {
+                                width: '380px',
+                                enterAnimationDuration,
+                                exitAnimationDuration,
+                            })
+                        }
+                    })
+                }
             })
         } else {
             this.setLobbyOwner.setAlreadyInLobby(true)
@@ -235,6 +245,7 @@ export class LogoutDialog {
 
     submitLogout() {
         document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     }
 
 }
