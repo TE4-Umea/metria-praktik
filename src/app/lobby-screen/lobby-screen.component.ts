@@ -46,7 +46,9 @@ export class LobbyScreenComponent implements OnInit {
 
     readyUp() {
         const players: [{ status: string, username: string }] = [{ status: 'ready', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobbyPlayers(players)
+        this.lobby.putLobbyPlayers(players).subscribe(() => {
+            this.getPlayerStatus()
+        })
     }
 
     startGame() {

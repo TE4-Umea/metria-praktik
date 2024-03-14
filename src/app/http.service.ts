@@ -8,7 +8,7 @@ import { Decoder, GetCookie } from './service'
     providedIn: 'root'
 })
 export class SignUpService {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private signInService: SignInService) { }
 
     signUp(username: string, password: string) {
         const url = 'http://jupiter.umea-ntig.se:4893/register_user'
@@ -17,7 +17,13 @@ export class SignUpService {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
 
-        return this.http.post(url, null, header)
+        return new Observable(observer => {
+            this.http.post(url, null, header).subscribe(() => {
+                observer.next(this.signInService.signIn(username, password))
+                observer.complete()
+            })
+        })
+
     }
 }
 
@@ -29,23 +35,26 @@ export class SignInService {
     currentLoginStatus = this.loginStatus.asObservable()
     constructor(private http: HttpClient, private getCookie: GetCookie) { }
 
-    signIn(username: string, password: string) {
+    signIn(username: string, password: string): Observable<any> {
         const url = 'http://jupiter.umea-ntig.se:4893/login'
         const token = btoa(username + ':' + password)
         const header = {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
-        this.http.post(url, null, header).subscribe((data) => {
-            document.cookie = 'token=' + data + '; samesite=strict; max-age=86400;'
-            const cookieToken: string = this.getCookie.getCookie('token') || ''
-            if (cookieToken !== '') {
-                console.log('Logged in')
-                return this.loginStatus.next(true)
-            }
-            else {
-                console.log('Not logged in')
-                return this.loginStatus.next(false)
-            }
+        return new Observable(observer => {
+            this.http.post(url, null, header).subscribe((data) => {
+                document.cookie = 'token=' + data + '; samesite=strict; max-age=86400;'
+                if (data !== '') {
+                    console.log('Logged in')
+                    observer.next(this.loginStatus.next(true))
+                    observer.complete()
+                }
+                else {
+                    console.log('Not logged in')
+                    observer.next(this.loginStatus.next(false))
+                    observer.complete()
+                }
+            })
         })
     }
 
@@ -92,9 +101,7 @@ export class Lobby {
         const body: object = {
             players: players
         }
-        return this.http.put(this.url + 'updatePlayersInLobby/' + this.id, body, this.header).subscribe((data) => {
-            console.log(data)
-        })
+        return this.http.put(this.url + 'updatePlayersInLobby/' + this.getCookie.getCookie('id'), body, this.header)
     }
 
 
@@ -105,7 +112,6 @@ export class Lobby {
         } else {
             return new Observable(observer => {
                 this.invite.getInvite().subscribe((data: any) => {
-                    console.log(data.lobby)
                     this.http.get(this.url + 'lobby/' + data.lobby, this.header).subscribe(result => {
                         observer.next(result)
                         observer.complete()
@@ -141,6 +147,4 @@ export class Invite {
         return this.http.get(this.url + username, this.header)
     }
 }
-
-
 

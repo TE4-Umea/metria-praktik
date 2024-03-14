@@ -22,12 +22,17 @@ export class GetCookie {
 })
 export class Decoder {
     decoder(token: string) {
-        console.log()
-        const base64Url = token.split('.')[1]
-        const base64 = base64Url.replace('-', '+').replace('_', '/')
-        return JSON.parse(window.atob(base64))
+        if (token) {
+            console.log()
+            const base64Url = token.split('.')[1]
+            const base64 = base64Url.replace('-', '+').replace('_', '/')
+            return JSON.parse(window.atob(base64))
+        } else {
+            return null
+        }
     }
 }
+
 @Injectable({
     providedIn: 'root'
 })
@@ -49,13 +54,6 @@ export class LobbyOwner_Invited {
 
     setLobbyOwner(lobbyOwner: string) {
         this._lobbyOwner.next(lobbyOwner)
-    }
-
-    private _alreadyInLobby = new BehaviorSubject<boolean>(false)
-    alreadyInLobby$ = this._alreadyInLobby.asObservable()
-
-    setAlreadyInLobby(alreadyInLobby: boolean) {
-        this._alreadyInLobby.next(alreadyInLobby)
     }
 }
 
