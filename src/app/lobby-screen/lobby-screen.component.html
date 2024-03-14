@@ -2,8 +2,33 @@
 <h2>Lobby owner: {{lobbyOwner}}</h2>
 <h2 *ngIf="!playersReady">Waiting for other players...</h2>
 <h2 *ngIf="playersReady">Everyone is ready!</h2>
-<button *ngIf="playersReady" (click)="startGame()">Start game</button>
-<button (click)="readyUp()" *ngIf="!ready">Ready up!</button>
-<button (click)="backToStartingScreen()">Back to main screen</button>
-<button (click)="cancelGame()">Leave lobby</button>
-<button (click)="refreshPage()">Refresh</button>
+
+<div [ngClass]="'background'">
+    <img [ngClass]="'background-image'" src="/assets/images/skog.jpg">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+</div>
+
+
+<div [ngClass]="'starting-screen-containers'">
+    
+    <div>
+        <h1 [ngClass]="'lobby-title'">IN LOBBY</h1>
+        <div [ngClass]="'starting-screen-lobby-container'">
+            <p [ngClass]="'starting-screen-lobby'" >Diamondminecart</p>
+            <p [ngClass]="'starting-screen-lobby'" >Tyler 1</p>
+            <p [ngClass]="'starting-screen-lobby'" >Pitbull 1992</p>
+            
+        </div>
+    </div>
+
+    <div [ngClass]="'starting-screen-button-container'">
+        <button *ngIf="playersReady" [ngClass]="'starting-screen-button'" (click)="startGame()">Start game</button>
+        <button (click)="readyUp()" [ngClass]="'starting-screen-button'" *ngIf="!ready">Ready up!</button>
+        <button [ngClass]="'starting-screen-button'" (click)="backToStartingScreen()">Back to <br>main screen</button>
+        <button [ngClass]="'starting-screen-button'" (click)="cancelGame()">Leave lobby</button>
+        <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
+    </div>
+
+</div>
+
