@@ -21,7 +21,7 @@ export class LobbyScreenComponent implements OnInit {
 
 
     ngOnInit() {
-        this.getPlayerStatus()
+        this.refreshPage()
     }
 
     getPlayerStatus() {
