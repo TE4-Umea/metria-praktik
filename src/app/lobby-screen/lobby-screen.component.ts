@@ -17,7 +17,7 @@ export class LobbyScreenComponent implements OnInit {
     playersReady: boolean = false
     ready: boolean = false
     lobbyOwner: string = ''
-    timeout: boolean = false
+    timeout: boolean = true
 
 
     ngOnInit() {
@@ -44,6 +44,7 @@ export class LobbyScreenComponent implements OnInit {
 
     refreshPage() {
         if (this.timeout) {
+            console.log('refresh')
             this.timeout = false
             this.getPlayerStatus()
         }

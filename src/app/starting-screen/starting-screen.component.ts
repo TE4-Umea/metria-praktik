@@ -85,11 +85,12 @@ export class StartingScreenComponent implements OnInit {
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
     username: string = ''
-    timeout: boolean = false
+    timeout: boolean = true
+    timeoutUsername: boolean = true
 
     ngOnInit() {
         this.signInServiceStatus()
-        this.refreshButton()
+        this.getUsername()
     }
 
     signInServiceStatus() {
@@ -142,8 +143,8 @@ export class StartingScreenComponent implements OnInit {
 
     refreshButton() {
         if (this.timeout) {
-            this.getUsername()
             this.refreshPage('450ms', '350ms')
+            this.timeout = false
         }
         setTimeout(() => {
             this.timeout = true
