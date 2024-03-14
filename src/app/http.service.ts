@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { Decoder, GetCookie } from './service'
 
 @Injectable({
     providedIn: 'root'
 })
 export class SignUpService {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private signInService: SignInService) { }
 
     signUp(username: string, password: string) {
         const url = 'http://jupiter.umea-ntig.se:4893/register_user'
@@ -16,7 +17,13 @@ export class SignUpService {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
 
-        return this.http.post(url, null, header)
+        return new Observable(observer => {
+            this.http.post(url, null, header).subscribe(() => {
+                observer.next(this.signInService.signIn(username, password))
+                observer.complete()
+            })
+        })
+
     }
 }
 
@@ -28,23 +35,26 @@ export class SignInService {
     currentLoginStatus = this.loginStatus.asObservable()
     constructor(private http: HttpClient, private getCookie: GetCookie) { }
 
-    signIn(username: string, password: string) {
+    signIn(username: string, password: string): Observable<any> {
         const url = 'http://jupiter.umea-ntig.se:4893/login'
         const token = btoa(username + ':' + password)
         const header = {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
-        this.http.post(url, null, header).subscribe((data) => {
-            document.cookie = 'token=' + data + '; samesite=strict; max-age=86400;'
-            const cookieToken: string = this.getCookie.getCookie('token') || ''
-            if (cookieToken !== '') {
-                console.log('Logged in')
-                return this.loginStatus.next(true)
-            }
-            else {
-                console.log('Not logged in')
-                return this.loginStatus.next(false)
-            }
+        return new Observable(observer => {
+            this.http.post(url, null, header).subscribe((data) => {
+                document.cookie = 'token=' + data + '; samesite=strict; max-age=86400;'
+                if (data !== '') {
+                    console.log('Logged in')
+                    observer.next(this.loginStatus.next(true))
+                    observer.complete()
+                }
+                else {
+                    console.log('Not logged in')
+                    observer.next(this.loginStatus.next(false))
+                    observer.complete()
+                }
+            })
         })
     }
 
@@ -71,7 +81,6 @@ export class Lobby {
             players: players,
         }
         console.log('createLobby', body, this.header, this.url)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return this.http.post(this.url + 'lobby', body, this.header).subscribe((data: any) => {
             document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
             this.invite.putInvite(username, data.id)
@@ -92,26 +101,25 @@ export class Lobby {
         const body: object = {
             players: players
         }
-        return this.http.put(this.url + 'updatePlayersInLobby/' + this.id, body, this.header).subscribe((data) => {
-            console.log(data)
-        })
+        return this.http.put(this.url + 'updatePlayersInLobby/' + this.getCookie.getCookie('id'), body, this.header)
     }
 
-    getLobby() {
+
+
+    getLobby(): Observable<any> {
         if (this.id !== '') {
             return this.http.get(this.url + 'lobby/' + this.id, this.header)
-        } else if (this.id === '') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.invite.getInvite().subscribe((data: any) => {
-                document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
-                return this.http.get(this.url + 'lobby/' + this.getCookie.getCookie('id'), this.header)
-            })
         } else {
-            return console.log('No lobby found')
+            return new Observable(observer => {
+                this.invite.getInvite().subscribe((data: any) => {
+                    this.http.get(this.url + 'lobby/' + data.lobby, this.header).subscribe(result => {
+                        observer.next(result)
+                        observer.complete()
+                    })
+                })
+            })
         }
     }
-
-
 }
 
 @Injectable({
@@ -129,9 +137,8 @@ export class Invite {
             lobbyID: id
         }
         console.log(this.url + username, body, this.header)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return this.http.put(this.url + username, body, this.header).subscribe((data) => {
-            console.log('invite sent')
+            console.log('invite sent' + data)
         })
     }
 
@@ -140,6 +147,4 @@ export class Invite {
         return this.http.get(this.url + username, this.header)
     }
 }
-
-
 

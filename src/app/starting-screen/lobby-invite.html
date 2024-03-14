@@ -1,10 +1,6 @@
-<form *ngIf="!alreadyInLobby" class="container">
+<form class="container">
     <h2 class="dialog-title">Do you want to join the lobby by {{lobbyOwner}}</h2>
     <h2 class="dialog-title">Will you accept?</h2>
     <button mat-flat-button color="primary" (click)="accept()">Yes</button>
     <button mat-flat-button color="warn" (click)="reject()">No</button>
-</form>
-<form *ngIf="alreadyInLobby" class="container">
-    <h2 class="dialog-title">You are already in a Lobby!</h2>
-    <button mat-flat-button color="primary" (click)="this.dialogRef.close()">Close</button>
 </form>

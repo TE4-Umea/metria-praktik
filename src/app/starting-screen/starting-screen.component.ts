@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatInputModule } from '@angular/material/input'
@@ -24,31 +25,49 @@ import { MatOption } from '@angular/material/core'
 export class LobbyInvite {
     constructor(public dialogRef: MatDialogRef<LobbyInvite>, private setlobbyOwner: LobbyOwner_Invited, private lobby: Lobby, private decoder: Decoder, private router: Router, private getCookie: GetCookie, private invite: Invite) { }
     lobbyOwner: string = ''
-    alreadyInLobby: boolean = false
 
     ngOnInit() {
         this.setLobbyOwner()
+        this.setCookieId()
+    }
+
+    ngOnDestroy() {
+        this.lobby.getLobby().subscribe((data: any) => {
+            data.players.forEach((element: { status: string; username: string }) => {
+                if (element.status === 'accepted' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                    this.router.navigate(['/lobby'])
+                }
+                else {
+                    document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                }
+            })
+        })
+    }
+
+    setCookieId() {
+        this.invite.getInvite().subscribe((data: any) => {
+            document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
+        })
     }
 
     setLobbyOwner() {
         this.setlobbyOwner.lobbyOwner$.subscribe((data) => {
             this.lobbyOwner = data
         })
-        this.setlobbyOwner.alreadyInLobby$.subscribe(alreadyInLobby => {
-            this.alreadyInLobby = alreadyInLobby
-        })
     }
 
     accept() {
-        this.router.navigate(['/lobby'])
-        this.dialogRef.close()
+        const players: [{ status: string, username: string }] = [{ status: 'accepted', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+        this.lobby.putLobbyPlayers(players).subscribe(() => {
+            this.dialogRef.close()
+        })
     }
 
     reject() {
         const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobbyPlayers(players)
-        document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        this.dialogRef.close()
+        this.lobby.putLobbyPlayers(players).subscribe(() => {
+            this.dialogRef.close()
+        })
     }
 }
 
@@ -65,15 +84,28 @@ export class StartingScreenComponent implements OnInit {
     constructor(public dialog: MatDialog, private setLobbyOwner: LobbyOwner_Invited, private signInService: SignInService, private getCookie: GetCookie, private router: Router, private lobby: Lobby, private decoder: Decoder, private invite: Invite) { }
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
+    username: string = ''
 
     ngOnInit() {
         this.signInServiceStatus()
+        this.getUsername()
     }
 
     signInServiceStatus() {
         this.signInService.currentLoginStatus.subscribe(status => {
+            console.log('status update')
             this.isLoggedIn = status
         })
+
+    }
+
+    getUsername() {
+        const decodedToken = this.decoder.decoder(this.getCookie.getCookie('token') || '')
+        if (decodedToken && decodedToken.user_information) {
+            this.username = decodedToken.user_information.username
+        } else {
+            this.username = ''
+        }
     }
 
     continueLobby() {
@@ -82,24 +114,20 @@ export class StartingScreenComponent implements OnInit {
 
     refreshPage(enterAnimationDuration: string, exitAnimationDuration: string): void {
         if (this.cookieId === '') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            this.lobby.getLobby()?.subscribe((data: any) => {
-                if (data) {
-                    this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
-                    data.players.forEach((element: { status: string; username: string }) => {
-                        if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                            this.dialog.open(LobbyInvite, {
-                                width: '380px',
-                                enterAnimationDuration,
-                                exitAnimationDuration,
-                            })
-                        }
-                    })
-                }
+            this.lobby.getLobby().subscribe((data: any) => {
+                this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
+                data.players.forEach((element: { status: string; username: string }) => {
+                    if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                        this.dialog.open(LobbyInvite, {
+                            width: '380px',
+                            enterAnimationDuration,
+                            exitAnimationDuration,
+                        })
+                    }
+                })
             })
         } else {
-            this.setLobbyOwner.setAlreadyInLobby(true)
-            this.dialog.open(LobbyInvite, {
+            this.dialog.open(AlreadyInLobby, {
                 width: '380px',
                 enterAnimationDuration,
                 exitAnimationDuration,
@@ -146,10 +174,10 @@ export class StartingScreenComponent implements OnInit {
     styleUrl: './starting-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [SignUpService]
+    providers: [SignUpService, SignInService]
 })
 export class SignUpDialog {
-    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private signUpService: SignUpService) { }
+    constructor(public dialogRef: MatDialogRef<SignUpDialog>, private signInService: SignInService, private signUpService: SignUpService) { }
 
     passwordHide: boolean = true
     confirmPasswordHide: boolean = true
@@ -161,7 +189,7 @@ export class SignUpDialog {
 
     confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
-    async submitSignUp() {
+    submitSignUp() {
         console.log(this.passwordFormControl.value === this.confirmPasswordFormControl.value)
 
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
@@ -197,8 +225,10 @@ export class SignInDialog {
     passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
     submitSignIn() {
-        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value)
-        this.dialogRef.close()
+        this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe(() => {
+            this.dialogRef.close()
+            window.location.reload()
+        })
     }
 }
 
@@ -217,7 +247,6 @@ export class LobbySettings {
     counter(i: number) {
         return new Array(i)
     }
-
 
     usernameFormControl: FormControl = new FormControl('', [Validators.required, Validators.maxLength(20)])
 
@@ -246,6 +275,28 @@ export class LogoutDialog {
     submitLogout() {
         document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        window.location.reload()
     }
 
+}
+
+
+@Component({
+    selector: 'already-in-lobby',
+    templateUrl: 'already-in-lobby.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: [Lobby, Invite]
+})
+export class AlreadyInLobby {
+    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+
+    cancelLobby() {
+        const players: [{ status: string, username: string }] = [{ status: 'left', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+        this.lobby.putLobbyPlayers(players).subscribe(() => {
+            document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+            this.dialogRef.close()
+        })
+    }
 }
