@@ -1,5 +1,10 @@
-<form class="container">
+<form *ngIf="cookieId" class="container">
     <h2 class="dialog-title">You are already in a Lobby!</h2>
     <button mat-flat-button color="primary" (click)="this.dialogRef.close()">Close</button>
+    <button mat-flat-button color="warn" (click)="cancelLobby()">Do you want to leave lobby?</button>
+</form>
+<form *ngIf="!cookieId" class="container">
+    <h2 class="dialog-title">You left while still in a Lobby!</h2>
+    <button mat-flat-button color="primary" (click)="continue()">Continue game</button>
     <button mat-flat-button color="warn" (click)="cancelLobby()">Do you want to leave lobby?</button>
 </form>

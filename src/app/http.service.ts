@@ -80,11 +80,12 @@ export class Lobby {
         const body: object = {
             players: players,
         }
-        console.log('createLobby', body, this.header, this.url)
         return this.http.post(this.url + 'lobby', body, this.header).subscribe((data: any) => {
             document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
-            this.invite.putInvite(username, data.id)
-            this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, data.id)
+            this.invite.putInvite(username, data.id).subscribe(() => {
+            })
+            this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, data.id).subscribe(() => {
+            })
         })
     }
 
@@ -92,8 +93,7 @@ export class Lobby {
         const body: object = {
             data: data
         }
-        return this.http.put(this.url + this.id, body, this.header).subscribe((data) => {
-            console.log(data)
+        return this.http.put(this.url + this.id, body, this.header).subscribe(() => {
         })
     }
 
@@ -132,14 +132,11 @@ export class Invite {
         headers: new HttpHeaders().set('Authorization', `Bearer ${this.getCookie.getCookie('token')}`)
     }
 
-    putInvite(username: string, id: [{ lobbyID: string }]) {
+    putInvite(username: string, id: string | [{ lobbyId: string }]) {
         const body: object = {
             lobbyID: id
         }
-        console.log(this.url + username, body, this.header)
-        return this.http.put(this.url + username, body, this.header).subscribe((data) => {
-            console.log('invite sent' + data)
-        })
+        return this.http.put(this.url + username, body, this.header)
     }
 
     getInvite() {
