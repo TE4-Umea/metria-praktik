@@ -51,11 +51,11 @@
 .containers-gap {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 50px;
 }
 
 .starting-screen-lobby{
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     font-family: "Gupter", serif;
     font-size: 20px;
     font-weight: bolder;
@@ -131,7 +131,7 @@
 }
 
 .owner{
-    color: rgb(5, 16, 53);
+    color: rgb(134, 142, 192);
     font-weight: bolder;
 }
 
