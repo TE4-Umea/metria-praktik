@@ -17,7 +17,7 @@
     </div>
     <div *ngIf="isLoggedIn" [ngClass]="'starting-screen-buttons-container'">
 
-        <h2>Logged in as: {{username}}</h2>
+        <h2 [ngClass]="'starting-screen-logged-in-as'">Logged in as: <span [ngClass]="'account'">{{username}}</span></h2>
 
         <button *ngIf="cookieId == ''" [ngClass]="'starting-screen-button'" type="button"
             (click)="openLobbySettings('450ms', '350ms')">Play
