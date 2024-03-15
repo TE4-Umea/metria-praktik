@@ -5,7 +5,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { SetShowBuildings } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
-import { Lobby } from '../http.service'
+import { Invite, Lobby } from '../http.service'
 import { interval } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 
@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button'
     imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss',
-    providers: [SetShowBuildings, Lobby]
+    providers: [SetShowBuildings, Lobby, Invite]
 })
 export class UserInterfaceComponent implements OnInit {
     constructor(private setShowBuildings: SetShowBuildings, private lobby: Lobby) { }
@@ -39,13 +39,30 @@ export class UserInterfaceComponent implements OnInit {
 
 
     ngOnInit() {
-        interval(30000).subscribe(() => {
-            this.lobby.getLobby()
-        })
+        this.getLobby()
+        this.toggleBuildings()
+    }
+
+
+    toggleBuildings(): void {
         this.setShowBuildings.showBuildings$.subscribe(show => {
             this.showBuildings = show
         })
     }
+
+    getLobby() {
+        interval(30000).subscribe(() => {
+            this.lobby.getLobby().subscribe((data) => {
+                console.log(data)
+            })
+        })
+    }
+
+    // onClickPutLobbyData() {
+    //     const data: { [resource: string]: number } = this.resources
+    //     this.lobby.putLobbyData(data)
+    // }
+
 
     carouselLeft(): void {
         this.ds.moveLeft()
@@ -55,10 +72,4 @@ export class UserInterfaceComponent implements OnInit {
         this.ds.moveRight()
     }
 
-    onClickPutLobby() {
-        const data: { [resource: string]: number } = this.resources
-        this.lobby.putLobby(data).subscribe((data) => {
-            console.log(data)
-        })
-    }
 }
