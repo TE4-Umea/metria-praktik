@@ -1,0 +1,21 @@
+<svg width="762" height="762" viewBox="0 0 762 762" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="381" cy="381" r="172" fill="url(#paint0_linear_164_24)"/>
+<rect x="370" y="581" width="22" height="78" rx="11" fill="#DFB826"/>
+<rect x="366" y="103" width="22" height="78" rx="11" fill="#DFB826"/>
+<rect x="660" y="370" width="22" height="78" rx="11" transform="rotate(90 660 370)" fill="#DFB826"/>
+<rect x="180" y="370" width="22" height="78" rx="11" transform="rotate(90 180 370)" fill="#DFB826"/>
+<rect x="548.706" y="490.527" width="22" height="78" rx="11" transform="rotate(-60 548.706 490.527)" fill="#DFB826"/>
+<rect x="132.745" y="254.991" width="22" height="78" rx="11" transform="rotate(-60 132.745 254.991)" fill="#DFB826"/>
+<rect x="510.974" y="133.879" width="22" height="78" rx="11" transform="rotate(30 510.974 133.879)" fill="#DFB826"/>
+<rect x="270.974" y="549.572" width="22" height="78" rx="11" transform="rotate(30 270.974 549.572)" fill="#DFB826"/>
+<rect x="202.295" y="471.474" width="22" height="78" rx="11" transform="rotate(60 202.295 471.474)" fill="#DFB826"/>
+<rect x="614.255" y="229.01" width="22" height="78" rx="11" transform="rotate(60 614.255 229.01)" fill="#DFB826"/>
+<rect x="530.026" y="617.121" width="22" height="78" rx="11" transform="rotate(150 530.026 617.121)" fill="#DFB826"/>
+<rect x="290.026" y="201.429" width="22" height="78" rx="11" transform="rotate(150 290.026 201.429)" fill="#DFB826"/>
+<defs>
+<linearGradient id="paint0_linear_164_24" x1="381" y1="209" x2="381" y2="553" gradientUnits="userSpaceOnUse">
+<stop offset="0.125" stop-color="#FFEC3E"/>
+<stop offset="1" stop-color="#BB800D"/>
+</linearGradient>
+</defs>
+</svg>

@@ -7,11 +7,12 @@ import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
 import { interval } from 'rxjs'
+import { MatButtonModule } from '@angular/material/button'
 
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective],
+    imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss',
     providers: [SetShowBuildings, Lobby]
@@ -28,7 +29,14 @@ export class UserInterfaceComponent implements OnInit {
 
     showDropdown: boolean = false
     showMenu: boolean = false
-    showBuildings: boolean = false
+    showBuildings: boolean = true
+
+    player2Active: boolean = false 
+
+    testPlayerSizing() {
+        this.player2Active = !this.player2Active
+    }
+
 
     ngOnInit() {
         interval(30000).subscribe(() => {
@@ -38,15 +46,6 @@ export class UserInterfaceComponent implements OnInit {
             this.showBuildings = show
         })
     }
-
-    toggleDropdown(): void {
-        this.showDropdown = !this.showDropdown
-    }
-
-    toggleMenu(): void {
-        this.showMenu = !this.showMenu
-    }
-
 
     carouselLeft(): void {
         this.ds.moveLeft()
