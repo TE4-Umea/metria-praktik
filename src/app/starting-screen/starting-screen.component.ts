@@ -14,62 +14,6 @@ import { Router } from '@angular/router'
 import { Decoder, GetCookie, LobbyOwner_Invited } from '../service'
 import { MatOption } from '@angular/material/core'
 
-@Component({
-    selector: 'lobby-invite',
-    templateUrl: 'lobby-invite.html',
-    styleUrl: './starting-screen.component.scss',
-    standalone: true,
-    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [Lobby, Invite]
-})
-export class LobbyInvite {
-    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private setlobbyOwner: LobbyOwner_Invited, private lobby: Lobby, private decoder: Decoder, private router: Router, private getCookie: GetCookie, private invite: Invite) { }
-    lobbyOwner: string = ''
-
-    ngOnInit() {
-        this.setLobbyOwner()
-        this.setCookieId()
-    }
-
-    ngOnDestroy() {
-        this.lobby.getLobby().subscribe((data: any) => {
-            data.players.forEach((element: { status: string; username: string }) => {
-                if (element.status === 'accepted' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                    this.router.navigate(['/lobby'])
-                }
-                else {
-                    document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-                }
-            })
-        })
-    }
-
-    setCookieId() {
-        this.invite.getInvite().subscribe((data: any) => {
-            document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
-        })
-    }
-
-    setLobbyOwner() {
-        this.setlobbyOwner.lobbyOwner$.subscribe((data) => {
-            this.lobbyOwner = data
-        })
-    }
-
-    accept() {
-        const players: [{ status: string, username: string }] = [{ status: 'accepted', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobbyPlayers(players).subscribe(() => {
-            this.dialogRef.close()
-        })
-    }
-
-    reject() {
-        const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
-        this.lobby.putLobbyPlayers(players).subscribe(() => {
-            this.dialogRef.close()
-        })
-    }
-}
 
 @Component({
     selector: 'app-starting-screen',
@@ -85,11 +29,12 @@ export class StartingScreenComponent implements OnInit {
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
     username: string = ''
-    timeout: boolean = false
+    timeout: boolean = true
+    timeoutUsername: boolean = true
 
     ngOnInit() {
         this.signInServiceStatus()
-        this.refreshButton()
+        this.getUsername()
     }
 
     signInServiceStatus() {
@@ -142,8 +87,8 @@ export class StartingScreenComponent implements OnInit {
 
     refreshButton() {
         if (this.timeout) {
-            this.getUsername()
             this.refreshPage('450ms', '350ms')
+            this.timeout = false
         }
         setTimeout(() => {
             this.timeout = true
@@ -325,6 +270,64 @@ export class AlreadyInLobby {
                 document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
                 this.dialogRef.close()
             })
+        })
+    }
+}
+
+
+@Component({
+    selector: 'lobby-invite',
+    templateUrl: 'lobby-invite.html',
+    styleUrl: './starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: [Lobby, Invite]
+})
+export class LobbyInvite {
+    constructor(public dialogRef: MatDialogRef<LobbyInvite>, private setlobbyOwner: LobbyOwner_Invited, private lobby: Lobby, private decoder: Decoder, private router: Router, private getCookie: GetCookie, private invite: Invite) { }
+    lobbyOwner: string = ''
+
+    ngOnInit() {
+        this.setLobbyOwner()
+        this.setCookieId()
+    }
+
+    ngOnDestroy() {
+        this.lobby.getLobby().subscribe((data: any) => {
+            data.players.forEach((element: { status: string; username: string }) => {
+                if (element.status === 'accepted' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                    this.router.navigate(['/lobby'])
+                }
+                else {
+                    document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                }
+            })
+        })
+    }
+
+    setCookieId() {
+        this.invite.getInvite().subscribe((data: any) => {
+            document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
+        })
+    }
+
+    setLobbyOwner() {
+        this.setlobbyOwner.lobbyOwner$.subscribe((data) => {
+            this.lobbyOwner = data
+        })
+    }
+
+    accept() {
+        const players: [{ status: string, username: string }] = [{ status: 'accepted', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+        this.lobby.putLobbyPlayers(players).subscribe(() => {
+            this.dialogRef.close()
+        })
+    }
+
+    reject() {
+        const players: [{ status: string, username: string }] = [{ status: 'rejected', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+        this.lobby.putLobbyPlayers(players).subscribe(() => {
+            this.dialogRef.close()
         })
     }
 }
