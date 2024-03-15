@@ -46,6 +46,9 @@ export class LobbyScreenComponent implements OnInit {
                     this.ready = true
                     this.playersReady = true
                     this.players.push(element.username)
+                } else if (element.status === 'left') {
+                    this.playersReady = false
+                    this.players = []
                 }
             })
 
@@ -94,16 +97,27 @@ export class LobbyScreenComponent implements OnInit {
     styleUrl: './lobby-screen.component.scss',
     standalone: true,
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
-    providers: [Invite]
+    providers: [Invite, Lobby]
 })
 export class AreYouSureDialog {
-    constructor(public dialogRef: MatDialogRef<AreYouSureDialog>, private invite: Invite, private decoder: Decoder, private getCookie: GetCookie, private router: Router) { }
+    constructor(public dialogRef: MatDialogRef<AreYouSureDialog>, private lobby: Lobby, private invite: Invite, private decoder: Decoder, private getCookie: GetCookie, private router: Router) { }
 
     yes() {
-        document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, '').subscribe(() => {
-            this.router.navigate(['/'])
-
+        })
+        this.lobby.getLobby().subscribe((data: any) => {
+            if (data.lobbyOwner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                this.router.navigate(['/'])
+                this.dialogRef.close()
+            } else {
+                const players: [{ status: string, username: string }] = [{ status: 'left', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+                this.lobby.putLobbyPlayers(players).subscribe(() => {
+                    document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                    this.router.navigate(['/'])
+                    this.dialogRef.close()
+                })
+            }
         })
     }
 }
