@@ -136,7 +136,12 @@ export class Invite {
         const body: object = {
             lobbyID: id
         }
-        return this.http.put(this.url + username, body, this.header)
+        return new Observable(observer => {
+            this.http.put(this.url + username, body, this.header).subscribe(() => {
+                observer.next()
+                observer.complete()
+            })
+        })
     }
 
     getInvite() {

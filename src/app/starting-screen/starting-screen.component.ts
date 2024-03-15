@@ -59,22 +59,30 @@ export class StartingScreenComponent implements OnInit {
     refreshPage(enterAnimationDuration: string, exitAnimationDuration: string): void {
         if (this.cookieId === '') {
             this.lobby.getLobby().subscribe((data: any) => {
-                this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
-                data.players.forEach((element: { status: string; username: string }) => {
-                    if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                        this.dialog.open(LobbyInvite, {
-                            width: '380px',
-                            enterAnimationDuration,
-                            exitAnimationDuration,
-                        })
-                    } else if (element.status === 'accepted' || element.status === 'ready' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                        this.dialog.open(AlreadyInLobby, {
-                            width: '380px',
-                            enterAnimationDuration,
-                            exitAnimationDuration,
-                        })
-                    }
-                })
+                if (data.lobbyOwner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                    this.dialog.open(AlreadyInLobby, {
+                        width: '380px',
+                        enterAnimationDuration,
+                        exitAnimationDuration,
+                    })
+                } else {
+                    this.setLobbyOwner.setLobbyOwner(data.lobbyOwner)
+                    data.players.forEach((element: { status: string; username: string }) => {
+                        if (element.status === 'invited' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                            this.dialog.open(LobbyInvite, {
+                                width: '380px',
+                                enterAnimationDuration,
+                                exitAnimationDuration,
+                            })
+                        } else if (element.status === 'accepted' || element.status === 'ready' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                            this.dialog.open(AlreadyInLobby, {
+                                width: '380px',
+                                enterAnimationDuration,
+                                exitAnimationDuration,
+                            })
+                        }
+                    })
+                }
             })
         } else {
             this.dialog.open(AlreadyInLobby, {
