@@ -1,31 +1,40 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common'
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { Invite, Lobby } from '../http.service'
 import { Decoder, GetCookie } from '../service'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { HttpClientModule } from '@angular/common/http'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { MatButtonModule } from '@angular/material/button'
+import { MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatDialogRef, MatDialog } from '@angular/material/dialog'
+import { MatIconModule } from '@angular/material/icon'
+import { MatInputModule } from '@angular/material/input'
+
+
 
 @Component({
     selector: 'app-lobby-screen',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
     templateUrl: './lobby-screen.component.html',
     styleUrl: './lobby-screen.component.scss',
     providers: [Lobby, Invite]
 })
 export class LobbyScreenComponent implements OnInit {
-    constructor(public router: Router, private invite: Invite, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    constructor(public dialog: MatDialog, public router: Router, private invite: Invite, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     playersReady: boolean = false
     ready: boolean = false
     lobbyOwner: string = ''
     timeout: boolean = true
-
+    players: string[] = []
 
     ngOnInit() {
         this.getPlayerStatus()
     }
 
     getPlayerStatus() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.lobby.getLobby().subscribe((data: any) => {
             if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === data.lobbyOwner) {
                 this.ready = true
@@ -36,6 +45,7 @@ export class LobbyScreenComponent implements OnInit {
                 if (element.status === 'ready') {
                     this.ready = true
                     this.playersReady = true
+                    this.players.push(element.username)
                 }
             })
 
@@ -69,10 +79,31 @@ export class LobbyScreenComponent implements OnInit {
         this.router.navigate(['/game'])
     }
 
-    cancelGame() {
+    cancelGame(enterAnimationDuration: string, exitAnimationDuration: string): void {
+        this.dialog.open(AreYouSureDialog, {
+            width: '380px',
+            enterAnimationDuration,
+            exitAnimationDuration,
+        })
+    }
+}
+
+@Component({
+    selector: 'are-you-sure',
+    templateUrl: 'are-you-sure.html',
+    styleUrl: './lobby-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: [Invite]
+})
+export class AreYouSureDialog {
+    constructor(public dialogRef: MatDialogRef<AreYouSureDialog>, private invite: Invite, private decoder: Decoder, private getCookie: GetCookie, private router: Router) { }
+
+    yes() {
         document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, '').subscribe(() => {
             this.router.navigate(['/'])
+
         })
     }
 }

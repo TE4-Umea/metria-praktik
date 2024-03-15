@@ -18,7 +18,11 @@
 
             <div [ngClass]="'starting-screen-lobby-container'">
 
-                <p [ngClass]="'starting-screen-lobby'">No one has joined yet</p>
+                <p [ngClass]="'starting-screen-lobby'">{{lobbyOwner}}</p>
+                <div *ngFor="let player of players" [ngClass]="'starting-screen-lobby'">
+                    <p>{{player}}</p>
+                </div>
+                <p *ngIf="!playersReady" [ngClass]="'starting-screen-lobby'">No one has joined yet</p>
 
             </div>
 
@@ -31,7 +35,7 @@
             <button (click)="readyUp()" [ngClass]="'starting-screen-button'" *ngIf="!ready">Ready up!</button>
             <button [ngClass]="'starting-screen-button'" (click)="this.router.navigate(['/'])">Back to <br>main
                 screen</button>
-            <button [ngClass]="'starting-screen-button'" (click)="cancelGame()">Leave lobby</button>
+            <button [ngClass]="'starting-screen-button'" (click)="cancelGame('450ms', '350ms')">Leave lobby</button>
             <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
 
 
