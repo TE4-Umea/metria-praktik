@@ -1,3 +1,15 @@
+.container {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dialog-title {
+    margin-top: 2px;
+    text-align: center;
+}
+
 .background {
     width: 100vw;
     height: 100vh;
@@ -6,7 +18,7 @@
     left: 0;
     z-index: -10;
     overflow: hidden;
-    
+
 }
 
 .background-image {
@@ -33,7 +45,7 @@
     top: 40px;
     left: 40px;
     box-sizing: border-box;
-    border:10px solid #00000066;
+    border: 10px solid #00000066;
 }
 
 
@@ -43,7 +55,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  
+
     flex-wrap: wrap;
     gap: 30px;
 }
@@ -53,6 +65,7 @@
     flex-direction: row;
     gap: 50px;
 }
+
 
 .starting-screen-lobby{
     color: rgb(255, 255, 255);
@@ -64,7 +77,7 @@
     text-align: center;
 }
 
-.starting-screen-button{
+.starting-screen-button {
     color: white;
     font-family: "Gupter", serif;
     font-size: 28px;
@@ -92,9 +105,9 @@
     padding-top: 60px;
     padding-bottom: 60px;
     padding-left: 50px;
-    padding-right: 50px; 
+    padding-right: 50px;
 
-    
+
 }
 
 .starting-screen-button-container {
@@ -107,12 +120,12 @@
     padding-top: 60px;
     padding-bottom: 60px;
     padding-left: 50px;
-    padding-right: 50px; 
+    padding-right: 50px;
 
-    
+
 }
 
-.lobby-title{
+.lobby-title {
     font-size: 20px;
     font-weight: 200px;
     color: rgb(235, 229, 229);
@@ -120,7 +133,7 @@
     font-family: "Gupter", serif;
 }
 
-.lobbyowner-title{
+.lobbyowner-title {
     font-size: 40px;
     font-weight: 200px;
     color: rgb(235, 229, 229);
@@ -130,9 +143,8 @@
 
 }
 
+
 .owner{
     color: rgb(134, 142, 192);
     font-weight: bolder;
 }
-
-

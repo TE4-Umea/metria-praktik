@@ -9,35 +9,39 @@
 <div [ngClass]="'starting-screen-containers'">
 
     <p [ngClass]="'lobbyowner-title'">Lobby owner: <span class="owner">{{lobbyOwner}}</span></p>
-    
+
     <div class="containers-gap">
 
 
-    <div>
-        <h1 [ngClass]="'lobby-title'">IN LOBBY</h1>
-        
-        <div [ngClass]="'starting-screen-lobby-container'">
+        <div>
+            <h1 [ngClass]="'lobby-title'">IN LOBBY</h1>
 
-            <p [ngClass]="'starting-screen-lobby'" >No one has joined yet</p>
+            <div [ngClass]="'starting-screen-lobby-container'">
+
+                <p [ngClass]="'starting-screen-lobby'">{{lobbyOwner}}</p>
+                <div *ngFor="let player of players" [ngClass]="'starting-screen-lobby'">
+                    <p>{{player}}</p>
+                </div>
+                <p *ngIf="!playersReady" [ngClass]="'starting-screen-lobby'">No one has joined yet</p>
+
+            </div>
+
+            <h2 [ngClass]="'lobby-title'" *ngIf="!playersReady">Waiting for other players...</h2>
+            <h2 [ngClass]="'lobby-title'" *ngIf="playersReady">Everyone is ready!</h2>
+        </div>
+
+        <div [ngClass]="'starting-screen-button-container'">
+            <button *ngIf="playersReady" [ngClass]="'starting-screen-button'" (click)="startGame()">Start game</button>
+            <button (click)="readyUp()" [ngClass]="'starting-screen-button'" *ngIf="!ready">Ready up!</button>
+            <button [ngClass]="'starting-screen-button'" (click)="this.router.navigate(['/'])">Back to <br>main
+                screen</button>
+            <button [ngClass]="'starting-screen-button'" (click)="cancelGame('450ms', '350ms')">Leave lobby</button>
+            <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
+
 
         </div>
 
-        <h2 [ngClass]="'lobby-title'" *ngIf="!playersReady">Waiting for other players...</h2>
-      <h2 [ngClass]="'lobby-title'" *ngIf="playersReady">Everyone is ready!</h2>
+
     </div>
-
-    <div [ngClass]="'starting-screen-button-container'">
-        <button *ngIf="playersReady" [ngClass]="'starting-screen-button'" (click)="startGame()">Start game</button>
-        <button (click)="readyUp()" [ngClass]="'starting-screen-button'" *ngIf="!ready">Ready up!</button>
-        <button [ngClass]="'starting-screen-button'" (click)="this.router.navigate(['/'])">Back to <br>main
-            screen</button>
-        <button [ngClass]="'starting-screen-button'" (click)="cancelGame()">Leave lobby</button>
-        <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
-        
-        
-    </div>
-
-
-</div>
 
 </div>
