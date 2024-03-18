@@ -160,15 +160,18 @@ export class SignUpDialog {
     confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignUp() {
-
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
             const passwordDoesNotMatchError: string = 'Password does not match'
             console.log(passwordDoesNotMatchError)
         }
         else {
-            this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value).subscribe(() => {
-                this.dialogRef.close()
-            })
+            this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value)
+            setTimeout(() => {
+                this.signInService.signIn(this.usernameFormControl.value, this.passwordFormControl.value).subscribe(() => {
+                    this.dialogRef.close()
+                    window.location.reload()
+                })
+            }, 1000)
         }
     }
 }
