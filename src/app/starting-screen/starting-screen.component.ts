@@ -30,7 +30,7 @@ export class StartingScreenComponent implements OnInit {
     cookieId: string = this.getCookie.getCookie('id') || ''
     username: string = ''
     timeout: boolean = true
-    timeoutUsername: boolean = true
+
 
     ngOnInit() {
         this.signInServiceStatus()
@@ -94,13 +94,15 @@ export class StartingScreenComponent implements OnInit {
     }
 
     refreshButton() {
-        if (this.timeout) {
-            this.refreshPage('450ms', '350ms')
-            this.timeout = false
+        if (!this.timeout) {
+            return
         }
-        setTimeout(() => {
+        this.refreshPage('450ms', '350ms')
+        this.timeout = false
+        const timeoutId = setTimeout(() => {
             this.timeout = true
-        }, 10000)
+            clearTimeout(timeoutId)
+        }, 5000)
     }
 
     openLogout(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -207,7 +209,7 @@ export class SignInDialog {
     providers: [Lobby, Invite]
 })
 export class LobbySettings {
-    constructor(public dialogRef: MatDialogRef<LobbySettings>, private lobby: Lobby, private router: Router, private invite: Invite) { }
+    constructor(public dialogRef: MatDialogRef<LobbySettings>, private getCookie: GetCookie, private lobby: Lobby, private router: Router, private invite: Invite) { }
     selectedNumberOfPlayers: number = 0
 
     counter(i: number) {
@@ -219,10 +221,6 @@ export class LobbySettings {
     submitCreateLobby() {
         const players: [{ status: string, username: string }] = [{ status: 'invited', username: this.usernameFormControl.value },]
         this.lobby.createLobby(players, this.usernameFormControl.value)
-        this.router.navigate(['/lobby'])
-        this.dialogRef.close()
-    }
-    cancelLobby() {
         this.dialogRef.close()
     }
 }
