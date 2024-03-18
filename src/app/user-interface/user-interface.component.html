@@ -1,107 +1,115 @@
-<div class="top-left">
-    <button class="dropdown-button" (click)="toggleDropdown()">Statistics</button>
-    <ul *ngIf="showDropdown" [ngClass]="{'statistics': true, 'show': showDropdown }">
-        <li *ngFor="let resource of resources | keyvalue">
-            {{ resource.key }}: {{ resource.value }}
-        </li>
-    </ul>
-</div>
+<div class="top-container">
+    <div class="top-left">
+        <label for="menu" [ngClass]="['menu-button','background-box']">
+            <img class="menu-icon" src="../assets/images/icons/menu.svg">
+            <p>Menu</p>
+        </label>
 
-<div #Information class="top-middle">
-    <ul>
-        <li *ngFor="let info of information | keyvalue">
-            {{ info.key }}: {{ info.value }}
-        </li>
-    </ul>
-</div>
+        <div [ngClass]="['weather-container','background-box']">
+            <p class="game-info-small-text">Current weather</p>
+            <div class="weather-icon-container">
+                <p class="weather">Sunny</p>
+                <img class="weather-icon" src="../assets/images/icons/Sunny.svg">
+            </div>
+        </div>
 
-<div #HamburgerMenu class="top-right">
-    <button class="dropdown-button" (click)="toggleMenu()">Menu</button>
-    <div *ngIf="showMenu" [ngClass]="{ 'show': showMenu }">
-        <ul>
-            <li>
-                <a href="#">Save</a>
+        <div [ngClass]="['round-container','background-box']">
+            <p class="round">Round 1</p>
+            <p class="game-info-small-text">Date 2021-01-01</p>
+        </div>
+    </div>
+
+    <div class="resources-dropdown-container">
+        <input type="checkbox" class="dp-none" id="resources-dropdown">
+        <label for="resources-dropdown" [ngClass]="['resources-dropdown-label', 'background-box']">Resources <img
+                class="dropdown-button-icon" src="../assets/images/icons/arrow.svg"></label>
+
+        <div class="arrow-up"></div>
+        <ul class="dropdown">
+            <li *ngFor="let resource of resources | keyvalue">
+                <div class="rersource-type"> {{ resource.key }}</div>
+                <div class="rersource-value">{{ resource.value }}</div>
             </li>
         </ul>
     </div>
+
+
+    <input type="checkbox" class="dp-none" id="menu">
+    <label for="menu" class="menu-backdrop">
+        <img [ngClass]="'logo'" src="../../assets/images/logo/ClashOfLans.svg" alt="Clash Of Läns">
+        <div class="line"></div>
+        <ul class="menu-list">
+            <li>
+                <a class="menu-item" href="#">Save</a>
+            </li>
+        </ul>
+    </label>
 </div>
 
+<div class="bottom-container">
+    <div class="bottom-top">
+        <div class="players">
 
-
-
-<div *ngIf="showBuildings">
-
-</div>
-
-
-<div class="carousel">
-    <button class="carousel-button" (click)="carouselLeft()">
-        <img class="carousel-button-left" src="../assets/images/icons/arrow.svg">
-    </button>
-    <!-- <ul  #carouselContent class="carousel-content-holder">
-        <h1>hej</h1>
-        <li *ngFor="let building of buildings | keyvalue">
-            {{ building.key }}: {{ building.value }}
-        </li> 
-    </ul> -->
-
-    <drag-scroll #carousel class="carousel-content">
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                <img class="type-icon" src="../assets/images/icons/house.svg">
-                <div class="carousel-card-image">
-                    <img src="../assets/images/example.png">
-                </div>
-                <div class="carousel-card-content">
-                    <div>
-                        <h3>Husigt hus</h3>
-                        <p>12000 sek</p>
+            <div [ngClass]="{'player' : true, 'player-small' : false}">
+                <div class="player-flex">
+                    <h3>Player name</h3>
+                    <div class="player-info">
+                        <p>Level 1</p>
+                        <img src="../../assets/images/icons/info.svg">
                     </div>
-                    <ul>
-                        <li>Metal</li>
-                        <li>Stone</li>
-                    </ul>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner"></div>
                 </div>
             </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-        <button drag-scroll-item type="button" class="carousel-card">
-            <div class="carousel-card-inner">
-                WIDGET
-            </div>
-        </button>
-    </drag-scroll>
 
-    <button class="carousel-button" (click)="carouselRight()">
-        <img class="carousel-button-right" src="../assets/images/icons/arrow.svg">
-    </button>
+            <div [ngClass]="{'player' : true, 'player-small' : !player2Active}">
+                <div class="player-flex">
+                    <h3>Player name</h3>
+                    <div class="player-info">
+                        <p>Level 1</p>
+                        <img src="../../assets/images/icons/info.svg">
+                    </div>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner"></div>
+                </div>
+            </div>
+        </div>
+        <button mat-flat-button color="primary" [ngClass]="'end-turn-button'">End turn</button>
+    </div>
+
+    <div *ngIf="showBuildings" class="carousel-container">
+        <button class="carousel-button" (click)="carouselLeft()"><img class="carousel-button-left"
+                src="../assets/images/icons/arrow.svg" alt="Left"></button>
+
+        <drag-scroll #carousel class="carousel">
+
+            <button drag-scroll-item [ngClass]="['carousel-card', 'button-animation']">
+                <div class="carousel-card-content">
+                    <div class="card-image-container">
+                        <img class="type-icon" src="../assets/images/icons/house.svg">
+                        <img class="card-image" src="../assets/images/example.png">
+                    </div>
+                    <div class="card-info-container">
+                        <div class="card-info">
+                            <h3>Husigt hus</h3>
+                            <p>12000 kr</p>
+                        </div>
+                        <ul class="card-material-list">
+                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
+                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
+                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
+                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
+                        </ul>
+                    </div>
+                </div>
+            </button>
+
+        </drag-scroll>
+
+        <button class="carousel-button" (click)="carouselRight()"><img class="carousel-button-right"
+                src="../assets/images/icons/arrow.svg" alt="Right"></button>
+    </div>
+
 </div>

@@ -7,11 +7,12 @@ import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Invite, Lobby } from '../http.service'
 import { interval } from 'rxjs'
+import { MatButtonModule } from '@angular/material/button'
 
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective],
+    imports: [CommonModule, MapComponent, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss',
     providers: [SetShowBuildings, Lobby, Invite]
@@ -28,20 +29,20 @@ export class UserInterfaceComponent implements OnInit {
 
     showDropdown: boolean = false
     showMenu: boolean = false
-    showBuildings: boolean = false
+    showBuildings: boolean = true
+
+    player2Active: boolean = false 
+
+    testPlayerSizing() {
+        this.player2Active = !this.player2Active
+    }
+
 
     ngOnInit() {
         this.getLobby()
         this.toggleBuildings()
     }
 
-    toggleDropdown(): void {
-        this.showDropdown = !this.showDropdown
-    }
-
-    toggleMenu(): void {
-        this.showMenu = !this.showMenu
-    }
 
     toggleBuildings(): void {
         this.setShowBuildings.showBuildings$.subscribe(show => {
@@ -57,11 +58,11 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
-
     // onClickPutLobbyData() {
     //     const data: { [resource: string]: number } = this.resources
     //     this.lobby.putLobbyData(data)
     // }
+
 
     carouselLeft(): void {
         this.ds.moveLeft()
