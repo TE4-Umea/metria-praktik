@@ -56,14 +56,16 @@ export class LobbyScreenComponent implements OnInit {
     }
 
     refreshPage() {
-        if (this.timeout) {
-            console.log('refresh')
-            this.timeout = false
-            this.getPlayerStatus()
+        if (!this.timeout) {
+            return
         }
-        setTimeout(() => {
+        console.log('refresh')
+        this.getPlayerStatus()
+        this.timeout = false
+        const timeoutId = setTimeout(() => {
             this.timeout = true
-        }, 10000)
+            clearTimeout(timeoutId)
+        }, 5000)
     }
 
     readyUp() {
