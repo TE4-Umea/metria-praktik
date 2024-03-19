@@ -18,13 +18,8 @@ export class SignUpService {
             headers: new HttpHeaders().set('Authorization', `Basic ${token}`)
         }
 
-        return new Observable(observer => {
-            this.http.post(url, null, header).subscribe(() => {
-                observer.next(this.signInService.signIn(username, password))
-                observer.complete()
-            })
+        return this.http.post(url, null, header).subscribe(() => {
         })
-
     }
 }
 
