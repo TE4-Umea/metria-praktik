@@ -37,7 +37,7 @@ export class UserInterfaceComponent implements OnInit {
 
     showDropdown: boolean = false
     showMenu: boolean = false
-    showBuildings: boolean = true
+    showBuildings: boolean = false
 
     playerName: string = ''
     enemyPlayerNames: string[] = []
@@ -55,24 +55,25 @@ export class UserInterfaceComponent implements OnInit {
     ngOnInit() {
         this.getLobbyNames()
         this.getLobbyData()
-        this.toggleBuildings('250ms', '250ms')
+        this.toggleBuildingsAndChooseLan('250ms', '250ms')
         interval(10000).subscribe(() => {
             this.getLobbyData()
         })
     }
 
 
-
-
-    toggleBuildings(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    toggleBuildingsAndChooseLan(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.setShowBuildings.showBuildings$.subscribe(show => {
-            this.showBuildings = show
-            if (this.showBuildings === true) {
-                this.dialog.open(LanChoose, {
-                    width: '380px',
-                    enterAnimationDuration,
-                    exitAnimationDuration,
-                })
+            if (this.lanChosen === false || this.lobbyOwnerChosen === false) {
+                if (show === true) {
+                    this.dialog.open(LanChoose, {
+                        width: '380px',
+                        enterAnimationDuration,
+                        exitAnimationDuration,
+                    })
+                }
+            } else {
+                this.showBuildings = show
             }
         })
     }
