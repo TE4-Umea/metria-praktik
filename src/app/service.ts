@@ -79,11 +79,4 @@ export class LobbyOwnerChooseAndStartGame {
     setLobbyOwnerChosen(lobbyOwnerChosen: boolean) {
         this._lobbyOwnerChosen.next(lobbyOwnerChosen)
     }
-
-    private _startGame = new BehaviorSubject<boolean>(true)
-    startGame$ = this._startGame.asObservable()
-
-    setStartGame(startGame: boolean) {
-        this._startGame.next(startGame)
-    }
 }

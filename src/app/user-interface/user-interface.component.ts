@@ -53,19 +53,18 @@ export class UserInterfaceComponent implements OnInit {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
-        interval(5000).subscribe(() => {
-            this.onScreenCheckLanChoice()
-        })
     }
 
 
     onScreenCheckLanChoice() {
         this.lobby.getLobby().subscribe((data: any) => {
             if (data.data.startGame === false || data.data.startGame === undefined) {
-                console.log(this.ifDialogOpen)
-                if (this.ifDialogOpen === false) {
-                    this.checkLanChoose('450ms', '350ms')
-                }
+                interval(5000).subscribe(() => {
+                    console.log(this.ifDialogOpen)
+                    if (this.ifDialogOpen === false) {
+                        this.checkLanChoose('450ms', '350ms')
+                    }
+                })
             }
         })
     }
