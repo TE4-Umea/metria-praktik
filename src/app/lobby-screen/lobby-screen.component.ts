@@ -42,7 +42,7 @@ export class LobbyScreenComponent implements OnInit {
             this.lobbyOwner = data.lobbyOwner
             data.players.forEach((element: { status: string; username: string }) => {
                 console.log(element.status)
-                if (element.status === 'ready') {
+                if (element.status === 'ready' || element.status === 'chosen') {
                     this.ready = true
                     this.playersReady = true
                     this.players.push(element.username)

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import Map from 'ol/Map'
 import View from 'ol/View'
 import TileLayer from 'ol/layer/Tile'
-import { fromLonLat, toLonLat } from 'ol/proj'
+import { fromLonLat } from 'ol/proj'
 import OSM from 'ol/source/OSM'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -11,15 +11,18 @@ import { Fill, Stroke, Style } from 'ol/style.js'
 import GeoJSON from 'ol/format/GeoJSON'
 import { click } from 'ol/events/condition'
 import { SetShowBuildings } from '../service'
+import { LanChoose } from '../user-interface/user-interface.component'
+import { MatDialogRef } from '@angular/material/dialog'
 @Component({
     selector: 'app-map',
     standalone: true,
     imports: [],
     templateUrl: './map.component.html',
-    styleUrl: './map.component.scss'
+    styleUrl: './map.component.scss',
+    providers: [LanChoose, { provide: MatDialogRef, useValue: {} }]
 })
 export class MapComponent implements OnInit, OnDestroy {
-    constructor(private setShowBuildings: SetShowBuildings) { }
+    constructor(private setShowBuildings: SetShowBuildings, private lanChoose: LanChoose) { }
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
@@ -54,13 +57,14 @@ export class MapComponent implements OnInit, OnDestroy {
             })
         })
 
-        this.map.on('singleclick', this.handleMapClick.bind(this))
+        this.map.on('click', (event) => {
+            this.handleMapClick(event)
+        })
     }
     map: Map | undefined
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private handleMapClick(event: any): void {
-        let hasSelected: boolean = false
         const selectedStyle = new Style({
             fill: new Fill({
                 color: 'rgba(0, 106, 167, 0.3)',
@@ -71,23 +75,13 @@ export class MapComponent implements OnInit, OnDestroy {
             }),
         })
 
-        const mapReference: Map | undefined = this.map
-        this.map?.on('click', (event) => {
-            if (hasSelected === false) {
-                this.setShowBuildings.setShowBuildings(true)
-                hasSelected = true
-                const select = new Select({ condition: click, style: selectedStyle })
-                mapReference?.addInteraction(select)
-                mapReference?.forEachFeatureAtPixel(event.pixel, function (feature) {
-                    console.log(feature.get('name'))
-                })
-            }
+        const select = new Select({ condition: click, style: selectedStyle })
+        this.map?.addInteraction(select)
+        this.setShowBuildings.setShowBuildings(false)
+        this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
+            this.setShowBuildings.setShowBuildings(true)
+            console.log(feature.get('name'))
         })
-
-
-        console.log(`Zoom level: ${this.map?.getView().getZoom()}`)
-        console.log(`Map coordinates (wgs84): ${toLonLat(event.coordinate)}`)
-        console.log(`Pixel coordinates (top-left): ${event.pixel}`)
     }
 }
 

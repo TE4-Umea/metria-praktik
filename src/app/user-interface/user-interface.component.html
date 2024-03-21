@@ -40,6 +40,9 @@
         <div class="line"></div>
         <ul class="menu-list">
             <li>
+                <a class="menu-item" (click)="this.router.navigate(['/'])">Back to main menu</a>
+            </li>
+            <li>
                 <a class="menu-item" href="#">Save</a>
             </li>
         </ul>
@@ -52,7 +55,7 @@
 
             <div [ngClass]="{'player' : true, 'player-small' : false}">
                 <div class="player-flex">
-                    <h3>Player name</h3>
+                    <h3>{{playerName}}</h3>
                     <div class="player-info">
                         <p>Level 1</p>
                         <img src="../../assets/images/icons/info.svg">
@@ -63,9 +66,10 @@
                 </div>
             </div>
 
-            <div [ngClass]="{'player' : true, 'player-small' : !player2Active}">
+            <div *ngFor="let players of enemyPlayerNames"
+                [ngClass]="{'player' : true, 'player-small' : !player2Active}">
                 <div class="player-flex">
-                    <h3>Player name</h3>
+                    <h3>{{players}}</h3>
                     <div class="player-info">
                         <p>Level 1</p>
                         <img src="../../assets/images/icons/info.svg">

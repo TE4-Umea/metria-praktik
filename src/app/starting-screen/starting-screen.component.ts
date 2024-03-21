@@ -74,7 +74,7 @@ export class StartingScreenComponent implements OnInit {
                                 enterAnimationDuration,
                                 exitAnimationDuration,
                             })
-                        } else if (element.status === 'accepted' || element.status === 'ready' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                        } else if (element.status === 'accepted' || element.status === 'ready' || element.status === 'chosen' && element.username === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
                             this.dialog.open(AlreadyInLobby, {
                                 width: '380px',
                                 enterAnimationDuration,
