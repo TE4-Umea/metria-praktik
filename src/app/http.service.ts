@@ -95,8 +95,7 @@ export class Lobby {
         const body: object = {
             data: data
         }
-        return this.http.put(this.url + this.id, body, this.header).subscribe(() => {
-        })
+        return this.http.put(this.url + 'updateLobbyData/' + this.id, body, this.header)
     }
 
     putLobbyPlayers(players: [{ status: string, username: string }]) {

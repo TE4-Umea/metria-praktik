@@ -1,4 +1,7 @@
-<form class="container">
+<form *ngIf="lobbyOwner" class="container">
     <h2 class="dialog-title">Start Clash of Läns</h2>
     <button mat-flat-button color="primary" (click)="startGame()">Start Game</button>
+</form>
+<form *ngIf="!lobbyOwner" class="container">
+    <h2 class="dialog-title">Waiting for Lobby Owner to start game...</h2>
 </form>
