@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { Router } from '@angular/router'
 import { Decoder, GetCookie, LobbyOwner_Invited } from '../service'
 import { MatOption } from '@angular/material/core'
+import { SocketsService } from '../sockets.service'
 
 
 @Component({
@@ -25,7 +26,7 @@ import { MatOption } from '@angular/material/core'
         { provide: MatDialogRef, useValue: {} }],
 })
 export class StartingScreenComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setLobbyOwner: LobbyOwner_Invited, private signInService: SignInService, private getCookie: GetCookie, private router: Router, private lobby: Lobby, private decoder: Decoder, private invite: Invite) { }
+    constructor(public dialog: MatDialog, private setLobbyOwner: LobbyOwner_Invited, private signInService: SignInService, private socketService: SocketsService, private getCookie: GetCookie, private router: Router, private lobby: Lobby, private decoder: Decoder, private invite: Invite) { }
     isLoggedIn: boolean = false
     cookieId: string = this.getCookie.getCookie('id') || ''
     username: string = ''
@@ -35,12 +36,36 @@ export class StartingScreenComponent implements OnInit {
     ngOnInit() {
         this.signInServiceStatus()
         this.getUsername()
+        if (this.isLoggedIn) {
+            console.log('Checking for invite')
+        }
     }
 
     signInServiceStatus() {
         this.signInService.currentLoginStatus.subscribe(status => {
             this.isLoggedIn = status
+            console.log('Connected')
+            if (status) {
+                this.connectToBackend()
+                this.socketService.getInvite().subscribe((data: { 'lobby': string, 'username': string }) => {
+                    if (confirm(data.username + ' has invited you to ' + data.lobby)) {
+                        this.socketService.joinLobby(data.lobby)
+                        document.cookie = 'id=' + data.lobby + '; samesite=strict; max-age=86400;'
+                        this.router.navigate(['/lobby'])
+                    }
+                })
+            }
         })
+    }
+
+    connectToBackend() {
+        const token = this.getCookie.getCookie('token') || ''
+        if (token) {
+            this.socketService.connectToBackend(token)
+        }
+        else {
+            console.log('No token')
+        }
     }
 
     getUsername() {

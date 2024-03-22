@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Decoder, GetCookie } from './service'
 import { Router } from '@angular/router'
+import { SocketsService } from './sockets.service'
 
 @Injectable({
     providedIn: 'root'
@@ -65,7 +66,7 @@ export class SignInService {
     providedIn: 'root'
 })
 export class Lobby {
-    constructor(private http: HttpClient, private router: Router, private getCookie: GetCookie, private invite: Invite, private decoder: Decoder) { }
+    constructor(private http: HttpClient, private router: Router, private getCookie: GetCookie, private invite: Invite, private decoder: Decoder, private socketService: SocketsService) { }
     url: string = 'http://jupiter.umea-ntig.se:4893/'
     id: string = this.getCookie.getCookie('id') || ''
     header: object = {
@@ -79,6 +80,7 @@ export class Lobby {
         return this.http.post(this.url + 'lobby', body, this.header).subscribe(
             (data: any) => {
                 document.cookie = 'id=' + data.id + '; samesite=strict; max-age=86400;'
+                this.socketService.sendInvite({ 'lobby': data.id, 'username': username })
                 this.invite.putInvite(username, data.id).subscribe(() => {
                 })
                 this.invite.putInvite(this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, data.id).subscribe(() => {
