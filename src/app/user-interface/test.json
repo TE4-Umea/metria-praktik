@@ -1,0 +1,56 @@
+{
+    "areas": [
+        [
+            {
+                "lan": "Jämtland",
+                "owner": "albert0404",
+                "buildings": [],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Norrbotten",
+                "owner": "tim040404",
+                "buildings": [],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ]
+    ],
+    "round": 0,
+    "state": [
+        {
+            "turn": "albert0404"
+        }
+    ],
+    "resources": [
+        [
+            {
+                "owner": "albert0404",
+                "resources": {
+                    "Army": 10000,
+                    "Money": 10000,
+                    "BuildingMaterials": 10000
+                }
+            }
+        ],
+        [
+            {
+                "owner": "tim040404",
+                "resources": {
+                    "Army": 10000,
+                    "Money": 10000,
+                    "BuildingMaterials": 10000
+                }
+            }
+        ]
+    ]
+}
