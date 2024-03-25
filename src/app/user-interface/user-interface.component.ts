@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, SetLan, SetShowBuildings } from '../service'
+import { Decoder, GetCookie, SetIfDialogOpen, SetLan, SetShowBuildings } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setLan: SetLan, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
+    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -44,7 +44,6 @@ export class UserInterfaceComponent implements OnInit {
 
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
-    ifDialogOpen: boolean = false
 
     player1Lan: string = ''
     player2Lan: string = ''
@@ -63,9 +62,11 @@ export class UserInterfaceComponent implements OnInit {
             if (data.data.round === 0 || data.data.round === undefined) {
                 this.checkLanChoose('450ms', '350ms')
                 interval(15000).subscribe(() => {
-                    if (this.ifDialogOpen === false) {
-                        this.checkLanChoose('450ms', '350ms')
-                    }
+                    this.setIfDialogOpen.ifDialogOpen$.subscribe(ifDialogOpen => {
+                        if (ifDialogOpen === false) {
+                            this.checkLanChoose('450ms', '350ms')
+                        }
+                    })
                 })
             }
         })
@@ -83,11 +84,11 @@ export class UserInterfaceComponent implements OnInit {
         return new Observable<boolean>(observer => {
             this.lobby.getLobby().subscribe((data) => {
                 let lobbyOwnerChosen = false
-                if (data.data.areas || data.data.areas[0]) {
+                if (data.data.areas) {
                     data.data.areas.forEach((element: any) => {
                         if (element.owner === this.lobbyOwner) {
                             lobbyOwnerChosen = true
-                        } else if (element[0].owner === this.lobbyOwner) {
+                        } else if (element[0] && element[0].owner === this.lobbyOwner) {
                             lobbyOwnerChosen = true
                         } else {
                             lobbyOwnerChosen = false
@@ -152,14 +153,13 @@ export class UserInterfaceComponent implements OnInit {
                         enterAnimationDuration,
                         exitAnimationDuration,
                     })
-                    this.ifDialogOpen = true
+
                 } else if (this.lanChosen === true && lobbyOwnerChosen === false && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username !== this.lobbyOwner) {
                     this.dialog.open(StartGame, {
                         width: '380px',
                         enterAnimationDuration,
                         exitAnimationDuration,
                     })
-                    this.ifDialogOpen = true
                 }
 
             })
@@ -265,12 +265,17 @@ export class LanChoose {
     imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
     providers: []
 })
-export class StartGame {
-    constructor(public dialogRef: MatDialogRef<StartGame>, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+export class StartGame implements OnInit, OnDestroy {
+    constructor(public dialogRef: MatDialogRef<StartGame>, private setIfDialogOpen: SetIfDialogOpen, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     lobbyOwner: boolean = false
 
     ngOnInit() {
         this.checkIfLobbyOwner()
+        this.setIfDialogOpen.setIfDialogOpen(true)
+    }
+
+    ngOnDestroy() {
+        this.setIfDialogOpen.setIfDialogOpen(false)
     }
 
     startGame() {
