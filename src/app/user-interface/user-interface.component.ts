@@ -2,11 +2,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, LobbyOwnerChooseAndStartGame, SetShowBuildings } from '../service'
+import { Decoder, GetCookie, SetLan, SetShowBuildings } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
-import { interval } from 'rxjs'
+import { Observable, interval } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { Router } from '@angular/router'
 import { HttpClientModule } from '@angular/common/http'
@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private lobbyOwnerAndStartGame: LobbyOwnerChooseAndStartGame, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
+    constructor(public dialog: MatDialog, private setLan: SetLan, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -42,10 +42,12 @@ export class UserInterfaceComponent implements OnInit {
     playerName: string = ''
     enemyPlayerNames: string[] = []
 
-    lobbyOwnerChosen: boolean = false
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
     ifDialogOpen: boolean = false
+
+    player1Lan: string = ''
+    player2Lan: string = ''
 
     player2Active: boolean = false
 
@@ -53,19 +55,18 @@ export class UserInterfaceComponent implements OnInit {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
-        interval(5000).subscribe(() => {
-            this.onScreenCheckLanChoice()
-        })
     }
 
 
     onScreenCheckLanChoice() {
-        this.lobby.getLobby().subscribe((data: any) => {
-            if (data.data.startGame === false || data.data.startGame === undefined) {
-                console.log(this.ifDialogOpen)
-                if (this.ifDialogOpen === false) {
-                    this.checkLanChoose('450ms', '350ms')
-                }
+        this.lobby.getLobby().subscribe((data) => {
+            if (data.data.round === 0 || data.data.round === undefined) {
+                this.checkLanChoose('450ms', '350ms')
+                interval(15000).subscribe(() => {
+                    if (this.ifDialogOpen === false) {
+                        this.checkLanChoose('450ms', '350ms')
+                    }
+                })
             }
         })
     }
@@ -78,14 +79,35 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    checkLobbyOwnerChosenBoolean(): Observable<boolean> {
+        return new Observable<boolean>(observer => {
+            this.lobby.getLobby().subscribe((data) => {
+                let lobbyOwnerChosen = false
+                if (data.data.areas || data.data.areas[0]) {
+                    data.data.areas.forEach((element: any) => {
+                        if (element.owner === this.lobbyOwner) {
+                            lobbyOwnerChosen = true
+                        } else if (element[0].owner === this.lobbyOwner) {
+                            lobbyOwnerChosen = true
+                        } else {
+                            lobbyOwnerChosen = false
+                        }
+                    })
+                } else {
+                    lobbyOwnerChosen = false
+                }
+                observer.next(lobbyOwnerChosen)
+                observer.complete()
+            })
+        })
+    }
 
     toggleBuildingsAndChooseLan(enterAnimationDuration: string, exitAnimationDuration: string): void {
-        this.lobby.getLobby().subscribe((data: any) => {
-            this.lobbyOwnerAndStartGame.lobbyOwnerChosen$.subscribe(chosen => {
-                this.lobbyOwnerChosen = chosen
-                this.setShowBuildings.showBuildings$.subscribe(show => {
-                    if (data.data.startGame === false || data.data.startGame === undefined) {
-                        if (this.lanChosen === false) {
+        this.checkLobbyOwnerChosenBoolean().subscribe(lobbyOwnerChosen => {
+            this.setShowBuildings.showBuildings$.subscribe(show => {
+                this.lobby.getLobby().subscribe((data) => {
+                    if (data.data.round === 0 || data.data.round === undefined) {
+                        if (this.lanChosen === false && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username !== this.lobbyOwner) {
                             if (show === true) {
                                 this.dialog.open(LanChoose, {
                                     width: '380px',
@@ -93,8 +115,9 @@ export class UserInterfaceComponent implements OnInit {
                                     exitAnimationDuration,
                                 })
                             }
-                        } else if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === this.lobbyOwner && this.lobbyOwnerChosen === false) {
+                        } else if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === this.lobbyOwner && lobbyOwnerChosen === false) {
                             if (show === true) {
+                                console.log('open', lobbyOwnerChosen)
                                 this.dialog.open(LanChoose, {
                                     width: '380px',
                                     enterAnimationDuration,
@@ -106,39 +129,46 @@ export class UserInterfaceComponent implements OnInit {
                     else {
                         this.showBuildings = show
                     }
+
                 })
+
             })
         })
     }
 
+
     checkLanChoose(enterAnimationDuration: string, exitAnimationDuration: string): void {
-        this.lobby.getLobby().subscribe((data: any) => {
-            if (this.lanChosen === true && this.lobbyOwnerChosen === true) {
-                this.dialog.open(StartGame, {
-                    width: '380px',
-                    enterAnimationDuration,
-                    exitAnimationDuration,
+        this.checkLobbyOwnerChosenBoolean().subscribe(lobbyOwnerChosen => {
+            console.log(this.lanChosen, lobbyOwnerChosen)
+            this.lobby.getLobby().subscribe((data) => {
+                data.players.forEach((element: { status: string; username: string }) => {
+                    if (element.status === 'chosen') {
+                        this.lanChosen = true
+                    }
                 })
-                this.ifDialogOpen = true
-            } else if (this.lanChosen === true && this.lobbyOwnerChosen === false) {
-                this.dialog.open(StartGame, {
-                    width: '380px',
-                    enterAnimationDuration,
-                    exitAnimationDuration,
-                })
-                this.ifDialogOpen = true
-            }
-            data.players.forEach((element: { status: string; username: string }) => {
-                if (element.status === 'chosen') {
-                    this.lanChosen = true
+                if (this.lanChosen === true && lobbyOwnerChosen === true) {
+                    this.dialog.open(StartGame, {
+                        width: '380px',
+                        enterAnimationDuration,
+                        exitAnimationDuration,
+                    })
+                    this.ifDialogOpen = true
+                } else if (this.lanChosen === true && lobbyOwnerChosen === false && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username !== this.lobbyOwner) {
+                    this.dialog.open(StartGame, {
+                        width: '380px',
+                        enterAnimationDuration,
+                        exitAnimationDuration,
+                    })
+                    this.ifDialogOpen = true
                 }
+
             })
         })
     }
 
     getLobbyNames() {
         this.playerName = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
-        this.lobby.getLobby().subscribe((data: any) => {
+        this.lobby.getLobby().subscribe((data) => {
             this.lobbyOwner = data.lobbyOwner
             if (data.lobbyOwner !== this.playerName) {
                 this.enemyPlayerNames.push(data.lobbyOwner)
@@ -152,8 +182,7 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     onClickPutLobbyData() {
-        const data: { [resource: string]: number } = this.resources
-        this.lobby.putLobbyData(data)
+        this.lobby.putLobbyData({})
     }
 
     testPlayerSizing() {
@@ -179,19 +208,50 @@ export class UserInterfaceComponent implements OnInit {
     providers: []
 })
 export class LanChoose {
-    constructor(public dialogRef: MatDialogRef<LanChoose>, private lobbyOwner: LobbyOwnerChooseAndStartGame, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    constructor(public dialogRef: MatDialogRef<LanChoose>, private setLan: SetLan, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    lan: string = ''
+
+    ngOnInit() {
+        this.setLan.lan$.subscribe(lan => {
+            this.lan = lan
+        })
+    }
 
     buttonChooseLan() {
-        this.lobby.getLobby().subscribe((data: any) => {
+        this.lobby.getLobby().subscribe((data) => {
             if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === data.lobbyOwner) {
-                this.lobbyOwner.setLobbyOwnerChosen(true)
-                this.dialogRef.close()
+                this.putLobbyDataState()
+
             } else {
                 this.lobby.putLobbyPlayers([{ status: 'chosen', username: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]).subscribe(() => {
-                    this.dialogRef.close()
-                    window.location.reload()
+                    this.putLobbyDataState()
                 })
             }
+        })
+
+    }
+
+    putLobbyDataState() {
+        this.setLan.lan$.subscribe(lan => {
+            this.lobby.getLobby().subscribe((data) => {
+                console.log(data.data.areas)
+                if (data.data.areas === true || data.data.areas !== undefined) {
+                    const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
+                    const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
+                    this.lobby.putLobbyData({ round: 0, areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
+                        this.dialogRef.close()
+                        window.location.reload()
+                    })
+                } else {
+                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    const state = [{ turn: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
+                    const resources = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
+                    this.lobby.putLobbyData({ round: 0, areas: areas, state: state, resources: resources }).subscribe(() => {
+                        this.dialogRef.close()
+                        window.location.reload()
+                    })
+                }
+            })
         })
     }
 
@@ -206,7 +266,7 @@ export class LanChoose {
     providers: []
 })
 export class StartGame {
-    constructor(public dialogRef: MatDialogRef<StartGame>, private startGameToFalse: LobbyOwnerChooseAndStartGame, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
+    constructor(public dialogRef: MatDialogRef<StartGame>, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     lobbyOwner: boolean = false
 
     ngOnInit() {
@@ -214,9 +274,11 @@ export class StartGame {
     }
 
     startGame() {
-        this.lobby.putLobbyData({ startGame: true }).subscribe(() => {
-            this.dialogRef.close()
-            window.location.reload()
+        this.lobby.getLobby().subscribe((data) => {
+            this.lobby.putLobbyData({ round: 1, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                this.dialogRef.close()
+                window.location.reload()
+            })
         })
     }
 

@@ -72,18 +72,11 @@ export class SetShowBuildings {
 @Injectable({
     providedIn: 'root'
 })
-export class LobbyOwnerChooseAndStartGame {
-    private _lobbyOwnerChosen = new BehaviorSubject<boolean>(false)
-    lobbyOwnerChosen$ = this._lobbyOwnerChosen.asObservable()
+export class SetLan {
+    private _lan = new BehaviorSubject<string>('')
+    lan$ = this._lan.asObservable()
 
-    setLobbyOwnerChosen(lobbyOwnerChosen: boolean) {
-        this._lobbyOwnerChosen.next(lobbyOwnerChosen)
-    }
-
-    private _startGame = new BehaviorSubject<boolean>(true)
-    startGame$ = this._startGame.asObservable()
-
-    setStartGame(startGame: boolean) {
-        this._startGame.next(startGame)
+    setLan(lan: string) {
+        this._lan.next(lan)
     }
 }
