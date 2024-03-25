@@ -6,7 +6,7 @@ import { Decoder, GetCookie, SetLan, SetShowBuildings } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
-import { interval } from 'rxjs'
+import { Observable, interval } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { Router } from '@angular/router'
 import { HttpClientModule } from '@angular/common/http'
@@ -42,7 +42,6 @@ export class UserInterfaceComponent implements OnInit {
     playerName: string = ''
     enemyPlayerNames: string[] = []
 
-    lobbyOwnerChosen: boolean = false
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
     ifDialogOpen: boolean = false
@@ -60,11 +59,10 @@ export class UserInterfaceComponent implements OnInit {
 
 
     onScreenCheckLanChoice() {
-        this.lobby.getLobby().subscribe((data: any) => {
+        this.lobby.getLobby().subscribe((data) => {
             if (data.data.round === 0 || data.data.round === undefined) {
                 this.checkLanChoose('450ms', '350ms')
                 interval(15000).subscribe(() => {
-                    console.log(this.ifDialogOpen)
                     if (this.ifDialogOpen === false) {
                         this.checkLanChoose('450ms', '350ms')
                     }
@@ -81,12 +79,33 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    checkLobbyOwnerChosenBoolean(): Observable<boolean> {
+        return new Observable<boolean>(observer => {
+            this.lobby.getLobby().subscribe((data) => {
+                let lobbyOwnerChosen = false
+                if (data.data.areas || data.data.areas[0]) {
+                    data.data.areas.forEach((element: any) => {
+                        if (element.owner === this.lobbyOwner) {
+                            lobbyOwnerChosen = true
+                        } else if (element[0].owner === this.lobbyOwner) {
+                            lobbyOwnerChosen = true
+                        } else {
+                            lobbyOwnerChosen = false
+                        }
+                    })
+                } else {
+                    lobbyOwnerChosen = false
+                }
+                observer.next(lobbyOwnerChosen)
+                observer.complete()
+            })
+        })
+    }
 
     toggleBuildingsAndChooseLan(enterAnimationDuration: string, exitAnimationDuration: string): void {
-        this.setShowBuildings.showBuildings$.subscribe(show => {
-            this.lobby.getLobby().subscribe((data: any) => {
-                data.data.areas.forEach((element: any) => {
-                    console.log(element[0].owner)
+        this.checkLobbyOwnerChosenBoolean().subscribe(lobbyOwnerChosen => {
+            this.setShowBuildings.showBuildings$.subscribe(show => {
+                this.lobby.getLobby().subscribe((data) => {
                     if (data.data.round === 0 || data.data.round === undefined) {
                         if (this.lanChosen === false && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username !== this.lobbyOwner) {
                             if (show === true) {
@@ -96,9 +115,9 @@ export class UserInterfaceComponent implements OnInit {
                                     exitAnimationDuration,
                                 })
                             }
-                        } else if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === this.lobbyOwner && element[0].owner !== this.lobbyOwner) {
+                        } else if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === this.lobbyOwner && lobbyOwnerChosen === false) {
                             if (show === true) {
-                                console.log('open')
+                                console.log('open', lobbyOwnerChosen)
                                 this.dialog.open(LanChoose, {
                                     width: '380px',
                                     enterAnimationDuration,
@@ -110,23 +129,31 @@ export class UserInterfaceComponent implements OnInit {
                     else {
                         this.showBuildings = show
                     }
-                })
-            })
 
+                })
+
+            })
         })
     }
 
+
     checkLanChoose(enterAnimationDuration: string, exitAnimationDuration: string): void {
-        this.lobby.getLobby().subscribe((data: any) => {
-            data.data.areas.forEach((element: any) => {
-                if (this.lanChosen === true && element[0].owner === this.lobbyOwner) {
+        this.checkLobbyOwnerChosenBoolean().subscribe(lobbyOwnerChosen => {
+            console.log(this.lanChosen, lobbyOwnerChosen)
+            this.lobby.getLobby().subscribe((data) => {
+                data.players.forEach((element: { status: string; username: string }) => {
+                    if (element.status === 'chosen') {
+                        this.lanChosen = true
+                    }
+                })
+                if (this.lanChosen === true && lobbyOwnerChosen === true) {
                     this.dialog.open(StartGame, {
                         width: '380px',
                         enterAnimationDuration,
                         exitAnimationDuration,
                     })
                     this.ifDialogOpen = true
-                } else if (this.lanChosen === true && element[0].owner !== this.lobbyOwner) {
+                } else if (this.lanChosen === true && lobbyOwnerChosen === false && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username !== this.lobbyOwner) {
                     this.dialog.open(StartGame, {
                         width: '380px',
                         enterAnimationDuration,
@@ -134,18 +161,14 @@ export class UserInterfaceComponent implements OnInit {
                     })
                     this.ifDialogOpen = true
                 }
-                data.players.forEach((element: { status: string; username: string }) => {
-                    if (element.status === 'chosen') {
-                        this.lanChosen = true
-                    }
-                })
+
             })
         })
     }
 
     getLobbyNames() {
         this.playerName = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
-        this.lobby.getLobby().subscribe((data: any) => {
+        this.lobby.getLobby().subscribe((data) => {
             this.lobbyOwner = data.lobbyOwner
             if (data.lobbyOwner !== this.playerName) {
                 this.enemyPlayerNames.push(data.lobbyOwner)
@@ -195,7 +218,7 @@ export class LanChoose {
     }
 
     buttonChooseLan() {
-        this.lobby.getLobby().subscribe((data: any) => {
+        this.lobby.getLobby().subscribe((data) => {
             if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === data.lobbyOwner) {
                 this.putLobbyDataState()
 
@@ -210,7 +233,7 @@ export class LanChoose {
 
     putLobbyDataState() {
         this.setLan.lan$.subscribe(lan => {
-            this.lobby.getLobby().subscribe((data: any) => {
+            this.lobby.getLobby().subscribe((data) => {
                 console.log(data.data.areas)
                 if (data.data.areas === true || data.data.areas !== undefined) {
                     const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
@@ -251,8 +274,8 @@ export class StartGame {
     }
 
     startGame() {
-        this.lobby.getLobby().subscribe(() => {
-            this.lobby.putLobbyData({ round: 1 }).subscribe(() => {
+        this.lobby.getLobby().subscribe((data) => {
+            this.lobby.putLobbyData({ round: 1, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
                 this.dialogRef.close()
                 window.location.reload()
             })
