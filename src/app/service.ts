@@ -80,3 +80,15 @@ export class SetLan {
         this._lan.next(lan)
     }
 }
+
+@Injectable({
+    providedIn: 'root'
+})
+export class SetIfDialogOpen {
+    private _ifDialogOpen = new BehaviorSubject<boolean>(false)
+    ifDialogOpen$ = this._ifDialogOpen.asObservable()
+
+    setIfDialogOpen(ifDialogOpen: boolean) {
+        this._ifDialogOpen.next(ifDialogOpen)
+    }
+}
