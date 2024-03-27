@@ -8,14 +8,14 @@
         <div [ngClass]="['weather-container','background-box']">
             <p class="game-info-small-text">Current weather</p>
             <div class="weather-icon-container">
-                <p class="weather">Sunny</p>
+                <p class="weather">{{ information['Weather'] }}</p>
                 <img class="weather-icon" src="../assets/images/icons/Sunny.svg">
             </div>
         </div>
 
         <div [ngClass]="['round-container','background-box']">
-            <p class="round">Round 1</p>
-            <p class="game-info-small-text">Date 2021-01-01</p>
+            <p class="round">Round {{ information['Round'] }}</p>
+            <p class="game-info-small-text">Date {{ information['Date'] }}</p>
         </div>
     </div>
 
@@ -57,7 +57,7 @@
                 <div class="player-flex">
                     <h3>{{playerName}}</h3>
                     <div class="player-info">
-                        <p>Level 1</p>
+                        <p>Level {{ information['Level'] }}</p>
                         <img src="../../assets/images/icons/info.svg">
                     </div>
                 </div>

@@ -2,7 +2,10 @@
     "areas": [
         [
             {
-                "lan": "Västerbotten",
+                "lan": [
+                    "Gotland",
+                    "Västerbotten"
+                ],
                 "owner": "DiamondMiner74",
                 "buildings": [],
                 "resourcesPerRound": {
@@ -14,7 +17,10 @@
         ],
         [
             {
-                "lan": "Jämtland",
+                "lan": [
+                    "Norrbotten",
+                    "Västerbotten"
+                ],
                 "owner": "rasmusrasmus",
                 "buildings": [],
                 "resourcesPerRound": {
