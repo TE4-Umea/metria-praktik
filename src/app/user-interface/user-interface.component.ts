@@ -167,15 +167,19 @@ export class UserInterfaceComponent implements OnInit {
                         enterAnimationDuration,
                         exitAnimationDuration,
                     })
-
                 } else if (this.lanChosen === true && lobbyOwnerChosen === false && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username !== this.lobbyOwner) {
                     this.dialog.open(StartGame, {
                         width: '380px',
                         enterAnimationDuration,
                         exitAnimationDuration,
                     })
+                } else if (this.lanChosen === false && lobbyOwnerChosen === true && this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === this.lobbyOwner) {
+                    this.dialog.open(StartGameLobbyOwner, {
+                        width: '380px',
+                        enterAnimationDuration,
+                        exitAnimationDuration,
+                    })
                 }
-
             })
         })
     }
@@ -245,7 +249,7 @@ export class LanChoose {
         this.setLan.lan$.subscribe(lan => {
             this.lobby.getLobby().subscribe((data) => {
                 if (data.data.areas === true || data.data.areas !== undefined) {
-                    if (data.data.areas[0].lan && lan !== data.data.areas[0].lan) {
+                    if (data.data.areas[0].lan && lan !== data.data.areas[0].lan[0]) {
                         const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
@@ -311,5 +315,18 @@ export class StartGame implements OnInit, OnDestroy {
             }
         })
     }
+}
+
+
+@Component({
+    selector: 'start-game-lobby-owner',
+    templateUrl: 'start-game-lobby-owner.html',
+    styleUrl: '../starting-screen/starting-screen.component.scss',
+    standalone: true,
+    imports: [CommonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, HttpClientModule],
+    providers: []
+})
+export class StartGameLobbyOwner {
+    constructor(public dialogRef: MatDialogRef<StartGameLobbyOwner>, private setIfDialogOpen: SetIfDialogOpen, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
 
 }
