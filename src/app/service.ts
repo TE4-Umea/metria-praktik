@@ -72,6 +72,18 @@ export class SetShowBuildings {
 @Injectable({
     providedIn: 'root'
 })
+export class SetCurrentLan {
+    private _currentLan = new BehaviorSubject<String>('')
+    currentLan$ = this._currentLan.asObservable()
+
+    setCurrentLan(currentLan: String) {
+        this._currentLan.next(currentLan)
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class LobbyOwnerChooseAndStartGame {
     private _lobbyOwnerChosen = new BehaviorSubject<boolean>(false)
     lobbyOwnerChosen$ = this._lobbyOwnerChosen.asObservable()

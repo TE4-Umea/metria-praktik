@@ -10,7 +10,7 @@ import Select from 'ol/interaction/Select.js'
 import { Fill, Stroke, Style } from 'ol/style.js'
 import GeoJSON from 'ol/format/GeoJSON'
 import { click } from 'ol/events/condition'
-import { SetShowBuildings } from '../service'
+import { SetShowBuildings, SetCurrentLan } from '../service'
 import { LanChoose } from '../user-interface/user-interface.component'
 import { MatDialogRef } from '@angular/material/dialog'
 @Component({
@@ -22,7 +22,7 @@ import { MatDialogRef } from '@angular/material/dialog'
     providers: [LanChoose, { provide: MatDialogRef, useValue: {} }]
 })
 export class MapComponent implements OnInit, OnDestroy {
-    constructor(private setShowBuildings: SetShowBuildings, private lanChoose: LanChoose) { }
+    constructor(private setShowBuildings: SetShowBuildings, private lanChoose: LanChoose, private setCurrentLan: SetCurrentLan) { }
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
@@ -81,6 +81,8 @@ export class MapComponent implements OnInit, OnDestroy {
         this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
             this.setShowBuildings.setShowBuildings(true)
             console.log(feature.get('name'))
+            const lan: String = feature.get('name')
+            this.setCurrentLan.setCurrentLan(lan)
         })
     }
 }

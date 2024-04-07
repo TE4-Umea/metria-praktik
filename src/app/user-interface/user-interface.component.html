@@ -89,23 +89,25 @@
 
         <drag-scroll #carousel class="carousel">
 
-            <button *ngFor="let building of buildings" drag-scroll-item [ngClass]="['carousel-card', 'button-animation']">
-                <div class="carousel-card-content">
-                    <div class="card-image-container">
-                        <img class="type-icon" src="../assets/images/icons/house.svg">
-                        <img class="card-image" src="../assets/images/example.png">
-                    </div>
-                    <div class="card-info-container">
-                        <div class="card-info">
-                            <h3>{{ building.name }}</h3>
-                            <p>{{ building.cost.money }} kr</p>
+            <div *ngFor="let building of buildings" [ngClass]="['carousel-card']">
+                <button drag-scroll-item [ngClass]="['carousel-card', 'button-animation']" (click)="constructBuilding(building.name)">
+                    <div class="carousel-card-content">
+                        <div class="card-image-container">
+                            <img class="type-icon" src="../assets/images/icons/house.svg">
+                            <img class="card-image" src="../assets/images/example.png">
                         </div>
-                        <ul class="card-material-list">
-                            <li><img src="../assets/images/icons/Stone.svg">{{ building.cost.building_materials }}</li>
-                        </ul>
+                        <div class="card-info-container">
+                            <div class="card-info">
+                                <h3>{{ building.name }}</h3>
+                                <p>{{ building.cost.money }} kr</p>
+                            </div>
+                            <ul class="card-material-list">
+                                <li><img src="../assets/images/icons/Stone.svg">{{ building.cost.building_materials }}</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </button>
+                </button>
+            </div>
 
         </drag-scroll>
 
