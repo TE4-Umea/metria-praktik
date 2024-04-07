@@ -15,6 +15,7 @@ import { MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, Mat
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
+import buildings from '../../assets/buildings.json'
 
 @Component({
     selector: 'app-user-interface',
@@ -49,10 +50,13 @@ export class UserInterfaceComponent implements OnInit {
 
     player2Active: boolean = false
 
+    buildings = buildings
+
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
+        console.log(buildings)
         interval(5000).subscribe(() => {
             this.onScreenCheckLanChoice()
         })
