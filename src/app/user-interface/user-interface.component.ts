@@ -2,7 +2,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, LobbyOwnerChooseAndStartGame, SetShowBuildings, SetCurrentLan } from '../service'
+import { Decoder, GetCookie, LobbyOwnerChooseAndStartGame, SetShowBuildings, SetCurrentLan, SetGameData } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -26,7 +26,7 @@ import buildings from '../../assets/buildings.json'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private lobbyOwnerAndStartGame: LobbyOwnerChooseAndStartGame, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setCurrentLan: SetCurrentLan) { }
+    constructor(public dialog: MatDialog, private lobbyOwnerAndStartGame: LobbyOwnerChooseAndStartGame, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setCurrentLan: SetCurrentLan, private setGameData: SetGameData) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -120,7 +120,10 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     constructBuilding(name: String) {
-        alert(name + ' ' + this.selectedLan)
+        const currentLan = this.selectedLan
+        alert(name + ' ' + currentLan)
+        // Uppdatera speldatan
+        //? this.setGameData.setGameData(JSON.stringify(gameData))   ???
     }
 
     checkLanChoose(enterAnimationDuration: string, exitAnimationDuration: string): void {
