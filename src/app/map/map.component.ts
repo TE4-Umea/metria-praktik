@@ -40,7 +40,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
     getLobbyData() {
         this.lobby.getLobby().subscribe((data) => {
-            console.log(data.data)
             if (data.data.round) {
                 this.round = data.data.round
             }

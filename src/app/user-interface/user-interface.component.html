@@ -89,7 +89,8 @@
 
         <drag-scroll #carousel class="carousel">
 
-            <button drag-scroll-item [ngClass]="['carousel-card', 'button-animation']">
+            <button *ngFor="let building of buildings.default" drag-scroll-item
+                [ngClass]="['carousel-card', 'button-animation']">
                 <div class="carousel-card-content">
                     <div class="card-image-container">
                         <img class="type-icon" src="../assets/images/icons/house.svg">
@@ -97,14 +98,11 @@
                     </div>
                     <div class="card-info-container">
                         <div class="card-info">
-                            <h3>Husigt hus</h3>
-                            <p>12000 kr</p>
+                            <h3>{{ building.name }}</h3>
+                            <p>{{ building.cost.money }} kr</p>
                         </div>
                         <ul class="card-material-list">
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
+                            <li><img src="../assets/images/icons/Stone.svg">{{ building.cost.buildingMaterials }}</li>
                         </ul>
                     </div>
                 </div>

@@ -15,7 +15,7 @@ import { MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, Mat
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
-
+import * as buildingsData from '../../assets/buildings.json'
 @Component({
     selector: 'app-user-interface',
     standalone: true,
@@ -32,6 +32,8 @@ export class UserInterfaceComponent implements OnInit {
     resources: { [resource: string]: number } = { Money: 0, BuildingMaterials: 0, Army: 0 }
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
+
+    buildings: any = buildingsData
 
     showDropdown: boolean = false
     showMenu: boolean = false
@@ -54,6 +56,7 @@ export class UserInterfaceComponent implements OnInit {
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
         this.getData()
+        console.log(this.buildings)
     }
 
 
@@ -71,7 +74,7 @@ export class UserInterfaceComponent implements OnInit {
 
     onScreenCheckLanChoice() {
         this.lobby.getLobby().subscribe((data) => {
-            if (data.data.round === 0 || data.data.round === undefined) {
+            if (!data.data.round) {
                 this.checkLanChoose('450ms', '350ms')
                 interval(15000).subscribe(() => {
                     this.setIfDialogOpen.ifDialogOpen$.subscribe(ifDialogOpen => {
