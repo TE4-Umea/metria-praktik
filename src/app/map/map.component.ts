@@ -40,7 +40,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
     getLobbyData() {
         this.lobby.getLobby().subscribe((data) => {
-            console.log(data.data)
             if (data.data.round) {
                 this.round = data.data.round
             }
@@ -113,15 +112,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
 
     vectorStylePlaying(feature: any) {
-        const defaultStyle = new Style({
-            fill: new Fill({
-                color: 'rgba(255, 0, 0, 0.3)'
-            }),
-            stroke: new Stroke({
-                color: '#319FD3',
-                width: 1
-            })
-        })
         const selectedStyle = new Style({
             fill: new Fill({
                 color: 'rgba(255, 0, 0, 0.5)',
@@ -159,8 +149,34 @@ export class MapComponent implements OnInit, OnDestroy {
             if (this.playerLan.includes(feature.get('name'))) {
                 return playerStyle
             } else {
-                return defaultStyle
+                return this.defaultGamingStyle(feature)
             }
+        } else {
+            return this.defaultGamingStyle(feature)
+        }
+    }
+
+    defaultGamingStyle(feature: any) {
+        const defaultStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(255, 0, 0, 0.3)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
+        const playerStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(100, 255, 100, 0.3)',
+            }),
+            stroke: new Stroke({
+                color: 'rgba(0, 255, 0, 0.7)',
+                width: 2,
+            }),
+        })
+        if (this.playerLan.includes(feature.get('name'))) {
+            return playerStyle
         } else {
             return defaultStyle
         }

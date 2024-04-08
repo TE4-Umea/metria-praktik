@@ -1,65 +1,38 @@
 [
     {
-        "name": "Small Apartment",
+        "name": "Barracks",
+        "img": "barracks.png",
         "cost": {
-            "stone": 1000,
-            "wood": 50,
-            "metal": 150,
-            "money": 7000000,
-            "electricity": 50
+            "buildingMaterials": 250,
+            "money": 7000
         },
-        "capacity": 30,
-        "tag": "housing"
-    },
-    {
-        "name": "Medium Apartment",
-        "cost": {
-            "stone": 1500,
-            "wood": 75,
-            "metal": 225,
-            "money": 10500000,
-            "electricity": 75
-        },
-        "capacity": 70,
-        "tag": "housing"
-    },
-    {
-        "name": "Large Apartment",
-        "cost": {
-            "stone": 2250,
-            "wood": 115,
-            "metal": 340,
-            "money": 15750000,
-            "electricity": 100
-        },
-        "capacity": 150,
-        "tag": "housing"
-    },
-    {
-        "name": "Row House",
-        "cost": {
-            "stone": 1000,
-            "wood": 350,
-            "metal": 25,
-            "money": 5000000,
-            "electricity": 15
-        },
-        "capacity": 20,
-        "tag": "housing"
+        "tag": "Army"
     },
     {
         "name": "Farm",
+        "img": "farm.png",
         "cost": {
-            "stone": 300,
-            "wood": 500,
-            "metal": 25,
-            "money": 5000000,
-            "electricity": 5
+            "buildingMaterials": 150,
+            "money": 1050
         },
-        "capacity": 10,
-        "output": {
-            "food": 40
+        "tag": "Materials"
+    },
+    {
+        "name": "Factory",
+        "img": "factory.png",
+        "cost": {
+            "buildingMaterials": 300,
+            "money": 8500
         },
-        "tag": "housing, farm"
+        "tag": "Money"
+    },
+    {
+        "name": "Bunker",
+        "img": "bunker.png",
+        "cost": {
+            "buildingMaterials": 50,
+            "money": 4500
+        },
+        "tag": "Army"
     }
 ]
