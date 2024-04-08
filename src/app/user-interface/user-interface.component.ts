@@ -25,7 +25,7 @@ import * as buildingsData from '../../assets/buildings.json'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
+    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -50,6 +50,8 @@ export class UserInterfaceComponent implements OnInit {
     player2Lan: string = ''
 
     player2Active: boolean = false
+
+    lan = ''
 
     ngOnInit() {
         this.getLobbyNames()
@@ -187,6 +189,25 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    constructBuilding(building: string) {
+        this.setLan.lan$.subscribe(lan => {
+            this.lan = lan
+        })
+        alert(building + ' ' + this.lan)
+        this.lobby.getLobby().subscribe((data) => {
+            data.data.areas.forEach((area: any[]) => {
+                console.log(area)
+                const buildingLan = area[0].lan[0]
+                if (buildingLan === this.lan) {
+                    area[0].buildings.push(building)
+                    console.log(area[0].buildings)
+                    console.log(data.data)
+                    this.lobby.putLobbyData(data).subscribe(() => { })
+                }
+            })
+        })
+    }
+
     getLobbyNames() {
         this.playerName = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
@@ -253,7 +274,7 @@ export class LanChoose {
             this.lobby.getLobby().subscribe((data) => {
                 if (data.data.areas === true || data.data.areas !== undefined) {
                     if (data.data.areas[0].lan && lan !== data.data.areas[0].lan[0]) {
-                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
+                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
                             this.dialogRef.close()
@@ -263,7 +284,7 @@ export class LanChoose {
                         alert('Someone has already chosen this lan')
                     }
                 } else {
-                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     const state = [{ turn: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
                     const resources = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
                     this.lobby.putLobbyData({ areas: areas, state: state, resources: resources }).subscribe(() => {

@@ -90,7 +90,7 @@
         <drag-scroll #carousel class="carousel">
 
             <button *ngFor="let building of buildings.default" drag-scroll-item
-                [ngClass]="['carousel-card', 'button-animation']">
+                [ngClass]="['carousel-card', 'button-animation']" (click)="constructBuilding(building.name)">
                 <div class="carousel-card-content">
                     <div class="card-image-container">
                         <img class="type-icon" src="../assets/images/icons/house.svg">
