@@ -49,9 +49,7 @@ export class MapComponent implements OnInit, OnDestroy {
                     if (Array.isArray(element)) {
                         element.forEach((subElement: any) => {
                             if (subElement.owner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                                subElement.lan.forEach((lan: string) => {
-                                    this.playerLan.push(lan)
-                                })
+                                this.playerLan.push(subElement.lan)
                             }
                         })
                     }

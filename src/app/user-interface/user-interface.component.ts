@@ -51,12 +51,32 @@ export class UserInterfaceComponent implements OnInit {
 
     player2Active: boolean = false
 
+    turn: string = 'DiamondMiner74'
+
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
         this.getData()
-        console.log(this.buildings)
+    }
+
+
+    endTurn() {
+        if (this.turn === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+            this.lobby.getLobby().subscribe((data) => {
+                data.data.resources.forEach((element: any) => {
+                    console.log(element[0].owner)
+                    if (element[0].owner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                        element[0].resources += this.resources
+                        this.lobby.putLobbyData({ round: data.data.round + 1, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                            window.location.reload()
+                        })
+                    }
+                })
+            })
+        } else {
+            alert('Not your turn')
+        }
     }
 
 
@@ -66,6 +86,8 @@ export class UserInterfaceComponent implements OnInit {
                 if (data.data.round) {
                     this.resources = data.data.resources[0][0].resources
                     this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
+                    this.turn = data.data.state[0].turn
+                    console.log(this.turn)
                 }
             })
         })
@@ -253,7 +275,7 @@ export class LanChoose {
             this.lobby.getLobby().subscribe((data) => {
                 if (data.data.areas === true || data.data.areas !== undefined) {
                     if (data.data.areas[0].lan && lan !== data.data.areas[0].lan[0]) {
-                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
+                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
                             this.dialogRef.close()
@@ -263,7 +285,7 @@ export class LanChoose {
                         alert('Someone has already chosen this lan')
                     }
                 } else {
-                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     const state = [{ turn: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
                     const resources = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
                     this.lobby.putLobbyData({ areas: areas, state: state, resources: resources }).subscribe(() => {
