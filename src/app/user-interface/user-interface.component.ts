@@ -195,12 +195,11 @@ export class UserInterfaceComponent implements OnInit {
         })
         this.lobby.getLobby().subscribe((data) => {
             data.data.areas.forEach((area: any[]) => {
-                const buildingLan = area[0].lan[0]
+                const buildingLan = area[0].lan
                 if (buildingLan === this.lan) {
                     area[0].buildings.push(building)
-                    console.log(data.data)
-                    this.lobby.putLobbyData(data).subscribe(() => {
-                        window.location.reload()    //! Fixa reload problem
+                    this.lobby.putLobbyData(data.data).subscribe(() => {
+                        window.location.reload()
                     })
                 }
             })
@@ -273,7 +272,7 @@ export class LanChoose {
             this.lobby.getLobby().subscribe((data) => {
                 if (data.data.areas === true || data.data.areas !== undefined) {
                     if (data.data.areas[0].lan && lan !== data.data.areas[0].lan[0]) {
-                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
+                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
                             this.dialogRef.close()
@@ -283,7 +282,7 @@ export class LanChoose {
                         alert('Someone has already chosen this lan')
                     }
                 } else {
-                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: [lan], buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     const state = [{ turn: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
                     const resources = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
                     this.lobby.putLobbyData({ areas: areas, state: state, resources: resources }).subscribe(() => {
