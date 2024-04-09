@@ -6,6 +6,9 @@
             "buildingMaterials": 250,
             "money": 7000
         },
+        "output": {
+            "army": 100
+        },
         "tag": "Army"
     },
     {
@@ -14,6 +17,9 @@
         "cost": {
             "buildingMaterials": 150,
             "money": 1050
+        },
+        "output": {
+            "buildingMaterials": 1000
         },
         "tag": "Materials"
     },
@@ -24,6 +30,9 @@
             "buildingMaterials": 300,
             "money": 8500
         },
+        "output": {
+            "money": 5000
+        },
         "tag": "Money"
     },
     {
@@ -32,6 +41,9 @@
         "cost": {
             "buildingMaterials": 50,
             "money": 4500
+        },
+        "output": {
+            "army": 50
         },
         "tag": "Army"
     }
