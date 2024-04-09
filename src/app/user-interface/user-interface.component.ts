@@ -193,16 +193,15 @@ export class UserInterfaceComponent implements OnInit {
         this.setLan.lan$.subscribe(lan => {
             this.lan = lan
         })
-        alert(building + ' ' + this.lan)
         this.lobby.getLobby().subscribe((data) => {
             data.data.areas.forEach((area: any[]) => {
-                console.log(area)
                 const buildingLan = area[0].lan[0]
                 if (buildingLan === this.lan) {
                     area[0].buildings.push(building)
-                    console.log(area[0].buildings)
                     console.log(data.data)
-                    this.lobby.putLobbyData(data).subscribe(() => { })
+                    this.lobby.putLobbyData(data).subscribe(() => {
+                        window.location.reload()    //! Fixa reload problem
+                    })
                 }
             })
         })
