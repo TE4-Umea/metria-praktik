@@ -2,6 +2,18 @@
     "areas": [
         [
             {
+                "lan": "Jämtland",
+                "owner": "rasmusrasmus",
+                "buildings": {},
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
                 "lan": "Västerbotten",
                 "owner": "DiamondMiner74",
                 "buildings": {},
@@ -11,42 +23,18 @@
                     "BuildingMaterials": 100
                 }
             }
-        ],
-        [
-            {
-                "lan": "Jämtland",
-                "owner": "albertalbert",
-                "buildings": {},
-                "resourcesPerRound": {
-                    "Army": 100,
-                    "Money": 100,
-                    "BuildingMaterials": 100
-                }
-            }
-        ],
-        [
-            {
-                "lan": "Norrbotten",
-                "owner": "albertalbert",
-                "buildings": {},
-                "resourcesPerRound": {
-                    "Army": 100,
-                    "Money": 100,
-                    "BuildingMaterials": 100
-                }
-            }
         ]
     ],
-    "round": 1,
+    "round": 2,
     "state": [
         {
-            "turn": "DiamondMiner74"
+            "turn": "rasmusrasmus"
         }
     ],
     "resources": [
         [
             {
-                "owner": "DiamondMiner74",
+                "owner": "rasmusrasmus",
                 "resources": {
                     "Army": 10000,
                     "Money": 10000,
@@ -56,11 +44,11 @@
         ],
         [
             {
-                "owner": "albertalbert",
+                "owner": "DiamondMiner74",
                 "resources": {
-                    "Army": 10000,
-                    "Money": 10000,
-                    "BuildingMaterials": 10000
+                    "Army": 300,
+                    "Money": 500,
+                    "BuildingMaterials": 200
                 }
             }
         ]

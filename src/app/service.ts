@@ -23,7 +23,6 @@ export class GetCookie {
 export class Decoder {
     decoder(token: string) {
         if (token) {
-            console.log()
             const base64Url = token.split('.')[1]
             const base64 = base64Url.replace('-', '+').replace('_', '/')
             return JSON.parse(window.atob(base64))
@@ -91,4 +90,5 @@ export class SetIfDialogOpen {
     setIfDialogOpen(ifDialogOpen: boolean) {
         this._ifDialogOpen.next(ifDialogOpen)
     }
+
 }
