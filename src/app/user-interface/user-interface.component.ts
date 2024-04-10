@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, SetIfDialogOpen, SetLan, SetShowBuildings } from '../service'
+import { Decoder, GetCookie, SetIfDialogOpen, SetLan, SetShowBuildings, SetShowEnemies } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -25,7 +25,7 @@ import * as buildingsData from '../../assets/buildings.json'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
+    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -38,6 +38,7 @@ export class UserInterfaceComponent implements OnInit {
     showDropdown: boolean = false
     showMenu: boolean = false
     showBuildings: boolean = false
+    showEnemies: boolean = false
 
     lobbyOwner: string = ''
     playerName: string = ''
@@ -103,6 +104,12 @@ export class UserInterfaceComponent implements OnInit {
                     console.log(this.turn)
                 }
             })
+        })
+    }
+
+    toggleShowEnemies() {
+        this.setShowEnemies.showEnemies$.subscribe(show => {
+            this.showEnemies = show
         })
     }
 

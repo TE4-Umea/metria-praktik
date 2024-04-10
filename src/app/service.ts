@@ -71,6 +71,18 @@ export class SetShowBuildings {
 @Injectable({
     providedIn: 'root'
 })
+export class SetShowEnemies {
+    private _showEnemies = new BehaviorSubject<boolean>(false)
+    showEnemies$ = this._showEnemies.asObservable()
+
+    setShowEnemies(showEnemies: boolean) {
+        this._showEnemies.next(showEnemies)
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class SetLan {
     private _lan = new BehaviorSubject<string>('')
     lan$ = this._lan.asObservable()

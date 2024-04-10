@@ -9,7 +9,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Stroke, Style } from 'ol/style.js'
 import GeoJSON from 'ol/format/GeoJSON'
-import { Decoder, GetCookie, SetLan, SetShowBuildings } from '../service'
+import { Decoder, GetCookie, SetLan, SetShowBuildings, SetShowEnemies } from '../service'
 import { LanChoose } from '../user-interface/user-interface.component'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Lobby } from '../http.service'
@@ -22,7 +22,7 @@ import { Lobby } from '../http.service'
     providers: [LanChoose, { provide: MatDialogRef, useValue: {} }]
 })
 export class MapComponent implements OnInit, OnDestroy {
-    constructor(private setShowBuildings: SetShowBuildings, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(private setShowBuildings: SetShowBuildings, private setShowEenemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
@@ -94,6 +94,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     private handleMapClick(event: any): void {
         this.setShowBuildings.setShowBuildings(false)
+        this.setShowEenemies.setShowEnemies(false)
         this.selectedLan = ''
         this.mapLayer.getSource().changed()
         this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
@@ -101,6 +102,8 @@ export class MapComponent implements OnInit, OnDestroy {
                 this.setShowBuildings.setShowBuildings(true)
             } else if (this.round >= 1 && this.playerLan.includes(feature.get('name'))) {
                 this.setShowBuildings.setShowBuildings(true)
+            } else if (this.round >= 1 && !this.playerLan.includes(feature.get('name'))) {
+                this.setShowEenemies.setShowEnemies(true)
             }
             this.setLan.setLan(feature.get('name'))
             this.selectedLan = feature.get('name')
