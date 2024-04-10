@@ -3,11 +3,11 @@
         "name": "Barracks",
         "img": "barracks.png",
         "cost": {
-            "buildingMaterials": 250,
-            "money": 7000
+            "BuildingMaterials": 250,
+            "Money": 7000
         },
         "output": {
-            "army": 100
+            "Army": 100
         },
         "tag": "Army"
     },
@@ -15,11 +15,11 @@
         "name": "Farm",
         "img": "farm.png",
         "cost": {
-            "buildingMaterials": 150,
-            "money": 1050
+            "BuildingMaterials": 150,
+            "Money": 1050
         },
         "output": {
-            "buildingMaterials": 1000
+            "BuildingMaterials": 1000
         },
         "tag": "Materials"
     },
@@ -27,11 +27,11 @@
         "name": "Factory",
         "img": "factory.png",
         "cost": {
-            "buildingMaterials": 300,
-            "money": 8500
+            "BuildingMaterials": 300,
+            "Money": 8500
         },
         "output": {
-            "money": 5000
+            "Money": 5000
         },
         "tag": "Money"
     },
@@ -39,11 +39,11 @@
         "name": "Bunker",
         "img": "bunker.png",
         "cost": {
-            "buildingMaterials": 50,
-            "money": 4500
+            "BuildingMaterials": 50,
+            "Money": 4500
         },
         "output": {
-            "army": 50
+            "Army": 50
         },
         "tag": "Army"
     }

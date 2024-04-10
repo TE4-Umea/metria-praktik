@@ -189,7 +189,7 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
-    constructBuilding(building: string) {
+    constructBuilding(building: any) {
         this.setLan.lan$.subscribe(lan => {
             this.lan = lan
         })
@@ -197,9 +197,11 @@ export class UserInterfaceComponent implements OnInit {
             data.data.areas.forEach((area: any[]) => {
                 const buildingLan = area[0].lan
                 if (buildingLan === this.lan) {
-                    area[0].buildings.push(building)
+                    area[0].buildings.push(building.name)
+                    console.log(building.name)
+                    console.log(area[0].resourcesPerRound)
+                    area[0].resourcesPerRound += building.output    //! FIXA
                     this.lobby.putLobbyData(data.data).subscribe(() => {
-                        window.location.reload()
                     })
                 }
             })
