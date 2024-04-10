@@ -23,7 +23,6 @@ export class GetCookie {
 export class Decoder {
     decoder(token: string) {
         if (token) {
-            console.log()
             const base64Url = token.split('.')[1]
             const base64 = base64Url.replace('-', '+').replace('_', '/')
             return JSON.parse(window.atob(base64))
@@ -72,6 +71,18 @@ export class SetShowBuildings {
 @Injectable({
     providedIn: 'root'
 })
+export class SetShowEnemies {
+    private _showEnemies = new BehaviorSubject<boolean>(false)
+    showEnemies$ = this._showEnemies.asObservable()
+
+    setShowEnemies(showEnemies: boolean) {
+        this._showEnemies.next(showEnemies)
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class SetLan {
     private _lan = new BehaviorSubject<string>('')
     lan$ = this._lan.asObservable()
@@ -91,4 +102,5 @@ export class SetIfDialogOpen {
     setIfDialogOpen(ifDialogOpen: boolean) {
         this._ifDialogOpen.next(ifDialogOpen)
     }
+
 }

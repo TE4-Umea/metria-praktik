@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <button mat-flat-button color="primary" [ngClass]="'end-turn-button'">End turn</button>
+        <button mat-flat-button color="primary" [ngClass]="'end-turn-button'" (click)="endTurn()">End turn</button>
     </div>
 
     <div *ngIf="showBuildings" class="carousel-container">

@@ -2,12 +2,9 @@
     "areas": [
         [
             {
-                "lan": [
-                    "Gotland",
-                    "Västerbotten"
-                ],
-                "owner": "DiamondMiner74",
-                "buildings": [],
+                "lan": "Jämtland",
+                "owner": "timpan0404",
+                "buildings": {},
                 "resourcesPerRound": {
                     "Army": 100,
                     "Money": 100,
@@ -17,11 +14,8 @@
         ],
         [
             {
-                "lan": [
-                    "Norrbotten",
-                    "Västerbotten"
-                ],
-                "owner": "rasmusrasmus",
+                "lan": "lan",
+                "owner": "tim040404",
                 "buildings": [],
                 "resourcesPerRound": {
                     "Army": 100,
@@ -31,16 +25,16 @@
             }
         ]
     ],
-    "round": 0,
+    "round": 2,
     "state": [
         {
-            "turn": "DiamondMiner74"
+            "turn": "timpan0404"
         }
     ],
     "resources": [
         [
             {
-                "owner": "DiamondMiner74",
+                "owner": "timpan0404",
                 "resources": {
                     "Army": 10000,
                     "Money": 10000,
@@ -50,7 +44,7 @@
         ],
         [
             {
-                "owner": "rasmusrasmus",
+                "owner": "tim040404",
                 "resources": {
                     "Army": 10000,
                     "Money": 10000,
