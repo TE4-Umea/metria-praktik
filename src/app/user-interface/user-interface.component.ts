@@ -73,11 +73,11 @@ export class UserInterfaceComponent implements OnInit {
                         console.log()
                         data.data.areas.forEach((areasElement: any) => {
                             if (areasElement[0].owner !== username) {
-                                const areas = [areasElement, [{ owner: username, lan: 'lan', buildings: this.buildings, resourcesPerRound: areasElement[0].resourcesPerRound }]]
+                                const areas = [areasElement, [{ owner: username, lan: areasElement[0].lan, buildings: [], resourcesPerRound: areasElement[0].resourcesPerRound }]]
                                 console.log(areas, state, resources)
-                                // this.lobby.putLobbyData({ round: data.data.round + 1, areas: areas, state: state, resources: resources }).subscribe(() => {
-                                //     window.location.reload()
-                                // })
+                                this.lobby.putLobbyData({ round: data.data.round + 1, areas: areas, state: state, resources: resources }).subscribe(() => {
+                                    window.location.reload()
+                                })
                             }
                         })
                     }

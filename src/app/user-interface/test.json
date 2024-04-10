@@ -3,7 +3,7 @@
         [
             {
                 "lan": "Jämtland",
-                "owner": "rasmusrasmus",
+                "owner": "timpan0404",
                 "buildings": {},
                 "resourcesPerRound": {
                     "Army": 100,
@@ -14,9 +14,9 @@
         ],
         [
             {
-                "lan": "Västerbotten",
-                "owner": "DiamondMiner74",
-                "buildings": {},
+                "lan": "lan",
+                "owner": "tim040404",
+                "buildings": [],
                 "resourcesPerRound": {
                     "Army": 100,
                     "Money": 100,
@@ -28,13 +28,13 @@
     "round": 2,
     "state": [
         {
-            "turn": "rasmusrasmus"
+            "turn": "timpan0404"
         }
     ],
     "resources": [
         [
             {
-                "owner": "rasmusrasmus",
+                "owner": "timpan0404",
                 "resources": {
                     "Army": 10000,
                     "Money": 10000,
@@ -44,11 +44,11 @@
         ],
         [
             {
-                "owner": "DiamondMiner74",
+                "owner": "tim040404",
                 "resources": {
-                    "Army": 300,
-                    "Money": 500,
-                    "BuildingMaterials": 200
+                    "Army": 10000,
+                    "Money": 10000,
+                    "BuildingMaterials": 10000
                 }
             }
         ]
