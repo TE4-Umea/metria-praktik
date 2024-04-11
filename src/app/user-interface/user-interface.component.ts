@@ -189,6 +189,13 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    concatNumbersJSON(object1: { [x: number]: any }, object2: { [x: number]: any }) {
+        for (const key in object2) {
+            object1[key] += object2[key]
+        }
+        return object1
+    }
+
     constructBuilding(building: any) {
         this.setLan.lan$.subscribe(lan => {
             this.lan = lan
@@ -198,9 +205,9 @@ export class UserInterfaceComponent implements OnInit {
                 const buildingLan = area[0].lan
                 if (buildingLan === this.lan) {
                     area[0].buildings.push(building.name)
-                    console.log(building.name)
-                    console.log(area[0].resourcesPerRound)
-                    area[0].resourcesPerRound += building.output    //! FIXA
+                    let resourcesObject = area[0].resourcesPerRound
+                    resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
+                    area[0].resourcesPerRound = resourcesObject
                     this.lobby.putLobbyData(data.data).subscribe(() => {
                     })
                 }
