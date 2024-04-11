@@ -200,16 +200,35 @@ export class UserInterfaceComponent implements OnInit {
         this.setLan.lan$.subscribe(lan => {
             this.lan = lan
         })
-        this.lobby.getLobby().subscribe((data) => {
-            data.data.areas.forEach((area: any[]) => {
-                const buildingLan = area[0].lan
-                if (buildingLan === this.lan) {
-                    area[0].buildings.push(building.name)
-                    let resourcesObject = area[0].resourcesPerRound
-                    resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
-                    area[0].resourcesPerRound = resourcesObject
-                    this.lobby.putLobbyData(data.data).subscribe(() => {
-                    })
+        this.lobby.getLobby().subscribe((response) => {
+            let canBuild = true
+            response.data.resources.forEach((resources: any) => {
+                if (resources[0].owner === this.playerName) {
+                    console.log(resources[0].resources)
+                    for (const key in building.cost) {
+                        console.log(resources[0].resources[key] - building.cost[key])
+                        if (resources[0].resources[key] - building.cost[key] < 0) {
+                            canBuild = false
+                        }
+                    }
+                    if (canBuild) {
+                        console.log('Can build')
+                        for (const key in building.cost) {
+                            resources[0].resources[key] -= building.cost[key]
+                        }
+
+                        response.data.areas.forEach((area: any[]) => {
+                            const buildingLan = area[0].lan
+                            if (buildingLan === this.lan) {
+                                area[0].buildings.push(building.name)
+                                let resourcesObject = area[0].resourcesPerRound
+                                resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
+                                area[0].resourcesPerRound = resourcesObject
+                                this.lobby.putLobbyData(response.data).subscribe(() => {
+                                })
+                            }
+                        })
+                    }
                 }
             })
         })
