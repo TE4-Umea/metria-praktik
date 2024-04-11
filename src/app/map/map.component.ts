@@ -28,6 +28,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     selectedLan: string = ''
     playerLan: string[] = []
+    enemyLan: string[] = []
     round: number = 0
 
     ngOnInit(): void {
@@ -39,6 +40,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     getLobbyData() {
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
                 this.round = data.data.round
@@ -48,8 +50,10 @@ export class MapComponent implements OnInit, OnDestroy {
                 data.data.areas.forEach((element: any) => {
                     if (Array.isArray(element)) {
                         element.forEach((subElement: any) => {
-                            if (subElement.owner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                            if (subElement.owner === username) {
                                 this.playerLan.push(subElement.lan)
+                            } else if (subElement.owner !== username) {
+                                this.enemyLan.push(subElement.lan)
                             }
                         })
                     }
@@ -115,6 +119,15 @@ export class MapComponent implements OnInit, OnDestroy {
     vectorStylePlaying(feature: any) {
         const selectedStyle = new Style({
             fill: new Fill({
+                color: 'rgba(25, 25, 25, 0.5)',
+            }),
+            stroke: new Stroke({
+                color: 'rgba(0, 106, 167, 0.7)',
+                width: 2,
+            }),
+        })
+        const enemySelectedStyle = new Style({
+            fill: new Fill({
                 color: 'rgba(255, 0, 0, 0.5)',
             }),
             stroke: new Stroke({
@@ -143,6 +156,8 @@ export class MapComponent implements OnInit, OnDestroy {
         if (this.selectedLan === feature.get('name')) {
             if (this.playerLan.includes(this.selectedLan)) {
                 return playerSelectedStyle
+            } else if (this.enemyLan.includes(this.selectedLan)) {
+                return enemySelectedStyle
             } else {
                 return selectedStyle
             }
@@ -160,7 +175,7 @@ export class MapComponent implements OnInit, OnDestroy {
     defaultGamingStyle(feature: any) {
         const defaultStyle = new Style({
             fill: new Fill({
-                color: 'rgba(255, 0, 0, 0.3)'
+                color: 'rgba(25, 25, 25, 0.3)'
             }),
             stroke: new Stroke({
                 color: '#319FD3',
@@ -176,8 +191,19 @@ export class MapComponent implements OnInit, OnDestroy {
                 width: 2,
             }),
         })
+        const enemyStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(255, 0, 0, 0.3)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
         if (this.playerLan.includes(feature.get('name'))) {
             return playerStyle
+        } else if (this.enemyLan.includes(feature.get('name'))) {
+            return enemyStyle
         } else {
             return defaultStyle
         }
