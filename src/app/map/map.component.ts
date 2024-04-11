@@ -56,6 +56,12 @@ export class MapComponent implements OnInit, OnDestroy {
                                 this.enemyLan.push(subElement.lan)
                             }
                         })
+                    } else {
+                        if (element.owner === username) {
+                            this.playerLan.push(element.lan)
+                        } else if (element.owner !== username) {
+                            this.enemyLan.push(element.lan)
+                        }
                     }
                 })
             }
@@ -103,7 +109,13 @@ export class MapComponent implements OnInit, OnDestroy {
         this.mapLayer.getSource().changed()
         this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
             if (this.round === 0) {
-                this.setShowBuildings.setShowBuildings(true)
+                if (this.enemyLan.includes(feature.get('name'))) {
+                    return
+                } else if (this.playerLan.includes(feature.get('name'))) {
+                    return
+                } else {
+                    this.setShowBuildings.setShowBuildings(true)
+                }
             } else if (this.round >= 1 && this.playerLan.includes(feature.get('name'))) {
                 this.setShowBuildings.setShowBuildings(true)
             } else if (this.round >= 1 && !this.playerLan.includes(feature.get('name'))) {
@@ -210,15 +222,6 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     vectorStyleStarting(feature: any) {
-        const defaultStyle = new Style({
-            fill: new Fill({
-                color: 'rgba(255, 255, 255, 0.6)'
-            }),
-            stroke: new Stroke({
-                color: '#319FD3',
-                width: 1
-            })
-        })
         const selectedStyle = new Style({
             fill: new Fill({
                 color: 'rgba(0, 106, 167, 0.3)',
@@ -231,12 +234,48 @@ export class MapComponent implements OnInit, OnDestroy {
         if (this.selectedLan === feature.get('name')) {
             return selectedStyle
         } else if (this.selectedLan === '') {
-            return defaultStyle
+            return this.styleStartingDefault(feature)
+        } else {
+            return this.styleStartingDefault(feature)
+        }
+    }
+
+    styleStartingDefault(feature: any) {
+        const defaultStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(255, 255, 255, 0.6)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
+        const enemyChoiceLan = new Style({
+            fill: new Fill({
+                color: 'rgba(25, 25, 25, 0.3)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
+        const playerStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(100, 255, 100, 0.3)',
+            }),
+            stroke: new Stroke({
+                color: 'rgba(0, 255, 0, 0.7)',
+                width: 2,
+            }),
+        })
+        if (this.playerLan.includes(feature.get('name'))) {
+            return playerStyle
+        } else if (this.enemyLan.includes(feature.get('name'))) {
+            return enemyChoiceLan
         } else {
             return defaultStyle
         }
     }
-
 }
 
 
