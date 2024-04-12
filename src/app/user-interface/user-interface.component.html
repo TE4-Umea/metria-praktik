@@ -1,6 +1,6 @@
 <div class="top-container">
     <div class="top-left">
-        <label for="menu" [ngClass]="['menu-button','background-box']">
+        <label for="menu" [ngClass]="['menu-button','background-box', 'button-animation']">
             <img class="menu-icon" src="../assets/images/icons/menu.svg">
             <p>Menu</p>
         </label>
@@ -19,15 +19,10 @@
         </div>
     </div>
 
-    <div class="resources-dropdown-container">
-        <input type="checkbox" class="dp-none" id="resources-dropdown">
-        <label for="resources-dropdown" [ngClass]="['resources-dropdown-label', 'background-box']">Resources <img
-                class="dropdown-button-icon" src="../assets/images/icons/arrow.svg"></label>
-
-        <div class="arrow-up"></div>
-        <ul class="dropdown">
+    <div [ngClass]="['background-box']">
+        <ul [ngClass]="'resources'">
             <li *ngFor="let resource of resources | keyvalue">
-                <div class="rersource-type"> {{ resource.key }}</div>
+                <div class="game-info-small-text"> {{ resource.key }}</div>
                 <div class="rersource-value">{{ resource.value }}</div>
             </li>
         </ul>
@@ -37,7 +32,6 @@
     <input type="checkbox" class="dp-none" id="menu">
     <label for="menu" class="menu-backdrop">
         <img [ngClass]="'logo'" src="../../assets/images/logo/ClashOfLans.svg" alt="Clash Of Läns">
-        <div class="line"></div>
         <ul class="menu-list">
             <li>
                 <a class="menu-item" (click)="this.router.navigate(['/'])">Back to main menu</a>
@@ -58,7 +52,6 @@
                     <h3>{{playerName}}</h3>
                     <div class="player-info">
                         <p>Level {{ information['Level'] }}</p>
-                        <img src="../../assets/images/icons/info.svg">
                     </div>
                 </div>
                 <div class="progress-bar-outer">
@@ -72,7 +65,6 @@
                     <h3>{{players}}</h3>
                     <div class="player-info">
                         <p>Level 1</p>
-                        <img src="../../assets/images/icons/info.svg">
                     </div>
                 </div>
                 <div class="progress-bar-outer">
@@ -84,8 +76,9 @@
             (click)="endTurn()">End turn</button>
     </div>
 
+
     <div *ngIf="showBuildings && player1Active" class="carousel-container">
-        <button class="carousel-button" (click)="carouselLeft()"><img class="carousel-button-left"
+        <button [ngClass]="['carousel-button', 'button-animation']" (click)="carouselLeft()"><img class="carousel-button-left"
                 src="../assets/images/icons/arrow.svg" alt="Left"></button>
 
         <drag-scroll #carousel class="carousel">
@@ -94,8 +87,9 @@
                 [ngClass]="['carousel-card', 'button-animation']" (click)="constructBuilding(building)">
                 <div class="carousel-card-content">
                     <div class="card-image-container">
+                        <div class="type-color" style="background-color: #1acf29;"></div>
                         <img class="type-icon" src="../assets/images/icons/house.svg">
-                        <img class="card-image" src="../assets/images/example.png">
+                        <img class="card-image" src="../assets/images/buildings/factory.png">
                     </div>
                     <div class="card-info-container">
                         <div class="card-info">
@@ -111,8 +105,77 @@
 
         </drag-scroll>
 
-        <button class="carousel-button" (click)="carouselRight()"><img class="carousel-button-right"
-                src="../assets/images/icons/arrow.svg" alt="Right"></button>
+        <button [ngClass]="['carousel-button', 'button-animation']" (click)="carouselRight()"><img
+                class="carousel-button-right" src="../assets/images/icons/arrow.svg" alt="Right"></button>
     </div>
 
+
+    <div *ngIf="showEnemies" class="attack-menu-container">
+        <div class="attack-menu-lan-stats">
+            <img class="lans-weapon-background" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
+            <div class="attack-menu-lan-flex-top">
+                <div class="attack-menu-lan">
+                    <h3>Västerbotten</h3>
+                    <img class="lans-weapon" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
+                </div>
+                <p>Player 1: Attacking</p>
+            </div>
+            <div class="attack-menu-lan-flex">
+                <div>
+                    <h4>Military</h4>
+                    <p>10000</p>
+                </div>
+                <div>
+                    <h4>Materials</h4>
+                    <p>1200</p>
+                </div>
+                <div>
+                    <h4>Money</h4>
+                    <p>50000000000000000</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="attack-menu-lan-stats">
+            <img class="lans-weapon-background" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
+            <div class="attack-menu-lan-flex-top">
+                <div class="attack-menu-lan">
+                    <h3>Norrbotten</h3>
+                    <img class="lans-weapon" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
+                </div>
+                <p>Player 2: Defending</p>
+            </div>
+            <div class="attack-menu-lan-flex">
+                <div>
+                    <h4>Military</h4>
+                    <p>10000</p>
+                </div>
+                <div>
+                    <h4>Materials</h4>
+                    <p>1200</p>
+                </div>
+                <div>
+                    <h4>Money</h4>
+                    <p>50000000000000000</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="attack-menu-breakdown">
+            <div class="attack-menu-breakdown-top">
+                <div>
+                    <h3>Västerbotten</h3>
+                    <p>Chance of victory: 1%</p>
+                </div>
+                <img class="attack-icon" src="../assets/images/icons/attack.svg">
+                <div>
+                    <h3>Norrbotten</h3>
+                    <p>Chance of victory: 5000%</p>
+                </div>
+            </div>
+            <button mat-flat-button color="primary" [ngClass]="'attack-button'">Attack Norrbotten</button>
+        </div>
+    </div>
 </div>
