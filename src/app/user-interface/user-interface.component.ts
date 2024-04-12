@@ -204,15 +204,12 @@ export class UserInterfaceComponent implements OnInit {
             let canBuild = true
             response.data.resources.forEach((resources: any) => {
                 if (resources[0].owner === this.playerName) {
-                    console.log(resources[0].resources)
                     for (const key in building.cost) {
-                        console.log(resources[0].resources[key] - building.cost[key])
                         if (resources[0].resources[key] - building.cost[key] < 0) {
                             canBuild = false
                         }
                     }
                     if (canBuild) {
-                        console.log('Can build')
                         for (const key in building.cost) {
                             resources[0].resources[key] -= building.cost[key]
                         }
@@ -232,6 +229,9 @@ export class UserInterfaceComponent implements OnInit {
                                 })
                             }
                         })
+                    }
+                    else {
+                        alert('Not enough resources')
                     }
                 }
             })
@@ -309,7 +309,6 @@ export class LanChoose {
                         this.buildings.default.forEach((building: { name: any }) => {
                             buildings.push({ 'name': building.name, 'amount': 0 })
                         })
-                        console.log(buildings)
                         const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
@@ -324,7 +323,6 @@ export class LanChoose {
                     this.buildings.default.forEach((building: { name: any }) => {
                         buildings.push({ 'name': building.name, 'amount': 0 })
                     })
-                    console.log(buildings)
                     const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     const state = [{ turn: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
                     const resources = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
