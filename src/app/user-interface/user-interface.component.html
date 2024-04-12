@@ -8,14 +8,14 @@
         <div [ngClass]="['weather-container','background-box']">
             <p class="game-info-small-text">Current weather</p>
             <div class="weather-icon-container">
-                <p class="weather">Sunny</p>
+                <p class="weather">{{ information['Weather'] }}</p>
                 <img class="weather-icon" src="../assets/images/icons/Sunny.svg">
             </div>
         </div>
 
         <div [ngClass]="['round-container','background-box']">
-            <p class="round">Round 1</p>
-            <p class="game-info-small-text">Date 2021-01-01</p>
+            <p class="round">Round {{ information['Round'] }}</p>
+            <p class="game-info-small-text">Date {{ information['Date'] }}</p>
         </div>
     </div>
 
@@ -34,6 +34,9 @@
         <img [ngClass]="'logo'" src="../../assets/images/logo/ClashOfLans.svg" alt="Clash Of Läns">
         <ul class="menu-list">
             <li>
+                <a class="menu-item" (click)="this.router.navigate(['/'])">Back to main menu</a>
+            </li>
+            <li>
                 <a class="menu-item" href="#">Save</a>
             </li>
         </ul>
@@ -44,11 +47,11 @@
     <div class="bottom-top">
         <div class="players">
 
-            <div [ngClass]="{'player' : true, 'player-small' : false}">
+            <div [ngClass]="{'player' : true, 'player-small' : !player1Active}">
                 <div class="player-flex">
-                    <h3>Player name</h3>
+                    <h3>{{playerName}}</h3>
                     <div class="player-info">
-                        <p>Level 1</p>
+                        <p>Level {{ information['Level'] }}</p>
                     </div>
                 </div>
                 <div class="progress-bar-outer">
@@ -56,33 +59,10 @@
                 </div>
             </div>
 
-            <div [ngClass]="{'player' : true, 'player-small' : true}">
+            <div *ngFor="let players of enemyPlayerNames"
+                [ngClass]="{'player' : true, 'player-small' : !player2Active}">
                 <div class="player-flex">
-                    <h3>Player name</h3>
-                    <div class="player-info">
-                        <p>Level 1</p>
-                    </div>
-                </div>
-                <div class="progress-bar-outer">
-                    <div class="progress-bar-inner"></div>
-                </div>
-            </div>
-
-            <div [ngClass]="{'player' : true, 'player-small' : true}">
-                <div class="player-flex">
-                    <h3>Player name</h3>
-                    <div class="player-info">
-                        <p>Level 1</p>
-                    </div>
-                </div>
-                <div class="progress-bar-outer">
-                    <div class="progress-bar-inner"></div>
-                </div>
-            </div>
-
-            <div [ngClass]="{'player' : true, 'player-small' : true}">
-                <div class="player-flex">
-                    <h3>Player name</h3>
+                    <h3>{{players}}</h3>
                     <div class="player-info">
                         <p>Level 1</p>
                     </div>
@@ -92,16 +72,19 @@
                 </div>
             </div>
         </div>
-        <button mat-flat-button color="primary" [ngClass]="'end-turn-button'">End turn</button>
+        <button *ngIf="player1Active" mat-flat-button color="primary" [ngClass]="'end-turn-button'"
+            (click)="endTurn()">End turn</button>
     </div>
 
-    <div *ngIf="showBuildings" class="carousel-container">
-        <button [ngClass]="['carousel-button', 'button-animation']" (click)="carouselLeft()"><img
-                class="carousel-button-left" src="../assets/images/icons/arrow.svg" alt="Left"></button>
+
+    <div *ngIf="showBuildings && player1Active" class="carousel-container">
+        <button [ngClass]="['carousel-button', 'button-animation']" (click)="carouselLeft()"><img class="carousel-button-left"
+                src="../assets/images/icons/arrow.svg" alt="Left"></button>
 
         <drag-scroll #carousel class="carousel">
 
-            <button drag-scroll-item [ngClass]="['carousel-card', 'button-animation']">
+            <button *ngFor="let building of buildings.default" drag-scroll-item
+                [ngClass]="['carousel-card', 'button-animation']" (click)="constructBuilding(building)">
                 <div class="carousel-card-content">
                     <div class="card-image-container">
                         <div class="type-color" style="background-color: #1acf29;"></div>
@@ -110,31 +93,11 @@
                     </div>
                     <div class="card-info-container">
                         <div class="card-info">
-                            <h3>Factory</h3>
-                            <p>12000 kr</p>
+                            <h3>{{ building.name }}</h3>
+                            <p>{{ building.cost.Money }} kr</p>
                         </div>
                         <ul class="card-material-list">
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
-                        </ul>
-                    </div>
-                </div>
-            </button>
-
-            <button drag-scroll-item [ngClass]="['carousel-card', 'button-animation']">
-                <div class="carousel-card-content">
-                    <div class="card-image-container">
-                        <div class="type-color" style="background-color: #d8c708;"></div>
-                        <img class="type-icon" src="../assets/images/icons/house.svg">
-                        <img class="card-image" src="../assets/images/buildings/bunker.png">
-                    </div>
-                    <div class="card-info-container">
-                        <div class="card-info">
-                            <h3>Factory</h3>
-                            <p>12000 kr</p>
-                        </div>
-                        <ul class="card-material-list">
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
-                            <li><img src="../assets/images/icons/Stone.svg">2000</li>
+                            <li><img src="../assets/images/icons/Stone.svg">{{ building.cost.BuildingMaterials }}</li>
                         </ul>
                     </div>
                 </div>

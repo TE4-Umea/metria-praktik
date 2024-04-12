@@ -1,65 +1,50 @@
 [
     {
-        "name": "Small Apartment",
+        "name": "Barracks",
+        "img": "barracks.png",
         "cost": {
-            "stone": 1000,
-            "wood": 50,
-            "metal": 150,
-            "money": 7000000,
-            "electricity": 50
+            "BuildingMaterials": 250,
+            "Money": 7000
         },
-        "capacity": 30,
-        "tag": "housing"
-    },
-    {
-        "name": "Medium Apartment",
-        "cost": {
-            "stone": 1500,
-            "wood": 75,
-            "metal": 225,
-            "money": 10500000,
-            "electricity": 75
+        "output": {
+            "Army": 100
         },
-        "capacity": 70,
-        "tag": "housing"
-    },
-    {
-        "name": "Large Apartment",
-        "cost": {
-            "stone": 2250,
-            "wood": 115,
-            "metal": 340,
-            "money": 15750000,
-            "electricity": 100
-        },
-        "capacity": 150,
-        "tag": "housing"
-    },
-    {
-        "name": "Row House",
-        "cost": {
-            "stone": 1000,
-            "wood": 350,
-            "metal": 25,
-            "money": 5000000,
-            "electricity": 15
-        },
-        "capacity": 20,
-        "tag": "housing"
+        "tag": "Army"
     },
     {
         "name": "Farm",
+        "img": "farm.png",
         "cost": {
-            "stone": 300,
-            "wood": 500,
-            "metal": 25,
-            "money": 5000000,
-            "electricity": 5
+            "BuildingMaterials": 150,
+            "Money": 1050
         },
-        "capacity": 10,
         "output": {
-            "food": 40
+            "BuildingMaterials": 1000
         },
-        "tag": "housing, farm"
+        "tag": "Materials"
+    },
+    {
+        "name": "Factory",
+        "img": "factory.png",
+        "cost": {
+            "BuildingMaterials": 300,
+            "Money": 8500
+        },
+        "output": {
+            "Money": 5000
+        },
+        "tag": "Money"
+    },
+    {
+        "name": "Bunker",
+        "img": "bunker.png",
+        "cost": {
+            "BuildingMaterials": 50,
+            "Money": 4500
+        },
+        "output": {
+            "Army": 50
+        },
+        "tag": "Army"
     }
 ]
