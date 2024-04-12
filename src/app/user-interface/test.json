@@ -14,9 +14,9 @@
         ],
         [
             {
-                "lan": "lan",
-                "owner": "tim040404",
-                "buildings": [],
+                "lan": "Västerbotten",
+                "owner": "DiamondMiner74",
+                "buildings": {},
                 "resourcesPerRound": {
                     "Army": 100,
                     "Money": 100,
@@ -44,7 +44,7 @@
         ],
         [
             {
-                "owner": "tim040404",
+                "owner": "DiamondMiner74",
                 "resources": {
                     "Army": 10000,
                     "Money": 10000,

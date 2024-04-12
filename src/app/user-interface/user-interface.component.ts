@@ -34,6 +34,7 @@ export class UserInterfaceComponent implements OnInit {
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
 
     buildings: any = buildingsData
+    areas: any = []
 
     showDropdown: boolean = false
     showMenu: boolean = false
@@ -50,15 +51,21 @@ export class UserInterfaceComponent implements OnInit {
     player1Lan: string = ''
     player2Lan: string = ''
 
+    player1Active: boolean = false
     player2Active: boolean = false
 
+    round: number | undefined
     turn: string = ''
+    turnBoolean: boolean = false
 
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
         this.getData()
+        interval(10000).subscribe(() => {
+            this.getData()
+        })
     }
 
 
@@ -73,10 +80,16 @@ export class UserInterfaceComponent implements OnInit {
                         const state = [{ turn: resourcesElement[0].owner }]
                         console.log()
                         data.data.areas.forEach((areasElement: any) => {
+                            if (areasElement[0].owner === username) {
+                                this.areas = [{ owner: username, lan: areasElement[0].lan, buildings: areasElement[0].buildings, resourcesPerRound: areasElement[0].resourcesPerRound }]
+                            }
                             if (areasElement[0].owner !== username) {
-                                const areas = [areasElement, [{ owner: username, lan: areasElement[0].lan, buildings: [], resourcesPerRound: areasElement[0].resourcesPerRound }]]
-                                console.log(areas, state, resources)
-                                this.lobby.putLobbyData({ round: data.data.round + 1, areas: areas, state: state, resources: resources }).subscribe(() => {
+                                const areas = [areasElement, this.areas]
+                                if (username === data.data.resources[0][0].owner) {
+                                    this.round = data.data.round + 1
+                                }
+                                const round = (this.round !== undefined) ? this.round : data.data.round
+                                this.lobby.putLobbyData({ round: round, areas: areas, state: state, resources: resources }).subscribe(() => {
                                     window.location.reload()
                                 })
                             }
@@ -84,26 +97,30 @@ export class UserInterfaceComponent implements OnInit {
                     }
                 })
             })
-        } else {
-            alert('Not your turn')
         }
     }
 
 
     getData() {
-        interval(10000).subscribe(() => {
-            this.lobby.getLobby().subscribe((data) => {
-                if (data.data.round) {
-                    data.data.resources.forEach((element: any) => {
-                        if (element[0].owner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                            this.resources = element[0].resources
-                        }
-                    })
-                    this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
-                    this.turn = data.data.state[0].turn
-                    console.log(this.turn)
+        this.lobby.getLobby().subscribe((data) => {
+            if (data.data.round) {
+                data.data.resources.forEach((element: any) => {
+                    if (element[0].owner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                        this.resources = element[0].resources
+                    }
+                })
+                this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
+                this.turn = data.data.state[0].turn
+                if (this.turn === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                    this.turnBoolean = true
+                    this.player1Active = true
+                    this.player2Active = false
+                } else {
+                    this.turnBoolean = false
+                    this.player2Active = true
+                    this.player1Active = false
                 }
-            })
+            }
         })
     }
 
