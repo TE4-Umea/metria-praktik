@@ -102,6 +102,7 @@ export class UserInterfaceComponent implements OnInit {
 
 
     getData() {
+        this.toggleShowEnemies() 
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
                 data.data.resources.forEach((element: any) => {
