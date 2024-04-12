@@ -54,6 +54,7 @@ export class UserInterfaceComponent implements OnInit {
     player1Active: boolean = false
     player2Active: boolean = false
 
+    round: number | undefined
     turn: string = ''
     turnBoolean: boolean = false
 
@@ -83,10 +84,12 @@ export class UserInterfaceComponent implements OnInit {
                                 this.areas = [{ owner: username, lan: areasElement[0].lan, buildings: areasElement[0].buildings, resourcesPerRound: areasElement[0].resourcesPerRound }]
                             }
                             if (areasElement[0].owner !== username) {
-                                console.log(areasElement[0].lan)
                                 const areas = [areasElement, this.areas]
-                                console.log(areas, state, resources)
-                                this.lobby.putLobbyData({ round: data.data.round + 1, areas: areas, state: state, resources: resources }).subscribe(() => {
+                                if (username === data.data.resources[0][0].owner) {
+                                    this.round = data.data.round + 1
+                                }
+                                const round = (this.round !== undefined) ? this.round : data.data.round
+                                this.lobby.putLobbyData({ round: round, areas: areas, state: state, resources: resources }).subscribe(() => {
                                     window.location.reload()
                                 })
                             }
@@ -94,8 +97,6 @@ export class UserInterfaceComponent implements OnInit {
                     }
                 })
             })
-        } else {
-            alert('Not your turn')
         }
     }
 

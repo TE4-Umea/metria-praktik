@@ -88,7 +88,7 @@ export class MapComponent implements OnInit, OnDestroy {
             ],
             view: new View({
                 center: fromLonLat([17.242829157757257, 63.82811461193097]),
-                zoom: 7,
+                zoom: 2,
                 maxZoom: 7,
                 minZoom: 5,
                 extent: [-2002513.341856, 7011017.966314, 6016327.095083, 11036950.728974] //West, South, East, North
