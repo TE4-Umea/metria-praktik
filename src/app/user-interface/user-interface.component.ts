@@ -25,7 +25,7 @@ import * as buildingsData from '../../assets/buildings.json'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby) { }
+    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -54,6 +54,7 @@ export class UserInterfaceComponent implements OnInit {
     player1Active: boolean = false
     player2Active: boolean = false
 
+    lan = ''
     round: number | undefined
     turn: string = ''
     turnBoolean: boolean = false
@@ -241,6 +242,55 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    concatNumbersJSON(object1: { [x: number]: any }, object2: { [x: number]: any }) {
+        for (const key in object2) {
+            object1[key] += object2[key]
+        }
+        return object1
+    }
+
+    constructBuilding(building: any) {
+        this.setLan.lan$.subscribe(lan => {
+            this.lan = lan
+        })
+        this.lobby.getLobby().subscribe((response) => {
+            let canBuild = true
+            response.data.resources.forEach((resources: any) => {
+                if (resources[0].owner === this.playerName) {
+                    for (const key in building.cost) {
+                        if (resources[0].resources[key] - building.cost[key] < 0) {
+                            canBuild = false
+                        }
+                    }
+                    if (canBuild) {
+                        for (const key in building.cost) {
+                            resources[0].resources[key] -= building.cost[key]
+                        }
+
+                        response.data.areas.forEach((area: any[]) => {
+                            const buildingLan = area[0].lan
+                            if (buildingLan === this.lan) {
+                                area[0].buildings.forEach((buildingInLan: { name: string; amount: number }) => {
+                                    if (buildingInLan.name === building.name) {
+                                        buildingInLan.amount += 1
+                                    }
+                                })
+                                let resourcesObject = area[0].resourcesPerRound
+                                resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
+                                area[0].resourcesPerRound = resourcesObject
+                                this.lobby.putLobbyData(response.data).subscribe(() => {
+                                })
+                            }
+                        })
+                    }
+                    else {
+                        alert('Not enough resources')
+                    }
+                }
+            })
+        })
+    }
+
     getLobbyNames() {
         this.playerName = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
@@ -281,6 +331,7 @@ export class UserInterfaceComponent implements OnInit {
 export class LanChoose {
     constructor(public dialogRef: MatDialogRef<LanChoose>, private setLan: SetLan, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     lan: string = ''
+    buildings: any = buildingsData
 
     ngOnInit() {
         this.setLan.lan$.subscribe(lan => {
@@ -308,7 +359,11 @@ export class LanChoose {
             this.lobby.getLobby().subscribe((data) => {
                 if (data.data.areas === true || data.data.areas !== undefined) {
                     if (data.data.areas[0].lan && lan !== data.data.areas[0].lan[0]) {
-                        const areas = [data.data.areas, [{ owner: username, lan: lan, buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
+                        const buildings: { name: string; amount: number }[] = []
+                        this.buildings.default.forEach((building: { name: any }) => {
+                            buildings.push({ 'name': building.name, 'amount': 0 })
+                        })
+                        const areas = [data.data.areas, [{ owner: username, lan: lan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
                             this.dialogRef.close()
@@ -318,7 +373,11 @@ export class LanChoose {
                         alert('Someone has already chosen this lan')
                     }
                 } else {
-                    const areas = [{ owner: username, lan: lan, buildings: {}, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    const buildings: { name: string; amount: number }[] = []
+                    this.buildings.default.forEach((building: { name: any }) => {
+                        buildings.push({ 'name': building.name, 'amount': 0 })
+                    })
+                    const areas = [{ owner: username, lan: lan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     const state = [{ turn: username }]
                     const resources = [{ owner: username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
                     this.lobby.putLobbyData({ areas: areas, state: state, resources: resources }).subscribe(() => {
