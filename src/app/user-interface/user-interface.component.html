@@ -80,11 +80,11 @@
                 </div>
             </div>
         </div>
-        <button *ngIf="turnBoolean" mat-flat-button color="primary" [ngClass]="'end-turn-button'"
+        <button *ngIf="player1Active" mat-flat-button color="primary" [ngClass]="'end-turn-button'"
             (click)="endTurn()">End turn</button>
     </div>
 
-    <div *ngIf="showBuildings && turnBoolean" class="carousel-container">
+    <div *ngIf="showBuildings && player1Active" class="carousel-container">
         <button class="carousel-button" (click)="carouselLeft()"><img class="carousel-button-left"
                 src="../assets/images/icons/arrow.svg" alt="Left"></button>
 

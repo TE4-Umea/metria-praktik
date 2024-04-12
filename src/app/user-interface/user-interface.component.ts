@@ -56,7 +56,6 @@ export class UserInterfaceComponent implements OnInit {
 
     round: number | undefined
     turn: string = ''
-    turnBoolean: boolean = false
 
     ngOnInit() {
         this.getLobbyNames()
@@ -85,7 +84,7 @@ export class UserInterfaceComponent implements OnInit {
                             }
                             if (areasElement[0].owner !== username) {
                                 const areas = [areasElement, this.areas]
-                                if (username === data.data.resources[0][0].owner) {
+                                if (username === data.lobbyOwner) {
                                     this.round = data.data.round + 1
                                 }
                                 const round = (this.round !== undefined) ? this.round : data.data.round
@@ -112,11 +111,9 @@ export class UserInterfaceComponent implements OnInit {
                 this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
                 this.turn = data.data.state[0].turn
                 if (this.turn === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
-                    this.turnBoolean = true
                     this.player1Active = true
                     this.player2Active = false
                 } else {
-                    this.turnBoolean = false
                     this.player2Active = true
                     this.player1Active = false
                 }
