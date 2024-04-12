@@ -29,14 +29,10 @@ export class UserInterfaceComponent implements OnInit {
 
     showDropdown: boolean = false
     showMenu: boolean = false
-    showBuildings: boolean = true
+    showBuildings: boolean = false
+    showEnemies: boolean = false
 
     player2Active: boolean = false 
-
-    testPlayerSizing() {
-        this.player2Active = !this.player2Active
-    }
-
 
     ngOnInit() {
         interval(30000).subscribe(() => {
