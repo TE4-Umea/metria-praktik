@@ -53,7 +53,7 @@
     <div class="bottom-top">
         <div class="players">
 
-            <div [ngClass]="{'player' : true, 'player-small' : false}">
+            <div [ngClass]="{'player' : true, 'player-small' : !player1Active}">
                 <div class="player-flex">
                     <h3>{{playerName}}</h3>
                     <div class="player-info">
@@ -80,10 +80,11 @@
                 </div>
             </div>
         </div>
-        <button mat-flat-button color="primary" [ngClass]="'end-turn-button'">End turn</button>
+        <button *ngIf="turnBoolean" mat-flat-button color="primary" [ngClass]="'end-turn-button'"
+            (click)="endTurn()">End turn</button>
     </div>
 
-    <div *ngIf="showBuildings" class="carousel-container">
+    <div *ngIf="showBuildings && turnBoolean" class="carousel-container">
         <button class="carousel-button" (click)="carouselLeft()"><img class="carousel-button-left"
                 src="../assets/images/icons/arrow.svg" alt="Left"></button>
 
