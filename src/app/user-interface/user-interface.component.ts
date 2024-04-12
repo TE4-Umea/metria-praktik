@@ -220,7 +220,11 @@ export class UserInterfaceComponent implements OnInit {
                         response.data.areas.forEach((area: any[]) => {
                             const buildingLan = area[0].lan
                             if (buildingLan === this.lan) {
-                                area[0].buildings.push(building.name)
+                                area[0].buildings.forEach((buildingInLan: { name: string; amount: number }) => {
+                                    if (buildingInLan.name === building.name) {
+                                        buildingInLan.amount += 1
+                                    }
+                                })
                                 let resourcesObject = area[0].resourcesPerRound
                                 resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
                                 area[0].resourcesPerRound = resourcesObject
@@ -274,6 +278,7 @@ export class UserInterfaceComponent implements OnInit {
 export class LanChoose {
     constructor(public dialogRef: MatDialogRef<LanChoose>, private setLan: SetLan, private lobby: Lobby, private decoder: Decoder, private getCookie: GetCookie) { }
     lan: string = ''
+    buildings: any = buildingsData
 
     ngOnInit() {
         this.setLan.lan$.subscribe(lan => {
@@ -300,7 +305,12 @@ export class LanChoose {
             this.lobby.getLobby().subscribe((data) => {
                 if (data.data.areas === true || data.data.areas !== undefined) {
                     if (data.data.areas[0].lan && lan !== data.data.areas[0].lan[0]) {
-                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
+                        const buildings: { name: string; amount: number }[] = []
+                        this.buildings.default.forEach((building: { name: any }) => {
+                            buildings.push({ 'name': building.name, 'amount': 0 })
+                        })
+                        console.log(buildings)
+                        const areas = [data.data.areas, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]]
                         const resources = [data.data.resources, [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]]
                         this.lobby.putLobbyData({ areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
                             this.dialogRef.close()
@@ -310,7 +320,12 @@ export class LanChoose {
                         alert('Someone has already chosen this lan')
                     }
                 } else {
-                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: [], resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    const buildings: { name: string; amount: number }[] = []
+                    this.buildings.default.forEach((building: { name: any }) => {
+                        buildings.push({ 'name': building.name, 'amount': 0 })
+                    })
+                    console.log(buildings)
+                    const areas = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: lan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     const state = [{ turn: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username }]
                     const resources = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, resources: { Money: 10000, BuildingMaterials: 10000, Army: 10000 } }]
                     this.lobby.putLobbyData({ areas: areas, state: state, resources: resources }).subscribe(() => {
