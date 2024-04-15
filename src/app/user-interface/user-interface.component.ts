@@ -29,7 +29,7 @@ export class UserInterfaceComponent implements OnInit {
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
-    resources: { [resource: string]: number } = { Money: 500, BuildingMaterials: 200, Army: 300 }
+    resources: any = []
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
 
@@ -54,6 +54,8 @@ export class UserInterfaceComponent implements OnInit {
     player1Active: boolean = false
     player2Active: boolean = false
 
+    resourcesPerRoundObject: any = []
+    buildingsOwned: any = []
     lan = ''
     round: number | undefined
     turn: string = ''
@@ -63,25 +65,23 @@ export class UserInterfaceComponent implements OnInit {
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
         this.getData()
+        this.getDataOnce()
         interval(10000).subscribe(() => {
             this.getData()
         })
     }
-
 
     endTurn() {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         if (this.turn === username) {
             this.lobby.getLobby().subscribe((data) => {
                 data.data.resources.forEach((resourcesElement: any) => {
-                    console.log(resourcesElement[0].owner)
                     if (resourcesElement[0].owner !== username) {
                         const resources = [resourcesElement, [{ owner: username, resources: this.resources }]]
                         const state = [{ turn: resourcesElement[0].owner }]
-                        console.log()
                         data.data.areas.forEach((areasElement: any) => {
                             if (areasElement[0].owner === username) {
-                                this.areas = [{ owner: username, lan: areasElement[0].lan, buildings: areasElement[0].buildings, resourcesPerRound: areasElement[0].resourcesPerRound }]
+                                this.areas = [{ owner: username, lan: areasElement[0].lan, buildings: this.buildingsOwned, resourcesPerRound: this.resourcesPerRoundObject }]
                             }
                             if (areasElement[0].owner !== username) {
                                 const areas = [areasElement, this.areas]
@@ -100,19 +100,33 @@ export class UserInterfaceComponent implements OnInit {
         }
     }
 
-
-    getData() {
-        this.toggleShowEnemies() 
+    getDataOnce() {
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
                 data.data.resources.forEach((element: any) => {
-                    if (element[0].owner === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                    if (element[0].owner === username) {
                         this.resources = element[0].resources
                     }
                 })
+                data.data.areas.forEach((element: any) => {
+                    if (element[0].owner === username) {
+                        this.resourcesPerRoundObject = element[0].resourcesPerRound
+                        this.buildingsOwned = element[0].buildings
+                    }
+                })
+            }
+        })
+    }
+
+
+    getData() {
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
+        this.lobby.getLobby().subscribe((data) => {
+            if (data.data.round) {
                 this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
                 this.turn = data.data.state[0].turn
-                if (this.turn === this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username) {
+                if (this.turn === username) {
                     this.player1Active = true
                     this.player2Active = false
                 } else {
@@ -253,39 +267,35 @@ export class UserInterfaceComponent implements OnInit {
         })
         this.lobby.getLobby().subscribe((response) => {
             let canBuild = true
-            response.data.resources.forEach((resources: any) => {
-                if (resources[0].owner === this.playerName) {
-                    for (const key in building.cost) {
-                        if (resources[0].resources[key] - building.cost[key] < 0) {
-                            canBuild = false
-                        }
-                    }
-                    if (canBuild) {
-                        for (const key in building.cost) {
-                            resources[0].resources[key] -= building.cost[key]
-                        }
-
-                        response.data.areas.forEach((area: any[]) => {
-                            const buildingLan = area[0].lan
-                            if (buildingLan === this.lan) {
-                                area[0].buildings.forEach((buildingInLan: { name: string; amount: number }) => {
-                                    if (buildingInLan.name === building.name) {
-                                        buildingInLan.amount += 1
-                                    }
-                                })
-                                let resourcesObject = area[0].resourcesPerRound
-                                resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
-                                area[0].resourcesPerRound = resourcesObject
-                                this.lobby.putLobbyData(response.data).subscribe(() => {
-                                })
+            for (const key in building.cost) {
+                if (this.resources[key] - building.cost[key] < 0) {
+                    canBuild = false
+                }
+            }
+            if (canBuild) {
+                for (const key in building.cost) {
+                    this.resources[key] -= building.cost[key]
+                }
+                response.data.areas.forEach((area: any[]) => {
+                    const buildingLan = area[0].lan
+                    if (buildingLan === this.lan) {
+                        this.buildingsOwned.forEach((buildingInLan: { name: string; amount: number }) => {
+                            if (buildingInLan.name === building.name) {
+                                buildingInLan.amount += 1
                             }
                         })
+                        let resourcesObject = area[0].resourcesPerRound
+                        resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
+                        area[0].resourcesPerRound = resourcesObject
+                        this.resourcesPerRoundObject = resourcesObject
                     }
-                    else {
-                        alert('Not enough resources')
-                    }
-                }
-            })
+                })
+            }
+            else {
+                alert('Not enough resources')
+            }
+
+
         })
     }
 
