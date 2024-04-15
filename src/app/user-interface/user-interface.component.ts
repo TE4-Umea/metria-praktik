@@ -129,6 +129,12 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    toggleShowBuildings() {
+        this.setShowBuildings.showBuildings$.subscribe(show => {
+            this.showBuildings = show
+        })
+    }
+
 
     onScreenCheckLanChoice() {
         this.lobby.getLobby().subscribe((data) => {
@@ -197,7 +203,7 @@ export class UserInterfaceComponent implements OnInit {
                         }
                     }
                     else {
-                        this.showBuildings = show
+                        this.toggleShowBuildings()
                     }
 
                 })
