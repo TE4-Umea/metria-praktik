@@ -30,6 +30,7 @@ export class UserInterfaceComponent implements OnInit {
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
     resources: any = []
+    enemyResources: any = []
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
 
@@ -48,8 +49,10 @@ export class UserInterfaceComponent implements OnInit {
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
 
-    player1Lan: string = ''
-    player2Lan: string = ''
+    playerLan: string = ''
+    enemyLan: string = ''
+    npcLan: string = ''
+    enemy: boolean = false
 
     player1Active: boolean = false
     player2Active: boolean = false
@@ -64,6 +67,8 @@ export class UserInterfaceComponent implements OnInit {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
+        this.getEnemyLan()
+        this.toggleShowEnemies()
         this.getData()
         this.getDataOnce()
         interval(10000).subscribe(() => {
@@ -104,15 +109,29 @@ export class UserInterfaceComponent implements OnInit {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
+                this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
+                        if (this.round !== data.data.round) {
+                            data.data.areas.forEach((element: any) => {
+                                if (element[0].owner === username) {
+                                    console.log(this.resources, element[0].resourcesPerRound)
+                                    this.resources = this.concatNumbersJSON(this.resources, element[0].resourcesPerRound)
+                                }
+                            })
+                        }
+                    } else {
+                        this.enemyResources = element[0].resources
                     }
                 })
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
+                        this.playerLan = element[0].lan
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.buildingsOwned = element[0].buildings
+                    } else {
+                        this.enemyLan = element[0].lan
                     }
                 })
             }
@@ -124,7 +143,6 @@ export class UserInterfaceComponent implements OnInit {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
-                this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
                 this.turn = data.data.state[0].turn
                 if (this.turn === username) {
                     this.player1Active = true
@@ -137,6 +155,14 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    checkIfEnemyOrNpc() {
+        if (this.enemyLan === this.npcLan) {
+            this.enemy = true
+        } else {
+            this.enemy = false
+        }
+    }
+
     toggleShowEnemies() {
         this.setShowEnemies.showEnemies$.subscribe(show => {
             this.showEnemies = show
@@ -146,6 +172,13 @@ export class UserInterfaceComponent implements OnInit {
     toggleShowBuildings() {
         this.setShowBuildings.showBuildings$.subscribe(show => {
             this.showBuildings = show
+        })
+    }
+
+    getEnemyLan() {
+        this.setLan.lan$.subscribe(lan => {
+            this.npcLan = lan
+            this.checkIfEnemyOrNpc()
         })
     }
 
