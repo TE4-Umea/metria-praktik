@@ -64,6 +64,7 @@ export class UserInterfaceComponent implements OnInit {
     turn: string = ''
 
     ngOnInit() {
+        console.log(this.buildings.default[0].img)
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
