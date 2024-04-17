@@ -9,10 +9,11 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Stroke, Style } from 'ol/style.js'
 import GeoJSON from 'ol/format/GeoJSON'
-import { Decoder, GetCookie, SetLan, SetShowBuildings, SetShowEnemies } from '../service'
+import { Decoder, GetCookie, NeighboringLan, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
 import { LanChoose } from '../user-interface/user-interface.component'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Lobby } from '../http.service'
+import * as lan from '../../assets/sweden.json'
 @Component({
     selector: 'app-map',
     standalone: true,
@@ -22,13 +23,15 @@ import { Lobby } from '../http.service'
     providers: [LanChoose, { provide: MatDialogRef, useValue: {} }]
 })
 export class MapComponent implements OnInit, OnDestroy {
-    constructor(private setShowBuildings: SetShowBuildings, private setShowEenemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(private setShowBuildings: SetShowBuildings, private setShowAttack: SetShowAttack, private neighboringLanService: NeighboringLan, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
+    lan: any = lan
     selectedLan: string = ''
     playerLan: string[] = []
     enemyLan: string[] = []
+    neighboringLan: string[] = []
     round: number = 0
 
     ngOnInit(): void {
@@ -51,7 +54,9 @@ export class MapComponent implements OnInit, OnDestroy {
                     if (Array.isArray(element)) {
                         element.forEach((subElement: any) => {
                             if (subElement.owner === username) {
+                                this.checkForNeighboringLan(subElement.lan)
                                 this.playerLan.push(subElement.lan)
+                                console.log(this.neighboringLan)
                             } else if (subElement.owner !== username) {
                                 this.enemyLan.push(subElement.lan)
                             }
@@ -66,6 +71,39 @@ export class MapComponent implements OnInit, OnDestroy {
                 })
             }
         })
+    }
+
+    checkForNeighboringLan(lanName: string) {
+        const lan = this.lan.features.find((element: any) => element.properties.name === lanName)
+        const lanNames = this.lan.features.map((element: any) => element.properties.name)
+        for (const otherLanName of lanNames) {
+            const otherLan = this.lan.features.find((element: any) => element.properties.name === otherLanName)
+            if (this.areLansNeighboring(lan, otherLan)) {
+                if (otherLanName !== lanName) {
+                    this.neighboringLan.push(otherLanName)
+                    this.neighboringLanService.setNeighboringLan(this.neighboringLan)
+                }
+            }
+        }
+
+    }
+
+    areLansNeighboring(lan1: any, lan2: any) {
+        const lan1Coordinates = lan1.geometry.coordinates[0]
+        const lan2Coordinates = lan2.geometry.coordinates[0]
+        for (const lan1Coordinate of lan1Coordinates) {
+            for (const lan2Coordinate of lan2Coordinates) {
+                if (this.areCoordinatesClose(lan1Coordinate, lan2Coordinate)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    areCoordinatesClose(lan1Coordinate: any, lan2Coordinate: any) {
+        const distance = Math.sqrt(Math.pow(lan1Coordinate[0] - lan2Coordinate[0], 2) + Math.pow(lan1Coordinate[1] - lan2Coordinate[1], 2))
+        return distance <= 0.4
     }
 
     private initMap(): void {
@@ -104,7 +142,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
     private handleMapClick(event: any): void {
         this.setShowBuildings.setShowBuildings(false)
-        this.setShowEenemies.setShowEnemies(false)
+        this.setShowEnemies.setShowEnemies(false)
+        this.setShowAttack.setShowAttack(false)
         this.selectedLan = ''
         this.mapLayer.getSource().changed()
         this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
@@ -119,7 +158,12 @@ export class MapComponent implements OnInit, OnDestroy {
             } else if (this.round >= 1 && this.playerLan.includes(feature.get('name'))) {
                 this.setShowBuildings.setShowBuildings(true)
             } else if (this.round >= 1 && !this.playerLan.includes(feature.get('name'))) {
-                this.setShowEenemies.setShowEnemies(true)
+                if (this.neighboringLan.includes(feature.get('name'))) {
+                    this.setShowEnemies.setShowEnemies(true)
+                    this.setShowAttack.setShowAttack(true)
+                } else {
+                    this.setShowEnemies.setShowEnemies(true)
+                }
             }
             this.setLan.setLan(feature.get('name'))
             this.selectedLan = feature.get('name')
@@ -149,7 +193,7 @@ export class MapComponent implements OnInit, OnDestroy {
         })
         const playerSelectedStyle = new Style({
             fill: new Fill({
-                color: 'rgba(100, 255, 100, 0.6)',
+                color: 'rgba(100, 255, 100, 0.5)',
             }),
             stroke: new Stroke({
                 color: 'rgba(0, 106, 167, 0.7)',
@@ -181,43 +225,6 @@ export class MapComponent implements OnInit, OnDestroy {
             }
         } else {
             return this.defaultGamingStyle(feature)
-        }
-    }
-
-    defaultGamingStyle(feature: any) {
-        const defaultStyle = new Style({
-            fill: new Fill({
-                color: 'rgba(25, 25, 25, 0.3)'
-            }),
-            stroke: new Stroke({
-                color: '#319FD3',
-                width: 1
-            })
-        })
-        const playerStyle = new Style({
-            fill: new Fill({
-                color: 'rgba(100, 255, 100, 0.3)',
-            }),
-            stroke: new Stroke({
-                color: 'rgba(0, 255, 0, 0.7)',
-                width: 2,
-            }),
-        })
-        const enemyStyle = new Style({
-            fill: new Fill({
-                color: 'rgba(255, 0, 0, 0.3)'
-            }),
-            stroke: new Stroke({
-                color: '#319FD3',
-                width: 1
-            })
-        })
-        if (this.playerLan.includes(feature.get('name'))) {
-            return playerStyle
-        } else if (this.enemyLan.includes(feature.get('name'))) {
-            return enemyStyle
-        } else {
-            return defaultStyle
         }
     }
 
@@ -276,7 +283,44 @@ export class MapComponent implements OnInit, OnDestroy {
             return defaultStyle
         }
     }
-}
 
+
+    defaultGamingStyle(feature: any) {
+        const defaultStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(25, 25, 25, 0.3)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
+        const playerStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(100, 255, 100, 0.3)',
+            }),
+            stroke: new Stroke({
+                color: 'rgba(0, 255, 0, 0.7)',
+                width: 2,
+            }),
+        })
+        const enemyStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(255, 0, 0, 0.3)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
+        if (this.playerLan.includes(feature.get('name'))) {
+            return playerStyle
+        } else if (this.enemyLan.includes(feature.get('name'))) {
+            return enemyStyle
+        } else {
+            return defaultStyle
+        }
+    }
+}
 
 

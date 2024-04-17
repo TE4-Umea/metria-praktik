@@ -118,7 +118,7 @@
                     <h3>{{ playerLan }}</h3>
                     <img class="lans-weapon" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
                 </div>
-                <p>Player 1: Attacking</p>
+                <p *ngIf="showAttack">Player 1: Attacking</p>
             </div>
             <div class="attack-menu-lan-flex">
                 <div *ngFor="let resource of resources | keyvalue">
@@ -136,7 +136,7 @@
                     <h3>{{ npcLan }}</h3>
                     <img class="lans-weapon" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
                 </div>
-                <p>Player 2: Defending</p>
+                <p *ngIf="showAttack">Player 2: Defending</p>
             </div>
             <div *ngIf="enemy" class="attack-menu-lan-flex">
                 <div *ngFor="let enemyResource of enemyResources | keyvalue">
@@ -173,7 +173,8 @@
                     <p>Chance of victory: 5000%</p>
                 </div>
             </div>
-            <button mat-flat-button color="primary" [ngClass]="'attack-button'">Attack Norrbotten</button>
+            <button *ngIf="showAttack" mat-flat-button color="primary" [ngClass]="'attack-button'">Attack
+                Norrbotten</button>
         </div>
     </div>
 </div>

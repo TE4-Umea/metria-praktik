@@ -160,9 +160,18 @@ export class SignUpDialog {
     confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignUp() {
+        // eslint-disable-next-line no-useless-escape
+        const specialChars = '/[$%^&*()+\-=\[\]{};\':"\\|,.<>\/]+/;åäö ÅÄÖ'
+        const isSpecialCharsPresent = specialChars.split('').some(char => this.usernameFormControl.value.includes(char) && this.passwordFormControl.value.includes(char))
+        if (isSpecialCharsPresent) {
+            const specialCharsError: string = 'Special characters are not allowed in username and password'
+            console.log(specialCharsError)
+            return
+        }
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
             const passwordDoesNotMatchError: string = 'Password does not match'
             console.log(passwordDoesNotMatchError)
+            return
         }
         else {
             this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value)

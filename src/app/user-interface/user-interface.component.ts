@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, SetIfDialogOpen, SetLan, SetShowBuildings, SetShowEnemies } from '../service'
+import { Decoder, GetCookie, NeighboringLan, SetIfDialogOpen, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -25,7 +25,7 @@ import * as buildingsData from '../../assets/buildings.json'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(public dialog: MatDialog, private setShowAttack: SetShowAttack, private neighboringLan: NeighboringLan, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -41,6 +41,7 @@ export class UserInterfaceComponent implements OnInit {
     showMenu: boolean = false
     showBuildings: boolean = false
     showEnemies: boolean = false
+    showAttack: boolean = false
 
     lobbyOwner: string = ''
     playerName: string = ''
@@ -64,7 +65,6 @@ export class UserInterfaceComponent implements OnInit {
     turn: string = ''
 
     ngOnInit() {
-        console.log(this.buildings.default[0].img)
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
@@ -117,7 +117,6 @@ export class UserInterfaceComponent implements OnInit {
                         if (this.round !== data.data.round) {
                             data.data.areas.forEach((element: any) => {
                                 if (element[0].owner === username) {
-                                    console.log(this.resources, element[0].resourcesPerRound)
                                     this.resources = this.concatNumbersJSON(this.resources, element[0].resourcesPerRound)
                                 }
                             })
@@ -168,6 +167,9 @@ export class UserInterfaceComponent implements OnInit {
         this.setShowEnemies.showEnemies$.subscribe(show => {
             this.showEnemies = show
         })
+        this.setShowAttack.showAttack$.subscribe(show => {
+            this.showAttack = show
+        })
     }
 
     toggleShowBuildings() {
@@ -182,6 +184,13 @@ export class UserInterfaceComponent implements OnInit {
             this.checkIfEnemyOrNpc()
         })
     }
+
+    getNeighbours() {
+        this.neighboringLan.neighboringLan$.subscribe((data) => {
+            console.log(data)
+        })
+    }
+
 
 
     onScreenCheckLanChoice() {
