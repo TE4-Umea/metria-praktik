@@ -2,8 +2,8 @@
     "areas": [
         [
             {
-                "lan": "Gävleborg",
-                "owner": "timpan0404",
+                "lan": "Vilhelmina",
+                "owner": "rasmusrasmus",
                 "buildings": [
                     {
                         "name": "Barracks",
@@ -31,8 +31,8 @@
         ],
         [
             {
-                "lan": "Västerbotten",
-                "owner": "DiamondMiner74",
+                "lan": "Jokkmokk",
+                "owner": "timpan0404",
                 "buildings": [
                     {
                         "name": "Barracks",
@@ -40,7 +40,7 @@
                     },
                     {
                         "name": "Farm",
-                        "amount": 25
+                        "amount": 0
                     },
                     {
                         "name": "Factory",
@@ -54,21 +54,21 @@
                 "resourcesPerRound": {
                     "Army": 100,
                     "Money": 100,
-                    "BuildingMaterials": 18100
+                    "BuildingMaterials": 100
                 }
             }
         ]
     ],
-    "round": 2,
+    "round": 1,
     "state": [
         {
-            "turn": "timpan0404"
+            "turn": "rasmusrasmus"
         }
     ],
     "resources": [
         [
             {
-                "owner": "timpan0404",
+                "owner": "rasmusrasmus",
                 "resources": {
                     "Army": 10000,
                     "Money": 10000,
@@ -78,11 +78,11 @@
         ],
         [
             {
-                "owner": "DiamondMiner74",
+                "owner": "timpan0404",
                 "resources": {
                     "Army": 10000,
-                    "Money": 1600,
-                    "BuildingMaterials": 8800
+                    "Money": 10000,
+                    "BuildingMaterials": 10000
                 }
             }
         ]

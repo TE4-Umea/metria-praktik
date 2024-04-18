@@ -1,0 +1,170 @@
+[
+    {
+        "name": "Norrbotten",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Västerbotten",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Jämtland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Västernorrland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Gävleborg",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Dalarna",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Värmland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Örebro",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Västmanland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Uppsala",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Stockholm",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Södermanland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Östergötland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Jönköping",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Kronoberg",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Kalmar",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Gotland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Blekinge",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Skåne",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Halland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    },
+    {
+        "name": "Västra Götaland",
+        "resources": {
+            "Army": 5000,
+            "BuildingMaterials": 5000,
+            "Money": 5000
+        }
+    }
+]

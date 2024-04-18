@@ -78,8 +78,8 @@
 
 
     <div *ngIf="showBuildings && player1Active" class="carousel-container">
-        <button [ngClass]="['carousel-button', 'button-animation']" (click)="carouselLeft()"><img class="carousel-button-left"
-                src="../assets/images/icons/arrow.svg" alt="Left"></button>
+        <button [ngClass]="['carousel-button', 'button-animation']" (click)="carouselLeft()"><img
+                class="carousel-button-left" src="../assets/images/icons/arrow.svg" alt="Left"></button>
 
         <drag-scroll #carousel class="carousel">
 
@@ -89,7 +89,7 @@
                     <div class="card-image-container">
                         <div class="type-color" style="background-color: #1acf29;"></div>
                         <img class="type-icon" src="../assets/images/icons/house.svg">
-                        <img class="card-image" src="../assets/images/buildings/factory.png">
+                        <img class="card-image" [src]="building.img">
                     </div>
                     <div class="card-info-container">
                         <div class="card-info">
@@ -110,28 +110,20 @@
     </div>
 
 
-    <div *ngIf="showEnemies && !showBuildings" class="attack-menu-container">
+    <div *ngIf="showEnemies && !showBuildings && player1Active" class="attack-menu-container">
         <div class="attack-menu-lan-stats">
             <img class="lans-weapon-background" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
             <div class="attack-menu-lan-flex-top">
                 <div class="attack-menu-lan">
-                    <h3>Västerbotten</h3>
+                    <h3>{{ playerLan }}</h3>
                     <img class="lans-weapon" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
                 </div>
-                <p>Player 1: Attacking</p>
+                <p *ngIf="showAttack">Player 1: Attacking</p>
             </div>
             <div class="attack-menu-lan-flex">
-                <div>
-                    <h4>Military</h4>
-                    <p>10000</p>
-                </div>
-                <div>
-                    <h4>Materials</h4>
-                    <p>1200</p>
-                </div>
-                <div>
-                    <h4>Money</h4>
-                    <p>50000000000000000</p>
+                <div *ngFor="let resource of resources | keyvalue">
+                    <h4>{{ resource.key }}</h4>
+                    <p>{{ resource.value }}</p>
                 </div>
             </div>
         </div>
@@ -141,12 +133,18 @@
             <img class="lans-weapon-background" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
             <div class="attack-menu-lan-flex-top">
                 <div class="attack-menu-lan">
-                    <h3>Norrbotten</h3>
+                    <h3>{{ npcLan }}</h3>
                     <img class="lans-weapon" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
                 </div>
-                <p>Player 2: Defending</p>
+                <p *ngIf="showAttack">Player 2: Defending</p>
             </div>
-            <div class="attack-menu-lan-flex">
+            <div *ngIf="enemy" class="attack-menu-lan-flex">
+                <div *ngFor="let enemyResource of enemyResources | keyvalue">
+                    <h4>{{ enemyResource.key }}</h4>
+                    <p>{{ enemyResource.value }}</p>
+                </div>
+            </div>
+            <div *ngIf="!enemy" class="attack-menu-lan-flex">
                 <div>
                     <h4>Military</h4>
                     <p>10000</p>
@@ -175,7 +173,8 @@
                     <p>Chance of victory: 5000%</p>
                 </div>
             </div>
-            <button mat-flat-button color="primary" [ngClass]="'attack-button'">Attack Norrbotten</button>
+            <button *ngIf="showAttack" mat-flat-button color="primary" [ngClass]="'attack-button'">Attack
+                Norrbotten</button>
         </div>
     </div>
 </div>

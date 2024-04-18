@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, SetIfDialogOpen, SetLan, SetShowBuildings, SetShowEnemies } from '../service'
+import { Decoder, GetCookie, NeighboringLan, SetIfDialogOpen, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -25,11 +25,12 @@ import * as buildingsData from '../../assets/buildings.json'
 
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(public dialog: MatDialog, private setShowAttack: SetShowAttack, private neighboringLan: NeighboringLan, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
     resources: any = []
+    enemyResources: any = []
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
 
@@ -40,6 +41,7 @@ export class UserInterfaceComponent implements OnInit {
     showMenu: boolean = false
     showBuildings: boolean = false
     showEnemies: boolean = false
+    showAttack: boolean = false
 
     lobbyOwner: string = ''
     playerName: string = ''
@@ -48,8 +50,10 @@ export class UserInterfaceComponent implements OnInit {
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
 
-    player1Lan: string = ''
-    player2Lan: string = ''
+    playerLan: string = ''
+    enemyLan: string = ''
+    npcLan: string = ''
+    enemy: boolean = false
 
     player1Active: boolean = false
     player2Active: boolean = false
@@ -64,6 +68,8 @@ export class UserInterfaceComponent implements OnInit {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
+        this.getEnemyLan()
+        this.toggleShowEnemies()
         this.getData()
         this.getDataOnce()
         interval(10000).subscribe(() => {
@@ -104,15 +110,28 @@ export class UserInterfaceComponent implements OnInit {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
+                this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
+                        if (this.round !== data.data.round) {
+                            data.data.areas.forEach((element: any) => {
+                                if (element[0].owner === username) {
+                                    this.resources = this.concatNumbersJSON(this.resources, element[0].resourcesPerRound)
+                                }
+                            })
+                        }
+                    } else {
+                        this.enemyResources = element[0].resources
                     }
                 })
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
+                        this.playerLan = element[0].lan
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.buildingsOwned = element[0].buildings
+                    } else {
+                        this.enemyLan = element[0].lan
                     }
                 })
             }
@@ -124,7 +143,6 @@ export class UserInterfaceComponent implements OnInit {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data) => {
             if (data.data.round) {
-                this.information = { Weather: 'Sunny', Date: '2021-01-01', Round: data.data.round, Level: 1 }
                 this.turn = data.data.state[0].turn
                 if (this.turn === username) {
                     this.player1Active = true
@@ -137,9 +155,20 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    checkIfEnemyOrNpc() {
+        if (this.enemyLan === this.npcLan) {
+            this.enemy = true
+        } else {
+            this.enemy = false
+        }
+    }
+
     toggleShowEnemies() {
         this.setShowEnemies.showEnemies$.subscribe(show => {
             this.showEnemies = show
+        })
+        this.setShowAttack.showAttack$.subscribe(show => {
+            this.showAttack = show
         })
     }
 
@@ -148,6 +177,20 @@ export class UserInterfaceComponent implements OnInit {
             this.showBuildings = show
         })
     }
+
+    getEnemyLan() {
+        this.setLan.lan$.subscribe(lan => {
+            this.npcLan = lan
+            this.checkIfEnemyOrNpc()
+        })
+    }
+
+    getNeighbours() {
+        this.neighboringLan.neighboringLan$.subscribe((data) => {
+            console.log(data)
+        })
+    }
+
 
 
     onScreenCheckLanChoice() {
