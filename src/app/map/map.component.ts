@@ -89,12 +89,17 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     areLansNeighboring(lan1: any, lan2: any) {
-        const lan1Coordinates = lan1.geometry.coordinates[0]
-        const lan2Coordinates = lan2.geometry.coordinates[0]
+        const lan1Coordinates = lan1.geometry.type === 'Polygon' ? [lan1.geometry.coordinates[0]] : lan1.geometry.coordinates.map((coords: any[]) => coords[0])
+        const lan2Coordinates = lan2.geometry.type === 'Polygon' ? [lan2.geometry.coordinates[0]] : lan2.geometry.coordinates.map((coords: any[]) => coords[0])
+
         for (const lan1Coordinate of lan1Coordinates) {
             for (const lan2Coordinate of lan2Coordinates) {
-                if (this.areCoordinatesClose(lan1Coordinate, lan2Coordinate)) {
-                    return true
+                for (const coord1 of lan1Coordinate) {
+                    for (const coord2 of lan2Coordinate) {
+                        if (this.areCoordinatesClose(coord1, coord2)) {
+                            return true
+                        }
+                    }
                 }
             }
         }
@@ -103,7 +108,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     areCoordinatesClose(lan1Coordinate: any, lan2Coordinate: any) {
         const distance = Math.sqrt(Math.pow(lan1Coordinate[0] - lan2Coordinate[0], 2) + Math.pow(lan1Coordinate[1] - lan2Coordinate[1], 2))
-        return distance <= 0.4
+        return distance <= 0.1
     }
 
     private initMap(): void {
@@ -313,10 +318,21 @@ export class MapComponent implements OnInit, OnDestroy {
                 width: 1
             })
         })
+        const neighborsStyle = new Style({
+            fill: new Fill({
+                color: 'rgba(255, 0, 0, 0.1)'
+            }),
+            stroke: new Stroke({
+                color: '#319FD3',
+                width: 1
+            })
+        })
         if (this.playerLan.includes(feature.get('name'))) {
             return playerStyle
         } else if (this.enemyLan.includes(feature.get('name'))) {
             return enemyStyle
+        } else if (this.neighboringLan.includes(feature.get('name'))) {
+            return neighborsStyle
         } else {
             return defaultStyle
         }
