@@ -56,7 +56,6 @@ export class MapComponent implements OnInit, OnDestroy {
                             if (subElement.owner === username) {
                                 this.checkForNeighboringLan(subElement.lan)
                                 this.playerLan.push(subElement.lan)
-                                console.log(this.neighboringLan)
                             } else if (subElement.owner !== username) {
                                 this.enemyLan.push(subElement.lan)
                             }

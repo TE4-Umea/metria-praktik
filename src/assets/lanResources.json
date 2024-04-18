@@ -10,7 +10,7 @@
     {
         "name": "Västerbotten",
         "resources": {
-            "Army": 5000,
+            "Army": 9000,
             "BuildingMaterials": 5000,
             "Money": 5000
         }
