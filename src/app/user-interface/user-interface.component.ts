@@ -60,8 +60,10 @@ export class UserInterfaceComponent implements OnInit {
     player1Active: boolean = false
     player2Active: boolean = false
 
+    whichLanNewBuildingsAt: any = []
     resourcesPerRoundObject: any = []
-    buildingsOwned: any = []
+    newBuildingsOwned: any = []
+
     lan = ''
     round: number | undefined
     turn: string = ''
@@ -71,6 +73,8 @@ export class UserInterfaceComponent implements OnInit {
     playerMaxPercentage: string = ''
     selectedLan: any
     lastSelectedLan: any
+
+    updatedAreas: any = []
 
     ngOnInit() {
         this.getLobbyNames()
@@ -212,11 +216,13 @@ export class UserInterfaceComponent implements OnInit {
                     }
                 })
                 data.data.areas.forEach((areasElement: any) => {
-                    if (areasElement[0].owner === username) {
-                        const userArea = areasElement[0]
-                        userArea.buildings = this.buildingsOwned
-                        userArea.resourcesPerRound = this.resourcesPerRoundObject
-                    }
+                    this.updatedAreas.forEach((updatedAreasElement: any) => {
+                        if (areasElement[0].owner === username && updatedAreasElement.lan === areasElement[0].lan) {
+                            const userArea = areasElement[0]
+                            userArea.buildings = updatedAreasElement.buildings
+                            userArea.resourcesPerRound = updatedAreasElement.resourcesPerRound
+                        }
+                    })
                 })
                 if (username === data.lobbyOwner) {
                     this.round = data.data.round + 1
@@ -253,7 +259,7 @@ export class UserInterfaceComponent implements OnInit {
                     if (element[0].owner === username) {
                         this.playerLan = element[0].lan
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
-                        this.buildingsOwned = element[0].buildings
+                        this.newBuildingsOwned = element[0].buildings
                     } else {
                         this.enemyLan = element[0].lan
                     }
@@ -460,15 +466,46 @@ export class UserInterfaceComponent implements OnInit {
                 response.data.areas.forEach((area: any[]) => {
                     const buildingLan = area[0].lan
                     if (buildingLan === this.lan) {
-                        this.buildingsOwned.forEach((buildingInLan: { name: string; amount: number }) => {
+                        const existingAreaIndex = this.updatedAreas.findIndex(
+                            (area: { lan: any }) => area.lan === buildingLan
+                        )
+
+                        const newBuildingsOwned = existingAreaIndex !== -1
+                            ? JSON.parse(JSON.stringify(this.updatedAreas[existingAreaIndex].buildings))
+                            : JSON.parse(JSON.stringify(this.newBuildingsOwned))
+
+                        newBuildingsOwned.forEach((buildingInLan: { name: string; amount: number }) => {
                             if (buildingInLan.name === building.name) {
                                 buildingInLan.amount += 1
                             }
                         })
-                        let resourcesObject = area[0].resourcesPerRound
-                        resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
-                        area[0].resourcesPerRound = resourcesObject
-                        this.resourcesPerRoundObject = resourcesObject
+
+                        const resourcesObject = existingAreaIndex !== -1
+                            ? { ...this.updatedAreas[existingAreaIndex].resourcesPerRound }
+                            : { ...area[0].resourcesPerRound }
+
+                        for (const key in building.output) {
+                            // eslint-disable-next-line no-prototype-builtins
+                            if (resourcesObject.hasOwnProperty(key)) {
+                                resourcesObject[key] += building.output[key] // Add the building output to the existing resources
+                            } else {
+                                resourcesObject[key] += building.output[key] // If the resource doesn't exist yet, add it
+                            }
+                        }
+                        const updatedArea = {
+                            lan: buildingLan,
+                            buildings: newBuildingsOwned,
+                            resourcesPerRound: resourcesObject,
+                        }
+                        if (existingAreaIndex !== -1) {
+                            this.updatedAreas[existingAreaIndex] = updatedArea
+                        } else {
+                            this.updatedAreas.push(updatedArea)
+                        }
+
+                        this.updatedAreas.forEach((element: any) => {
+                            console.log(element.lan)
+                        })
                     }
                 })
             }

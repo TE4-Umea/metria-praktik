@@ -2,36 +2,7 @@
     "areas": [
         [
             {
-                "lan": "Dalarna",
-                "owner": "timpan0404",
-                "buildings": [
-                    {
-                        "name": "Barracks",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Farm",
-                        "amount": 11
-                    },
-                    {
-                        "name": "Factory",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Bunker",
-                        "amount": 0
-                    }
-                ],
-                "resourcesPerRound": {
-                    "Army": 100,
-                    "Money": 100,
-                    "BuildingMaterials": 1100
-                }
-            }
-        ],
-        [
-            {
-                "lan": "Östergötland",
+                "lan": "Västra Götaland",
                 "owner": "DiamondMiner74",
                 "buildings": [
                     {
@@ -48,11 +19,40 @@
                     },
                     {
                         "name": "Bunker",
-                        "amount": 2
+                        "amount": 0
                     }
                 ],
                 "resourcesPerRound": {
-                    "Army": 150,
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Uppsala",
+                "owner": "timpan0404",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 1
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
                     "Money": 100,
                     "BuildingMaterials": 1100
                 }
@@ -61,7 +61,7 @@
         [
             {
                 "lan": "Värmland",
-                "owner": "timpan0404",
+                "owner": "DiamondMiner74",
                 "buildings": [
                     {
                         "name": "Barracks",
@@ -69,7 +69,7 @@
                     },
                     {
                         "name": "Farm",
-                        "amount": 11
+                        "amount": 0
                     },
                     {
                         "name": "Factory",
@@ -83,14 +83,14 @@
                 "resourcesPerRound": {
                     "Army": 100,
                     "Money": 100,
-                    "BuildingMaterials": 1100
+                    "BuildingMaterials": 100
                 }
             }
         ],
         [
             {
-                "lan": "Jönköping",
-                "owner": "DiamondMiner74",
+                "lan": "Västmanland",
+                "owner": "timpan0404",
                 "buildings": [
                     {
                         "name": "Barracks",
@@ -98,7 +98,7 @@
                     },
                     {
                         "name": "Farm",
-                        "amount": 0
+                        "amount": 5
                     },
                     {
                         "name": "Factory",
@@ -106,70 +106,41 @@
                     },
                     {
                         "name": "Bunker",
-                        "amount": 2
+                        "amount": 0
                     }
                 ],
                 "resourcesPerRound": {
-                    "Army": 150,
+                    "Army": 100,
                     "Money": 100,
-                    "BuildingMaterials": 1100
-                }
-            }
-        ],
-        [
-            {
-                "lan": "Södermanland",
-                "owner": "DiamondMiner74",
-                "buildings": [
-                    {
-                        "name": "Barracks",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Farm",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Factory",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Bunker",
-                        "amount": 2
-                    }
-                ],
-                "resourcesPerRound": {
-                    "Army": 150,
-                    "Money": 100,
-                    "BuildingMaterials": 1100
+                    "BuildingMaterials": 5100
                 }
             }
         ]
     ],
-    "round": 3,
+    "round": 2,
     "state": [
         {
-            "turn": "timpan0404"
+            "turn": "DiamondMiner74"
         }
     ],
     "resources": [
         [
             {
-                "owner": "timpan0404",
+                "owner": "DiamondMiner74",
                 "resources": {
                     "Army": 15300,
-                    "Money": 3750,
-                    "BuildingMaterials": 13650
+                    "Money": 10050,
+                    "BuildingMaterials": 14550
                 }
             }
         ],
         [
             {
-                "owner": "DiamondMiner74",
+                "owner": "timpan0404",
                 "resources": {
-                    "Army": 20700,
-                    "Money": 5400,
-                    "BuildingMaterials": 22700
+                    "Army": 15300,
+                    "Money": 9000,
+                    "BuildingMaterials": 14400
                 }
             }
         ]
