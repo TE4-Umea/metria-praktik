@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import * as buildingsData from '../../assets/buildings.json'
+import * as lanResources from '../../assets/lanResources.json'
 @Component({
     selector: 'app-user-interface',
     standalone: true,
@@ -34,6 +35,7 @@ export class UserInterfaceComponent implements OnInit {
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
 
+    lanResources: any = lanResources
     buildings: any = buildingsData
     areas: any = []
 
@@ -58,17 +60,27 @@ export class UserInterfaceComponent implements OnInit {
     player1Active: boolean = false
     player2Active: boolean = false
 
+    whichLanNewBuildingsAt: any = []
     resourcesPerRoundObject: any = []
-    buildingsOwned: any = []
+    newBuildingsOwned: any = []
+
     lan = ''
     round: number | undefined
     turn: string = ''
+
+    attackPercentage: number = 0
+    playerMinPercentage: string = ''
+    playerMaxPercentage: string = ''
+    selectedLan: any
+    lastSelectedLan: any
+
+    updatedAreas: any = []
 
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
-        this.getEnemyLan()
+        this.selectLan()
         this.toggleShowEnemies()
         this.getData()
         this.getDataOnce()
@@ -77,34 +89,152 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    attack() {
+        let resources: any[] = []
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
+        const randomNumber = Math.random() * 100
+        if (randomNumber <= this.attackPercentage) {
+            this.lobby.getLobby().subscribe((data) => {
+                if (this.selectedLan !== this.enemyLan) {
+                    const buildings: { name: string; amount: number }[] = []
+                    this.buildings.default.forEach((building: { name: any }) => {
+                        buildings.push({ 'name': building.name, 'amount': 0 })
+                    })
+                    const newArea = [{ owner: username, lan: this.selectedLan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
+                    data.data.areas.push(newArea)
+                    const areas = data.data.areas
+                    data.data.resources.forEach((resourcesElement: any) => {
+                        if (resourcesElement[0].owner !== username) {
+                            resources = [resourcesElement, [{ owner: username, resources: this.concatNumbersJSON(this.resources, this.getSelectedLanResources()) }]]
+                        }
+                    })
+                    this.lobby.putLobbyData({ round: data.data.round, areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
+                        window.location.reload()
+                    })
+                }
+            })
+        } else {
+            console.log('Attack failed!')
+        }
+    }
+
+
+    calculateMinMaxAttackPercentage(numSimulations: number) {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (this.selectedLan !== this.enemyLan) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
+        }
+
+        let minPercentage = Infinity
+        let maxPercentage = 0
+
+        for (let sim = 0; sim < numSimulations; sim++) {
+            let playerWins = 0
+
+            for (let i = 0; i < numSimulations; i++) {
+                const playerDice = this.rollDice(Math.min(playerArmy, 3))
+                const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
+
+                const playerLosses = this.countLosses(playerDice, enemyDice)
+                const enemyLosses = this.countLosses(enemyDice, playerDice)
+
+                if (playerLosses < enemyLosses) {
+                    playerWins++
+                }
+            }
+
+            const winPercentage = (playerWins / numSimulations) * 100
+
+            minPercentage = Math.min(minPercentage, winPercentage)
+            maxPercentage = Math.max(maxPercentage, winPercentage)
+        }
+
+        this.playerMinPercentage = minPercentage.toFixed(0)
+        this.playerMaxPercentage = maxPercentage.toFixed(0)
+    }
+
+    calculateAttackPercentage() {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (this.selectedLan !== this.enemyLan) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
+        }
+
+        const iterations = 10
+        let playerWins = 0
+
+        for (let i = 0; i < iterations; i++) {
+            const playerDice = this.rollDice(Math.min(playerArmy, 3))
+            const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
+
+            const playerLosses = this.countLosses(playerDice, enemyDice)
+            const enemyLosses = this.countLosses(enemyDice, playerDice)
+
+            if (playerLosses < enemyLosses) {
+                playerWins++
+            }
+        }
+
+        const winPercentage = (playerWins / iterations) * 100
+        this.attackPercentage = winPercentage
+    }
+
+    rollDice(numDice: number) {
+        const results = []
+        for (let i = 0; i < numDice; i++) {
+            results.push(Math.floor(Math.random() * 6) + 1) // Assuming 6-sided dice
+        }
+        return results.sort((a, b) => b - a) // Sort in descending order
+    }
+
+    countLosses(attackerDice: string | any[], defenderDice: string | any[]) {
+        let losses = 0
+        for (let i = 0; i < Math.min(attackerDice.length, defenderDice.length); i++) {
+            if (attackerDice[i] > defenderDice[i]) {
+                losses++
+            }
+        }
+        return losses
+    }
+
+
     endTurn() {
+        let resources: any[] = []
+        let state: any[] = []
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         if (this.turn === username) {
             this.lobby.getLobby().subscribe((data) => {
                 data.data.resources.forEach((resourcesElement: any) => {
                     if (resourcesElement[0].owner !== username) {
-                        const resources = [resourcesElement, [{ owner: username, resources: this.resources }]]
-                        const state = [{ turn: resourcesElement[0].owner }]
-                        data.data.areas.forEach((areasElement: any) => {
-                            if (areasElement[0].owner === username) {
-                                this.areas = [{ owner: username, lan: areasElement[0].lan, buildings: this.buildingsOwned, resourcesPerRound: this.resourcesPerRoundObject }]
-                            }
-                            if (areasElement[0].owner !== username) {
-                                const areas = [areasElement, this.areas]
-                                if (username === data.lobbyOwner) {
-                                    this.round = data.data.round + 1
-                                }
-                                const round = (this.round !== undefined) ? this.round : data.data.round
-                                this.lobby.putLobbyData({ round: round, areas: areas, state: state, resources: resources }).subscribe(() => {
-                                    window.location.reload()
-                                })
-                            }
-                        })
+                        resources = [resourcesElement, [{ owner: username, resources: this.resources }]]
+                        state = [{ turn: resourcesElement[0].owner }]
                     }
+                })
+                data.data.areas.forEach((areasElement: any) => {
+                    this.updatedAreas.forEach((updatedAreasElement: any) => {
+                        if (areasElement[0].owner === username && updatedAreasElement.lan === areasElement[0].lan) {
+                            const userArea = areasElement[0]
+                            userArea.buildings = updatedAreasElement.buildings
+                            userArea.resourcesPerRound = updatedAreasElement.resourcesPerRound
+                        }
+                    })
+                })
+                if (username === data.lobbyOwner) {
+                    this.round = data.data.round + 1
+                }
+                const round = (this.round !== undefined) ? this.round : data.data.round
+                this.lobby.putLobbyData({ round: round, areas: data.data.areas, state: state, resources: resources }).subscribe(() => {
+                    window.location.reload()
                 })
             })
         }
     }
+
 
     getDataOnce() {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
@@ -129,7 +259,7 @@ export class UserInterfaceComponent implements OnInit {
                     if (element[0].owner === username) {
                         this.playerLan = element[0].lan
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
-                        this.buildingsOwned = element[0].buildings
+                        this.newBuildingsOwned = element[0].buildings
                     } else {
                         this.enemyLan = element[0].lan
                     }
@@ -155,14 +285,6 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
-    checkIfEnemyOrNpc() {
-        if (this.enemyLan === this.npcLan) {
-            this.enemy = true
-        } else {
-            this.enemy = false
-        }
-    }
-
     toggleShowEnemies() {
         this.setShowEnemies.showEnemies$.subscribe(show => {
             this.showEnemies = show
@@ -178,20 +300,36 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
-    getEnemyLan() {
+    selectLan() {
         this.setLan.lan$.subscribe(lan => {
-            this.npcLan = lan
-            this.checkIfEnemyOrNpc()
+            if (this.lastSelectedLan !== lan) {
+                this.selectedLan = lan
+                this.calculateAttackPercentage()
+                this.calculateMinMaxAttackPercentage(1000)
+                if (this.selectedLan === this.enemyLan) {
+                    this.enemy = true
+                } else {
+                    this.enemy = false
+                }
+                this.lastSelectedLan = lan
+            }
         })
+
     }
 
     getNeighbours() {
-        this.neighboringLan.neighboringLan$.subscribe((data) => {
-            console.log(data)
+        this.neighboringLan.neighboringLan$.subscribe(() => {
         })
     }
 
-
+    getSelectedLanResources() {
+        if (this.selectedLan !== this.enemyLan) {
+            const lan = this.lanResources.default.find((l: { name: any }) => l.name === this.selectedLan)
+            return lan ? lan.resources : null
+        } else {
+            return null
+        }
+    }
 
     onScreenCheckLanChoice() {
         this.lobby.getLobby().subscribe((data) => {
@@ -328,23 +466,52 @@ export class UserInterfaceComponent implements OnInit {
                 response.data.areas.forEach((area: any[]) => {
                     const buildingLan = area[0].lan
                     if (buildingLan === this.lan) {
-                        this.buildingsOwned.forEach((buildingInLan: { name: string; amount: number }) => {
+                        const existingAreaIndex = this.updatedAreas.findIndex(
+                            (area: { lan: any }) => area.lan === buildingLan
+                        )
+
+                        const newBuildingsOwned = existingAreaIndex !== -1
+                            ? JSON.parse(JSON.stringify(this.updatedAreas[existingAreaIndex].buildings))
+                            : JSON.parse(JSON.stringify(this.newBuildingsOwned))
+
+                        newBuildingsOwned.forEach((buildingInLan: { name: string; amount: number }) => {
                             if (buildingInLan.name === building.name) {
                                 buildingInLan.amount += 1
                             }
                         })
-                        let resourcesObject = area[0].resourcesPerRound
-                        resourcesObject = this.concatNumbersJSON(resourcesObject, building.output)
-                        area[0].resourcesPerRound = resourcesObject
-                        this.resourcesPerRoundObject = resourcesObject
+
+                        const resourcesObject = existingAreaIndex !== -1
+                            ? { ...this.updatedAreas[existingAreaIndex].resourcesPerRound }
+                            : { ...area[0].resourcesPerRound }
+
+                        for (const key in building.output) {
+                            // eslint-disable-next-line no-prototype-builtins
+                            if (resourcesObject.hasOwnProperty(key)) {
+                                resourcesObject[key] += building.output[key] // Add the building output to the existing resources
+                            } else {
+                                resourcesObject[key] += building.output[key] // If the resource doesn't exist yet, add it
+                            }
+                        }
+                        const updatedArea = {
+                            lan: buildingLan,
+                            buildings: newBuildingsOwned,
+                            resourcesPerRound: resourcesObject,
+                        }
+                        if (existingAreaIndex !== -1) {
+                            this.updatedAreas[existingAreaIndex] = updatedArea
+                        } else {
+                            this.updatedAreas.push(updatedArea)
+                        }
+
+                        this.updatedAreas.forEach((element: any) => {
+                            console.log(element.lan)
+                        })
                     }
                 })
             }
             else {
                 alert('Not enough resources')
             }
-
-
         })
     }
 
@@ -461,6 +628,7 @@ export class StartGame implements OnInit, OnDestroy {
     lobbyOwner: boolean = false
 
     ngOnInit() {
+        this.checkIfStarted()
         interval(10000).subscribe(() => {
             this.checkIfStarted()
         })
