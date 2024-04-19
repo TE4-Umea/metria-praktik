@@ -2,36 +2,7 @@
     "areas": [
         [
             {
-                "lan": "Västra Götaland",
-                "owner": "DiamondMiner74",
-                "buildings": [
-                    {
-                        "name": "Barracks",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Farm",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Factory",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Bunker",
-                        "amount": 0
-                    }
-                ],
-                "resourcesPerRound": {
-                    "Army": 100,
-                    "Money": 100,
-                    "BuildingMaterials": 100
-                }
-            }
-        ],
-        [
-            {
-                "lan": "Västernorrland",
+                "lan": "Dalarna",
                 "owner": "timpan0404",
                 "buildings": [
                     {
@@ -40,65 +11,7 @@
                     },
                     {
                         "name": "Farm",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Factory",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Bunker",
-                        "amount": 0
-                    }
-                ],
-                "resourcesPerRound": {
-                    "Army": 100,
-                    "Money": 100,
-                    "BuildingMaterials": 100
-                }
-            }
-        ],
-        [
-            {
-                "lan": "Värmland",
-                "owner": "DiamondMiner74",
-                "buildings": [
-                    {
-                        "name": "Barracks",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Farm",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Factory",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Bunker",
-                        "amount": 0
-                    }
-                ],
-                "resourcesPerRound": {
-                    "Army": 100,
-                    "Money": 100,
-                    "BuildingMaterials": 100
-                }
-            }
-        ],
-        [
-            {
-                "lan": "Västra Götaland",
-                "owner": "DiamondMiner74",
-                "buildings": [
-                    {
-                        "name": "Barracks",
-                        "amount": 0
-                    },
-                    {
-                        "name": "Farm",
-                        "amount": 5
+                        "amount": 11
                     },
                     {
                         "name": "Factory",
@@ -115,9 +28,125 @@
                     "BuildingMaterials": 1100
                 }
             }
+        ],
+        [
+            {
+                "lan": "Östergötland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 2
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 150,
+                    "Money": 100,
+                    "BuildingMaterials": 1100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Värmland",
+                "owner": "timpan0404",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 11
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 1100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Jönköping",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 2
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 150,
+                    "Money": 100,
+                    "BuildingMaterials": 1100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 2
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 150,
+                    "Money": 100,
+                    "BuildingMaterials": 1100
+                }
+            }
         ]
     ],
-    "round": 2,
+    "round": 3,
     "state": [
         {
             "turn": "timpan0404"
@@ -128,9 +157,9 @@
             {
                 "owner": "timpan0404",
                 "resources": {
-                    "Army": 10000,
-                    "Money": 10000,
-                    "BuildingMaterials": 10000
+                    "Army": 15300,
+                    "Money": 3750,
+                    "BuildingMaterials": 13650
                 }
             }
         ],
@@ -138,9 +167,9 @@
             {
                 "owner": "DiamondMiner74",
                 "resources": {
-                    "Army": 15300,
-                    "Money": 950,
-                    "BuildingMaterials": 14000
+                    "Army": 20700,
+                    "Money": 5400,
+                    "BuildingMaterials": 22700
                 }
             }
         ]

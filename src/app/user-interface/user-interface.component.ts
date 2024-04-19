@@ -73,22 +73,16 @@ export class UserInterfaceComponent implements OnInit {
     lastSelectedLan: any
 
     ngOnInit() {
-        this.lobby.getLobby().subscribe((data) => {
-            const newArea = [{ owner: this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username, lan: this.selectedLan, buildings: 0, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
-            data.data.areas.push(newArea)
-            const areas = data.data.areas
-            console.log(areas)
-        })
-        this.getData()
-        this.getDataOnce()
-        interval(10000).subscribe(() => {
-            this.getData()
-        })
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
         this.selectLan()
         this.toggleShowEnemies()
+        this.getData()
+        this.getDataOnce()
+        interval(10000).subscribe(() => {
+            this.getData()
+        })
     }
 
     attack() {
@@ -208,7 +202,6 @@ export class UserInterfaceComponent implements OnInit {
     endTurn() {
         let resources: any[] = []
         let state: any[] = []
-        let areas: any[] = []
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         if (this.turn === username) {
             this.lobby.getLobby().subscribe((data) => {
@@ -220,18 +213,16 @@ export class UserInterfaceComponent implements OnInit {
                 })
                 data.data.areas.forEach((areasElement: any) => {
                     if (areasElement[0].owner === username) {
-                        this.areas = [{ owner: username, lan: areasElement[0].lan, buildings: this.buildingsOwned, resourcesPerRound: this.resourcesPerRoundObject }]
-                    }
-                    if (areasElement[0].owner !== username) {
-                        data.data.areas.push(this.areas)
-                        areas = data.data.areas
-                        if (username === data.lobbyOwner) {
-                            this.round = data.data.round + 1
-                        }
+                        const userArea = areasElement[0]
+                        userArea.buildings = this.buildingsOwned
+                        userArea.resourcesPerRound = this.resourcesPerRoundObject
                     }
                 })
+                if (username === data.lobbyOwner) {
+                    this.round = data.data.round + 1
+                }
                 const round = (this.round !== undefined) ? this.round : data.data.round
-                this.lobby.putLobbyData({ round: round, areas: areas, state: state, resources: resources }).subscribe(() => {
+                this.lobby.putLobbyData({ round: round, areas: data.data.areas, state: state, resources: resources }).subscribe(() => {
                     window.location.reload()
                 })
             })
@@ -306,14 +297,14 @@ export class UserInterfaceComponent implements OnInit {
     selectLan() {
         this.setLan.lan$.subscribe(lan => {
             if (this.lastSelectedLan !== lan) {
+                this.selectedLan = lan
+                this.calculateAttackPercentage()
+                this.calculateMinMaxAttackPercentage(1000)
                 if (this.selectedLan === this.enemyLan) {
                     this.enemy = true
                 } else {
                     this.enemy = false
                 }
-                this.selectedLan = lan
-                this.calculateMinMaxAttackPercentage(1000)
-                this.calculateAttackPercentage()
                 this.lastSelectedLan = lan
             }
         })
@@ -484,8 +475,6 @@ export class UserInterfaceComponent implements OnInit {
             else {
                 alert('Not enough resources')
             }
-
-
         })
     }
 
@@ -602,6 +591,7 @@ export class StartGame implements OnInit, OnDestroy {
     lobbyOwner: boolean = false
 
     ngOnInit() {
+        this.checkIfStarted()
         interval(10000).subscribe(() => {
             this.checkIfStarted()
         })
