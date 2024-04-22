@@ -111,95 +111,20 @@ export class UserInterfaceComponent implements OnInit {
                     this.lobby.putLobbyData({ round: data.data.round, areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
                         window.location.reload()
                     })
+                } else {
+                    data.data.areas.forEach((element: any, index: number) => {
+                        if (element[0].owner !== username && element[0].lan === this.selectedLan) {
+                            data.data.areas[index] = [{ lan: this.selectedLan, owner: username, buildings: element[0].buildings, resourcesPerRound: element[0].resourcesPerRound }]
+                        }
+                    })
+                    this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                        window.location.reload()
+                    })
                 }
             })
         } else {
             console.log('Attack failed!')
         }
-    }
-
-
-    calculateMinMaxAttackPercentage(numSimulations: number) {
-        const playerArmy = this.resources.Army
-        let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
-
-        let minPercentage = Infinity
-        let maxPercentage = 0
-
-        for (let sim = 0; sim < numSimulations; sim++) {
-            let playerWins = 0
-
-            for (let i = 0; i < numSimulations; i++) {
-                const playerDice = this.rollDice(Math.min(playerArmy, 3))
-                const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
-
-                const playerLosses = this.countLosses(playerDice, enemyDice)
-                const enemyLosses = this.countLosses(enemyDice, playerDice)
-
-                if (playerLosses < enemyLosses) {
-                    playerWins++
-                }
-            }
-
-            const winPercentage = (playerWins / numSimulations) * 100
-
-            minPercentage = Math.min(minPercentage, winPercentage)
-            maxPercentage = Math.max(maxPercentage, winPercentage)
-        }
-
-        this.playerMinPercentage = minPercentage.toFixed(0)
-        this.playerMaxPercentage = maxPercentage.toFixed(0)
-    }
-
-    calculateAttackPercentage() {
-        const playerArmy = this.resources.Army
-        let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
-
-        const iterations = 10
-        let playerWins = 0
-
-        for (let i = 0; i < iterations; i++) {
-            const playerDice = this.rollDice(Math.min(playerArmy, 3))
-            const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
-
-            const playerLosses = this.countLosses(playerDice, enemyDice)
-            const enemyLosses = this.countLosses(enemyDice, playerDice)
-
-            if (playerLosses < enemyLosses) {
-                playerWins++
-            }
-        }
-
-        const winPercentage = (playerWins / iterations) * 100
-        this.attackPercentage = winPercentage
-    }
-
-    rollDice(numDice: number) {
-        const results = []
-        for (let i = 0; i < numDice; i++) {
-            results.push(Math.floor(Math.random() * 6) + 1) // Assuming 6-sided dice
-        }
-        return results.sort((a, b) => b - a) // Sort in descending order
-    }
-
-    countLosses(attackerDice: string | any[], defenderDice: string | any[]) {
-        let losses = 0
-        for (let i = 0; i < Math.min(attackerDice.length, defenderDice.length); i++) {
-            if (attackerDice[i] > defenderDice[i]) {
-                losses++
-            }
-        }
-        return losses
     }
 
 
@@ -244,6 +169,7 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
+                        this.resources.Army = 10000000
                         if (this.round !== data.data.round) {
                             data.data.areas.forEach((element: any) => {
                                 if (element[0].owner === username) {
@@ -305,7 +231,7 @@ export class UserInterfaceComponent implements OnInit {
             if (this.lastSelectedLan !== lan) {
                 this.selectedLan = lan
                 this.calculateAttackPercentage()
-                this.calculateMinMaxAttackPercentage(1000)
+                this.calculateMinMaxAttackPercentage(100)
                 if (this.selectedLan === this.enemyLan) {
                     this.enemy = true
                 } else {
@@ -513,6 +439,98 @@ export class UserInterfaceComponent implements OnInit {
                 alert('Not enough resources')
             }
         })
+    }
+
+    calculateMinMaxAttackPercentage(numSimulations: number) {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (this.selectedLan !== this.enemyLan) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
+        }
+
+        let minPercentage = Infinity
+        let maxPercentage = 0
+
+        for (let sim = 0; sim < numSimulations; sim++) {
+            let playerWins = 0
+
+            for (let i = 0; i < numSimulations; i++) {
+                const playerDice = this.rollDice(Math.min(playerArmy, 3))
+                const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
+
+                const playerLosses = this.countLosses(playerDice, enemyDice)
+                const enemyLosses = this.countLosses(enemyDice, playerDice)
+
+                if (playerLosses < enemyLosses) {
+                    playerWins++
+                }
+            }
+
+            const winPercentage = (playerWins / numSimulations) * 100
+
+            minPercentage = Math.min(minPercentage, winPercentage)
+            maxPercentage = Math.max(maxPercentage, winPercentage)
+        }
+
+        this.playerMinPercentage = minPercentage.toFixed(0)
+        this.playerMaxPercentage = maxPercentage.toFixed(0)
+    }
+
+    calculateAttackPercentage() {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (this.selectedLan !== this.enemyLan) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
+        }
+
+        const iterations = 10
+        let playerWins = 0
+
+        for (let i = 0; i < iterations; i++) {
+            const playerDice = this.rollDice(Math.floor(playerArmy / 10))
+            const enemyDice = this.rollDice(Math.floor(enemyArmy / 10))
+
+            console.log(`Player dice: ${playerDice}`)
+            console.log(`Enemy dice: ${enemyDice}`)
+
+            const playerLosses = this.countLosses(playerDice, enemyDice)
+            const enemyLosses = this.countLosses(enemyDice, playerDice)
+
+            console.log(`Player losses: ${playerLosses}`)
+            console.log(`Enemy losses: ${enemyLosses}`)
+
+            if (playerLosses < enemyLosses) {
+                playerWins++
+            }
+        }
+
+        const winPercentage = (playerWins / iterations) * 100
+        this.attackPercentage = winPercentage
+        console.log(winPercentage)
+    }
+
+    rollDice(numDice: number) {
+        const results = []
+        for (let i = 0; i < numDice; i++) {
+            results.push(Math.floor(Math.random() * 6) + 1) // Assuming 6-sided dice
+        }
+        return results.sort((a, b) => b - a) // Sort in descending order
+    }
+
+    countLosses(attackerDice: number[], defenderDice: number[]) {
+        let losses = 0
+        attackerDice.sort((a, b) => b - a)
+        defenderDice.sort((a, b) => b - a)
+        for (let i = 0; i < Math.min(attackerDice.length, defenderDice.length); i++) {
+            if (attackerDice[i] > defenderDice[i]) {
+                losses++
+            }
+        }
+        return losses
     }
 
     getLobbyNames() {

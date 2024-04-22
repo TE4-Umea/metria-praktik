@@ -19,6 +19,7 @@
             "Money": 1050
         },
         "output": {
+            "Money": 10,
             "BuildingMaterials": 1000
         },
         "tag": "Materials"
