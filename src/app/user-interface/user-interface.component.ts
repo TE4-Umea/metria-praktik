@@ -169,7 +169,7 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
-                        this.resources.Army = 10000000
+                        this.resources.Army = 25000
                         if (this.round !== data.data.round) {
                             data.data.areas.forEach((element: any) => {
                                 if (element[0].owner === username) {
@@ -231,7 +231,7 @@ export class UserInterfaceComponent implements OnInit {
             if (this.lastSelectedLan !== lan) {
                 this.selectedLan = lan
                 this.calculateAttackPercentage()
-                this.calculateMinMaxAttackPercentage(100)
+                this.calculateAttackMinMaxPercentage()
                 if (this.selectedLan === this.enemyLan) {
                     this.enemy = true
                 } else {
@@ -441,43 +441,6 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
-    calculateMinMaxAttackPercentage(numSimulations: number) {
-        const playerArmy = this.resources.Army
-        let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
-
-        let minPercentage = Infinity
-        let maxPercentage = 0
-
-        for (let sim = 0; sim < numSimulations; sim++) {
-            let playerWins = 0
-
-            for (let i = 0; i < numSimulations; i++) {
-                const playerDice = this.rollDice(Math.min(playerArmy, 3))
-                const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
-
-                const playerLosses = this.countLosses(playerDice, enemyDice)
-                const enemyLosses = this.countLosses(enemyDice, playerDice)
-
-                if (playerLosses < enemyLosses) {
-                    playerWins++
-                }
-            }
-
-            const winPercentage = (playerWins / numSimulations) * 100
-
-            minPercentage = Math.min(minPercentage, winPercentage)
-            maxPercentage = Math.max(maxPercentage, winPercentage)
-        }
-
-        this.playerMinPercentage = minPercentage.toFixed(0)
-        this.playerMaxPercentage = maxPercentage.toFixed(0)
-    }
-
     calculateAttackPercentage() {
         const playerArmy = this.resources.Army
         let enemyArmy
@@ -487,50 +450,68 @@ export class UserInterfaceComponent implements OnInit {
             enemyArmy = this.enemyResources.Army
         }
 
-        const iterations = 10
-        let playerWins = 0
+        const strengthRatio: number = playerArmy / enemyArmy
 
-        for (let i = 0; i < iterations; i++) {
-            const playerDice = this.rollDice(Math.floor(playerArmy / 10))
-            const enemyDice = this.rollDice(Math.floor(enemyArmy / 10))
+        const baseSuccessRate: number = 0.3
 
-            console.log(`Player dice: ${playerDice}`)
-            console.log(`Enemy dice: ${enemyDice}`)
-
-            const playerLosses = this.countLosses(playerDice, enemyDice)
-            const enemyLosses = this.countLosses(enemyDice, playerDice)
-
-            console.log(`Player losses: ${playerLosses}`)
-            console.log(`Enemy losses: ${enemyLosses}`)
-
-            if (playerLosses < enemyLosses) {
-                playerWins++
-            }
+        let successRate: number
+        if (strengthRatio > 1) {
+            successRate = baseSuccessRate + (strengthRatio - 1) * 0.1
+        } else {
+            successRate = baseSuccessRate - (1 - strengthRatio) * 0.1
         }
 
-        const winPercentage = (playerWins / iterations) * 100
-        this.attackPercentage = winPercentage
-        console.log(winPercentage)
+        const randomness: number = Math.random() * 0.2 - 0.1
+        successRate += randomness
+
+        successRate = Math.max(0, Math.min(successRate, 1))
+
+        const successPercentage: number = successRate * 100
+
+        this.attackPercentage = successPercentage
     }
 
-    rollDice(numDice: number) {
-        const results = []
-        for (let i = 0; i < numDice; i++) {
-            results.push(Math.floor(Math.random() * 6) + 1) // Assuming 6-sided dice
+    calculateAttackMinMaxPercentage() {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (this.selectedLan !== this.enemyLan) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
         }
-        return results.sort((a, b) => b - a) // Sort in descending order
-    }
 
-    countLosses(attackerDice: number[], defenderDice: number[]) {
-        let losses = 0
-        attackerDice.sort((a, b) => b - a)
-        defenderDice.sort((a, b) => b - a)
-        for (let i = 0; i < Math.min(attackerDice.length, defenderDice.length); i++) {
-            if (attackerDice[i] > defenderDice[i]) {
-                losses++
-            }
+        const minStrengthRatio: number = Math.min(playerArmy, enemyArmy) / Math.max(playerArmy, enemyArmy)
+        const maxStrengthRatio: number = Math.max(playerArmy, enemyArmy) / Math.min(playerArmy, enemyArmy)
+
+        const baseSuccessRate: number = 0.5
+
+        let minSuccessRate: number
+        if (minStrengthRatio > 1) {
+            minSuccessRate = baseSuccessRate - (minStrengthRatio - 1) * 0.1
+        } else {
+            minSuccessRate = baseSuccessRate + (1 - minStrengthRatio) * 0.1
         }
-        return losses
+
+        let maxSuccessRate: number
+        if (maxStrengthRatio > 1) {
+            maxSuccessRate = baseSuccessRate + (maxStrengthRatio - 1) * 0.1
+        } else {
+            maxSuccessRate = baseSuccessRate - (1 - maxStrengthRatio) * 0.1
+        }
+
+        const minRandomness: number = Math.random() * 0.2 - 0.1
+        const maxRandomness: number = Math.random() * 0.2 - 0.1
+        minSuccessRate += minRandomness
+        maxSuccessRate += maxRandomness
+
+        minSuccessRate = Math.max(0, Math.min(minSuccessRate, 1))
+        maxSuccessRate = Math.max(0, Math.min(maxSuccessRate, 1))
+
+        const minSuccessPercentage: number = minSuccessRate * 100
+        const maxSuccessPercentage: number = maxSuccessRate * 100
+
+        this.playerMinPercentage = minSuccessPercentage.toFixed(0)
+        this.playerMaxPercentage = maxSuccessPercentage.toFixed(0)
     }
 
     getLobbyNames() {
