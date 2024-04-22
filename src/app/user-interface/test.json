@@ -7,11 +7,11 @@
                 "buildings": [
                     {
                         "name": "Barracks",
-                        "amount": 0
+                        "amount": 1
                     },
                     {
                         "name": "Farm",
-                        "amount": 0
+                        "amount": 7
                     },
                     {
                         "name": "Factory",
@@ -23,9 +23,9 @@
                     }
                 ],
                 "resourcesPerRound": {
-                    "Army": 100,
+                    "Army": 200,
                     "Money": 100,
-                    "BuildingMaterials": 100
+                    "BuildingMaterials": 7100
                 }
             }
         ],
@@ -86,9 +86,705 @@
                     "BuildingMaterials": 100
                 }
             }
+        ],
+        [
+            {
+                "lan": "Gävleborg",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Örebro",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Östergötland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Västra Götaland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Värmland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Uppsala",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Stockholm",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Norrbotten",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Västmanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Södermanland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Jönköping",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Kronoberg",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Skåne",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Blekinge",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Kalmar",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Halland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Västernorrland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
         ]
     ],
-    "round": 1,
+    "round": 4,
     "state": [
         {
             "turn": "DiamondMiner74"
@@ -109,9 +805,9 @@
             {
                 "owner": "DiamondMiner74",
                 "resources": {
-                    "Army": 15100,
-                    "Money": 15100,
-                    "BuildingMaterials": 15100
+                    "Army": 8700,
+                    "Money": 145250,
+                    "BuildingMaterials": 291300
                 }
             }
         ]

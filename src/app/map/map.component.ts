@@ -9,7 +9,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Stroke, Style } from 'ol/style.js'
 import GeoJSON from 'ol/format/GeoJSON'
-import { Decoder, GetCookie, NeighboringLan, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
+import { Decoder, GetCookie, MapService, NeighboringLan, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
 import { LanChoose } from '../user-interface/user-interface.component'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Lobby } from '../http.service'
@@ -23,7 +23,7 @@ import * as lan from '../../assets/sweden.json'
     providers: [LanChoose, { provide: MatDialogRef, useValue: {} }]
 })
 export class MapComponent implements OnInit, OnDestroy {
-    constructor(private setShowBuildings: SetShowBuildings, private setShowAttack: SetShowAttack, private neighboringLanService: NeighboringLan, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(private setShowBuildings: SetShowBuildings, private setShowAttack: SetShowAttack, private neighboringLanService: NeighboringLan, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private mapService: MapService, private setLan: SetLan) { }
 
     @ViewChild('mapElement', { static: true }) mapElement: ElementRef | undefined
 
@@ -36,6 +36,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getLobbyData()
+        this.mapService.mapUpdate$.subscribe(() => {
+            this.initMap()
+        })
     }
 
     ngOnDestroy(): void {
@@ -143,6 +146,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
     map: Map | undefined
     mapLayer: any
+    newMapLayer: any
 
     private handleMapClick(event: any): void {
         this.setShowBuildings.setShowBuildings(false)

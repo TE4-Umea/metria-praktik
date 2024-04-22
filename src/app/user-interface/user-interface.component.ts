@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, NeighboringLan, SetIfDialogOpen, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
+import { Decoder, GetCookie, MapService, NeighboringLan, SetIfDialogOpen, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -22,11 +22,10 @@ import * as lanResources from '../../assets/lanResources.json'
     standalone: true,
     imports: [CommonModule, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
-    styleUrl: './user-interface.component.scss'
-
+    styleUrl: './user-interface.component.scss',
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setShowAttack: SetShowAttack, private neighboringLan: NeighboringLan, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(public dialog: MatDialog, private setShowAttack: SetShowAttack, private neighboringLan: NeighboringLan, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private mapService: MapService, private setLan: SetLan) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -123,7 +122,8 @@ export class UserInterfaceComponent implements OnInit {
                 }
             })
         } else {
-            console.log('Attack failed!')
+            const newArmy = this.resources.Army * (this.attackPercentage / 100)
+            this.resources.Army = newArmy.toFixed(0)
         }
     }
 
@@ -169,7 +169,7 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
-                        this.resources.Army = 25000
+                        this.resources.Army = 1000
                         if (this.round !== data.data.round) {
                             data.data.areas.forEach((element: any) => {
                                 if (element[0].owner === username) {
@@ -452,7 +452,7 @@ export class UserInterfaceComponent implements OnInit {
 
         const strengthRatio: number = playerArmy / enemyArmy
 
-        const baseSuccessRate: number = 0.3
+        const baseSuccessRate: number = 0.4
 
         let successRate: number
         if (strengthRatio > 1) {
@@ -483,7 +483,7 @@ export class UserInterfaceComponent implements OnInit {
         const minStrengthRatio: number = Math.min(playerArmy, enemyArmy) / Math.max(playerArmy, enemyArmy)
         const maxStrengthRatio: number = Math.max(playerArmy, enemyArmy) / Math.min(playerArmy, enemyArmy)
 
-        const baseSuccessRate: number = 0.5
+        const baseSuccessRate: number = 0.4
 
         let minSuccessRate: number
         if (minStrengthRatio > 1) {
