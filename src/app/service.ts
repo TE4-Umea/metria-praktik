@@ -133,10 +133,10 @@ export class NeighboringLan {
     providedIn: 'root'
 })
 export class MapService {
-    private mapUpdate = new Subject<void>()
-    mapUpdate$ = this.mapUpdate.asObservable()
+    private mapUpdateRequest = new Subject<void>()
+    mapUpdateRequest$ = this.mapUpdateRequest.asObservable()
 
-    triggerMapUpdate() {
-        this.mapUpdate.next()
+    requestMapUpdate() {
+        this.mapUpdateRequest.next()
     }
 }

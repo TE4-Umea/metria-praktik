@@ -51,8 +51,8 @@ export class UserInterfaceComponent implements OnInit {
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
 
-    playerLan: string = ''
-    enemyLan: string = ''
+    playerLan: string[] = []
+    enemyLan: string[] = []
     npcLan: string = ''
     enemy: boolean = false
 
@@ -79,8 +79,8 @@ export class UserInterfaceComponent implements OnInit {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
-        this.selectLan()
         this.toggleShowEnemies()
+        this.selectLan()
         this.getData()
         this.getDataOnce()
         interval(10000).subscribe(() => {
@@ -89,7 +89,6 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     attack() {
-        let resources: any[] = []
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         const randomNumber = Math.random() * 100
         if (randomNumber <= this.attackPercentage) {
@@ -102,13 +101,13 @@ export class UserInterfaceComponent implements OnInit {
                     const newArea = [{ owner: username, lan: this.selectedLan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     data.data.areas.push(newArea)
                     const areas = data.data.areas
-                    data.data.resources.forEach((resourcesElement: any) => {
-                        if (resourcesElement[0].owner !== username) {
-                            resources = [resourcesElement, [{ owner: username, resources: this.concatNumbersJSON(this.resources, this.getSelectedLanResources()) }]]
+                    data.data.resources.forEach((resourcesElement: any, index: number) => {
+                        if (resourcesElement[0].owner === username) {
+                            data.data.resources[index] = [{ owner: username, resources: this.concatNumbersJSON(this.resources, this.getSelectedLanResources()) }]
                         }
                     })
-                    this.lobby.putLobbyData({ round: data.data.round, areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
-                        window.location.reload()
+                    this.lobby.putLobbyData({ round: data.data.round, areas: areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                        this.mapService.requestMapUpdate()
                     })
                 } else {
                     data.data.areas.forEach((element: any, index: number) => {
@@ -117,13 +116,23 @@ export class UserInterfaceComponent implements OnInit {
                         }
                     })
                     this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
-                        window.location.reload()
+                        this.mapService.requestMapUpdate()
                     })
                 }
             })
         } else {
             const newArmy = this.resources.Army * (this.attackPercentage / 100)
             this.resources.Army = newArmy.toFixed(0)
+            this.lobby.getLobby().subscribe((data) => {
+                data.data.resources.forEach((resourcesElement: any, index: number) => {
+                    if (resourcesElement[0].owner === username) {
+                        data.data.resources[index] = [{ owner: username, resources: this.resources }]
+                    }
+                })
+                this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                    this.getDataOnce()
+                })
+            })
         }
     }
 
@@ -169,7 +178,6 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
-                        this.resources.Army = 1000
                         if (this.round !== data.data.round) {
                             data.data.areas.forEach((element: any) => {
                                 if (element[0].owner === username) {
@@ -183,11 +191,11 @@ export class UserInterfaceComponent implements OnInit {
                 })
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
-                        this.playerLan = element[0].lan
+                        this.playerLan.push(element[0].lan)
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.newBuildingsOwned = element[0].buildings
                     } else {
-                        this.enemyLan = element[0].lan
+                        this.enemyLan.push(element[0].lan)
                     }
                 })
             }
@@ -232,7 +240,7 @@ export class UserInterfaceComponent implements OnInit {
                 this.selectedLan = lan
                 this.calculateAttackPercentage()
                 this.calculateAttackMinMaxPercentage()
-                if (this.selectedLan === this.enemyLan) {
+                if (this.enemyLan.includes(lan)) {
                     this.enemy = true
                 } else {
                     this.enemy = false
@@ -249,7 +257,7 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     getSelectedLanResources() {
-        if (this.selectedLan !== this.enemyLan) {
+        if (!this.enemyLan.includes(this.selectedLan)) {
             const lan = this.lanResources.default.find((l: { name: any }) => l.name === this.selectedLan)
             return lan ? lan.resources : null
         } else {
@@ -444,7 +452,7 @@ export class UserInterfaceComponent implements OnInit {
     calculateAttackPercentage() {
         const playerArmy = this.resources.Army
         let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
+        if (!this.enemyLan.includes(this.selectedLan)) {
             enemyArmy = this.getSelectedLanResources().Army
         } else {
             enemyArmy = this.enemyResources.Army
@@ -474,7 +482,7 @@ export class UserInterfaceComponent implements OnInit {
     calculateAttackMinMaxPercentage() {
         const playerArmy = this.resources.Army
         let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
+        if (!this.enemyLan.includes(this.selectedLan)) {
             enemyArmy = this.getSelectedLanResources().Army
         } else {
             enemyArmy = this.enemyResources.Army

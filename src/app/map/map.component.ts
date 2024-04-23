@@ -36,8 +36,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getLobbyData()
-        this.mapService.mapUpdate$.subscribe(() => {
-            this.initMap()
+        this.mapService.mapUpdateRequest$.subscribe(() => {
+            this.map?.setTarget(undefined)
+            this.getLobbyData()
         })
     }
 
