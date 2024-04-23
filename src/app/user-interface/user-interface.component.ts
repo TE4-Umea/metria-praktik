@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'
-import { Decoder, GetCookie, NeighboringLan, SetIfDialogOpen, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
+import { Decoder, GetCookie, MapService, NeighboringLan, SetIfDialogOpen, SetLan, SetShowAttack, SetShowBuildings, SetShowEnemies } from '../service'
 import { DragScrollComponent, DragScrollItemDirective } from 'ngx-drag-scroll'
 
 import { Lobby } from '../http.service'
@@ -22,11 +22,10 @@ import * as lanResources from '../../assets/lanResources.json'
     standalone: true,
     imports: [CommonModule, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
-    styleUrl: './user-interface.component.scss'
-
+    styleUrl: './user-interface.component.scss',
 })
 export class UserInterfaceComponent implements OnInit {
-    constructor(public dialog: MatDialog, private setShowAttack: SetShowAttack, private neighboringLan: NeighboringLan, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private setLan: SetLan) { }
+    constructor(public dialog: MatDialog, private setShowAttack: SetShowAttack, private neighboringLan: NeighboringLan, private setIfDialogOpen: SetIfDialogOpen, private setShowBuildings: SetShowBuildings, public router: Router, private setShowEnemies: SetShowEnemies, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private mapService: MapService, private setLan: SetLan) { }
 
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
@@ -52,8 +51,8 @@ export class UserInterfaceComponent implements OnInit {
     lanChosen: boolean = false
     choosingLanScreen: boolean = true
 
-    playerLan: string = ''
-    enemyLan: string = ''
+    playerLan: string[] = []
+    enemyLan: string[] = []
     npcLan: string = ''
     enemy: boolean = false
 
@@ -80,8 +79,8 @@ export class UserInterfaceComponent implements OnInit {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
         this.onScreenCheckLanChoice()
-        this.selectLan()
         this.toggleShowEnemies()
+        this.selectLan()
         this.getData()
         this.getDataOnce()
         interval(10000).subscribe(() => {
@@ -90,7 +89,6 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     attack() {
-        let resources: any[] = []
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         const randomNumber = Math.random() * 100
         if (randomNumber <= this.attackPercentage) {
@@ -103,103 +101,39 @@ export class UserInterfaceComponent implements OnInit {
                     const newArea = [{ owner: username, lan: this.selectedLan, buildings: buildings, resourcesPerRound: { Money: 100, BuildingMaterials: 100, Army: 100 } }]
                     data.data.areas.push(newArea)
                     const areas = data.data.areas
-                    data.data.resources.forEach((resourcesElement: any) => {
-                        if (resourcesElement[0].owner !== username) {
-                            resources = [resourcesElement, [{ owner: username, resources: this.concatNumbersJSON(this.resources, this.getSelectedLanResources()) }]]
+                    data.data.resources.forEach((resourcesElement: any, index: number) => {
+                        if (resourcesElement[0].owner === username) {
+                            data.data.resources[index] = [{ owner: username, resources: this.concatNumbersJSON(this.resources, this.getSelectedLanResources()) }]
                         }
                     })
-                    this.lobby.putLobbyData({ round: data.data.round, areas: areas, state: data.data.state, resources: resources }).subscribe(() => {
-                        window.location.reload()
+                    this.lobby.putLobbyData({ round: data.data.round, areas: areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                        this.mapService.requestMapUpdate()
+                    })
+                } else {
+                    data.data.areas.forEach((element: any, index: number) => {
+                        if (element[0].owner !== username && element[0].lan === this.selectedLan) {
+                            data.data.areas[index] = [{ lan: this.selectedLan, owner: username, buildings: element[0].buildings, resourcesPerRound: element[0].resourcesPerRound }]
+                        }
+                    })
+                    this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                        this.mapService.requestMapUpdate()
                     })
                 }
             })
         } else {
-            console.log('Attack failed!')
+            const newArmy = this.resources.Army * (this.attackPercentage / 100)
+            this.resources.Army = newArmy.toFixed(0)
+            this.lobby.getLobby().subscribe((data) => {
+                data.data.resources.forEach((resourcesElement: any, index: number) => {
+                    if (resourcesElement[0].owner === username) {
+                        data.data.resources[index] = [{ owner: username, resources: this.resources }]
+                    }
+                })
+                this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
+                    this.getDataOnce()
+                })
+            })
         }
-    }
-
-
-    calculateMinMaxAttackPercentage(numSimulations: number) {
-        const playerArmy = this.resources.Army
-        let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
-
-        let minPercentage = Infinity
-        let maxPercentage = 0
-
-        for (let sim = 0; sim < numSimulations; sim++) {
-            let playerWins = 0
-
-            for (let i = 0; i < numSimulations; i++) {
-                const playerDice = this.rollDice(Math.min(playerArmy, 3))
-                const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
-
-                const playerLosses = this.countLosses(playerDice, enemyDice)
-                const enemyLosses = this.countLosses(enemyDice, playerDice)
-
-                if (playerLosses < enemyLosses) {
-                    playerWins++
-                }
-            }
-
-            const winPercentage = (playerWins / numSimulations) * 100
-
-            minPercentage = Math.min(minPercentage, winPercentage)
-            maxPercentage = Math.max(maxPercentage, winPercentage)
-        }
-
-        this.playerMinPercentage = minPercentage.toFixed(0)
-        this.playerMaxPercentage = maxPercentage.toFixed(0)
-    }
-
-    calculateAttackPercentage() {
-        const playerArmy = this.resources.Army
-        let enemyArmy
-        if (this.selectedLan !== this.enemyLan) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
-
-        const iterations = 10
-        let playerWins = 0
-
-        for (let i = 0; i < iterations; i++) {
-            const playerDice = this.rollDice(Math.min(playerArmy, 3))
-            const enemyDice = this.rollDice(Math.min(enemyArmy, 2))
-
-            const playerLosses = this.countLosses(playerDice, enemyDice)
-            const enemyLosses = this.countLosses(enemyDice, playerDice)
-
-            if (playerLosses < enemyLosses) {
-                playerWins++
-            }
-        }
-
-        const winPercentage = (playerWins / iterations) * 100
-        this.attackPercentage = winPercentage
-    }
-
-    rollDice(numDice: number) {
-        const results = []
-        for (let i = 0; i < numDice; i++) {
-            results.push(Math.floor(Math.random() * 6) + 1) // Assuming 6-sided dice
-        }
-        return results.sort((a, b) => b - a) // Sort in descending order
-    }
-
-    countLosses(attackerDice: string | any[], defenderDice: string | any[]) {
-        let losses = 0
-        for (let i = 0; i < Math.min(attackerDice.length, defenderDice.length); i++) {
-            if (attackerDice[i] > defenderDice[i]) {
-                losses++
-            }
-        }
-        return losses
     }
 
 
@@ -257,11 +191,11 @@ export class UserInterfaceComponent implements OnInit {
                 })
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
-                        this.playerLan = element[0].lan
+                        this.playerLan.push(element[0].lan)
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.newBuildingsOwned = element[0].buildings
                     } else {
-                        this.enemyLan = element[0].lan
+                        this.enemyLan.push(element[0].lan)
                     }
                 })
             }
@@ -305,8 +239,8 @@ export class UserInterfaceComponent implements OnInit {
             if (this.lastSelectedLan !== lan) {
                 this.selectedLan = lan
                 this.calculateAttackPercentage()
-                this.calculateMinMaxAttackPercentage(1000)
-                if (this.selectedLan === this.enemyLan) {
+                this.calculateAttackMinMaxPercentage()
+                if (this.enemyLan.includes(lan)) {
                     this.enemy = true
                 } else {
                     this.enemy = false
@@ -323,7 +257,7 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     getSelectedLanResources() {
-        if (this.selectedLan !== this.enemyLan) {
+        if (!this.enemyLan.includes(this.selectedLan)) {
             const lan = this.lanResources.default.find((l: { name: any }) => l.name === this.selectedLan)
             return lan ? lan.resources : null
         } else {
@@ -513,6 +447,79 @@ export class UserInterfaceComponent implements OnInit {
                 alert('Not enough resources')
             }
         })
+    }
+
+    calculateAttackPercentage() {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (!this.enemyLan.includes(this.selectedLan)) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
+        }
+
+        const strengthRatio: number = playerArmy / enemyArmy
+
+        const baseSuccessRate: number = 0.4
+
+        let successRate: number
+        if (strengthRatio > 1) {
+            successRate = baseSuccessRate + (strengthRatio - 1) * 0.1
+        } else {
+            successRate = baseSuccessRate - (1 - strengthRatio) * 0.1
+        }
+
+        const randomness: number = Math.random() * 0.2 - 0.1
+        successRate += randomness
+
+        successRate = Math.max(0, Math.min(successRate, 1))
+
+        const successPercentage: number = successRate * 100
+
+        this.attackPercentage = successPercentage
+    }
+
+    calculateAttackMinMaxPercentage() {
+        const playerArmy = this.resources.Army
+        let enemyArmy
+        if (!this.enemyLan.includes(this.selectedLan)) {
+            enemyArmy = this.getSelectedLanResources().Army
+        } else {
+            enemyArmy = this.enemyResources.Army
+        }
+
+        const minStrengthRatio: number = Math.min(playerArmy, enemyArmy) / Math.max(playerArmy, enemyArmy)
+        const maxStrengthRatio: number = Math.max(playerArmy, enemyArmy) / Math.min(playerArmy, enemyArmy)
+
+        const baseSuccessRate: number = 0.4
+
+        let minSuccessRate: number
+        if (minStrengthRatio > 1) {
+            minSuccessRate = baseSuccessRate - (minStrengthRatio - 1) * 0.1
+        } else {
+            minSuccessRate = baseSuccessRate + (1 - minStrengthRatio) * 0.1
+        }
+
+        let maxSuccessRate: number
+        if (maxStrengthRatio > 1) {
+            maxSuccessRate = baseSuccessRate + (maxStrengthRatio - 1) * 0.1
+        } else {
+            maxSuccessRate = baseSuccessRate - (1 - maxStrengthRatio) * 0.1
+        }
+
+        const minRandomness: number = Math.random() * 0.2 - 0.1
+        const maxRandomness: number = Math.random() * 0.2 - 0.1
+        minSuccessRate += minRandomness
+        maxSuccessRate += maxRandomness
+
+        minSuccessRate = Math.max(0, Math.min(minSuccessRate, 1))
+        maxSuccessRate = Math.max(0, Math.min(maxSuccessRate, 1))
+
+        const minSuccessPercentage: number = minSuccessRate * 100
+        const maxSuccessPercentage: number = maxSuccessRate * 100
+
+        this.playerMinPercentage = minSuccessPercentage.toFixed(0)
+        this.playerMaxPercentage = maxSuccessPercentage.toFixed(0)
     }
 
     getLobbyNames() {

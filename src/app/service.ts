@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Subject } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
@@ -126,5 +126,17 @@ export class NeighboringLan {
 
     setNeighboringLan(neighboringLan: string[]) {
         this._neighboringLan.next(neighboringLan)
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class MapService {
+    private mapUpdateRequest = new Subject<void>()
+    mapUpdateRequest$ = this.mapUpdateRequest.asObservable()
+
+    requestMapUpdate() {
+        this.mapUpdateRequest.next()
     }
 }
