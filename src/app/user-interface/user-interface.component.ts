@@ -332,6 +332,10 @@ export class UserInterfaceComponent implements OnInit {
         this.ds.moveRight()
     }
 
+    scrollToElement($element: HTMLDivElement): void {
+        $element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    }
+
 }
 
 @Component({
