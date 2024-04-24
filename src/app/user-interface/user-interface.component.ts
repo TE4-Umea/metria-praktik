@@ -83,17 +83,18 @@ export class UserInterfaceComponent implements OnInit {
         this.selectLan()
         this.getData()
         this.getDataOnce()
-        interval(10000).subscribe(() => {
+        interval(15000).subscribe(() => {
             this.getData()
         })
     }
 
     attack() {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
-        const randomNumber = Math.random() * 100
+        const randomNumber = Math.random() * 10000
         if (randomNumber <= this.attackPercentage) {
             this.lobby.getLobby().subscribe((data) => {
-                if (this.selectedLan !== this.enemyLan) {
+                this.updateAreas(data, username)
+                if (!this.enemyLan.includes(this.selectedLan)) {
                     const buildings: { name: string; amount: number }[] = []
                     this.buildings.default.forEach((building: { name: any }) => {
                         buildings.push({ 'name': building.name, 'amount': 0 })
@@ -111,8 +112,8 @@ export class UserInterfaceComponent implements OnInit {
                     })
                 } else {
                     data.data.areas.forEach((element: any, index: number) => {
-                        if (element[0].owner !== username && element[0].lan === this.selectedLan) {
-                            data.data.areas[index] = [{ lan: this.selectedLan, owner: username, buildings: element[0].buildings, resourcesPerRound: element[0].resourcesPerRound }]
+                        if (element[0].lan === this.selectedLan) {
+                            data.data.areas[index][0].owner = username
                         }
                     })
                     this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
@@ -122,7 +123,7 @@ export class UserInterfaceComponent implements OnInit {
             })
         } else {
             const newArmy = this.resources.Army * (this.attackPercentage / 100)
-            this.resources.Army = newArmy.toFixed(0)
+            this.resources.Army = parseInt(newArmy.toFixed(0))
             this.lobby.getLobby().subscribe((data) => {
                 data.data.resources.forEach((resourcesElement: any, index: number) => {
                     if (resourcesElement[0].owner === username) {
@@ -130,7 +131,7 @@ export class UserInterfaceComponent implements OnInit {
                     }
                 })
                 this.lobby.putLobbyData({ round: data.data.round, areas: data.data.areas, state: data.data.state, resources: data.data.resources }).subscribe(() => {
-                    this.getDataOnce()
+                    this.getData()
                 })
             })
         }
@@ -149,15 +150,7 @@ export class UserInterfaceComponent implements OnInit {
                         state = [{ turn: resourcesElement[0].owner }]
                     }
                 })
-                data.data.areas.forEach((areasElement: any) => {
-                    this.updatedAreas.forEach((updatedAreasElement: any) => {
-                        if (areasElement[0].owner === username && updatedAreasElement.lan === areasElement[0].lan) {
-                            const userArea = areasElement[0]
-                            userArea.buildings = updatedAreasElement.buildings
-                            userArea.resourcesPerRound = updatedAreasElement.resourcesPerRound
-                        }
-                    })
-                })
+                this.updateAreas(data, username)
                 if (username === data.lobbyOwner) {
                     this.round = data.data.round + 1
                 }
@@ -168,6 +161,19 @@ export class UserInterfaceComponent implements OnInit {
             })
         }
     }
+
+    updateAreas(data: any, username: string) {
+        data.data.areas.forEach((areasElement: any) => {
+            this.updatedAreas.forEach((updatedAreasElement: any) => {
+                if (areasElement[0].owner === username && updatedAreasElement.lan === areasElement[0].lan) {
+                    const userArea = areasElement[0]
+                    userArea.buildings = updatedAreasElement.buildings
+                    userArea.resourcesPerRound = updatedAreasElement.resourcesPerRound
+                }
+            })
+        })
+    }
+
 
 
     getDataOnce() {
@@ -449,34 +455,25 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    getEnemyArmySize(): number {
+        return this.enemyLan.includes(this.selectedLan) ? this.enemyResources.Army : this.getSelectedLanResources().Army
+    }
+
+    calculateSuccessRate(strengthRatio: number, baseSuccessRate: number): number {
+        const adjustment = strengthRatio > 1 ? (strengthRatio - 1) * 0.1 : (1 - strengthRatio) * 0.1
+        let successRate = baseSuccessRate + adjustment
+        successRate += Math.random() * 0.2 - 0.1
+        successRate = Math.max(0, Math.min(successRate, 1))
+        return successRate
+    }
+
     calculateAttackPercentage() {
         const playerArmy = this.resources.Army
-        let enemyArmy
-        if (!this.enemyLan.includes(this.selectedLan)) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
-
+        const enemyArmy = this.getEnemyArmySize()
         const strengthRatio: number = playerArmy / enemyArmy
-
         const baseSuccessRate: number = 0.4
-
-        let successRate: number
-        if (strengthRatio > 1) {
-            successRate = baseSuccessRate + (strengthRatio - 1) * 0.1
-        } else {
-            successRate = baseSuccessRate - (1 - strengthRatio) * 0.1
-        }
-
-        const randomness: number = Math.random() * 0.2 - 0.1
-        successRate += randomness
-
-        successRate = Math.max(0, Math.min(successRate, 1))
-
-        const successPercentage: number = successRate * 100
-
-        this.attackPercentage = successPercentage
+        const successRate = this.calculateSuccessRate(strengthRatio, baseSuccessRate)
+        this.attackPercentage = successRate * 100
     }
 
     calculateAttackMinMaxPercentage() {

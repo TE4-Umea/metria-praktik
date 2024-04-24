@@ -1,6 +1,7 @@
 <form class="container">
     <h2 class="dialog-title">Create multiplayer game</h2>
     <h4 class="dialog-title">Right now only one player works :D</h4>
+    <h4 class="dialog-title">Owner: {{ username }}</h4>
     <mat-form-field appearance="outline" [style.width.%]=100>
         <mat-label>Select number of players</mat-label>
         <mat-select [(value)]="selectedNumberOfPlayers" name="numberOfPlayers">
