@@ -149,7 +149,10 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
-
+    scrollToElement($element: HTMLDivElement): void {
+        console.log($element)
+        $element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    }
     onScreenCheckLanChoice() {
         this.lobby.getLobby().subscribe((data) => {
             if (!data.data.round) {

@@ -76,6 +76,170 @@ h4 {
     border: none;
 }
 
+.tutorial-backdrop {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    opacity: 0; 
+    transition: 0.4s;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000c6;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+}
+
+.tutorial-list {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tutorial-item {
+    color: var(--color-fg);
+    font-size: 22px;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.tutorial-item:hover {
+    opacity: 0.6;
+}
+
+#tutorial:checked~.tutorial-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tutorial-box{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    width: 900px;
+    height: 700px;
+    background-color: transparent;
+    border-radius:20px;
+    overflow: hidden;
+}
+
+#tutorial:checked~.tutorial-box {
+    opacity: 1;
+    z-index: 11;
+}
+
+.close-tutorial {
+    color: var(--color-fg);
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+
+.close-tutorial img {
+    height: 40px;
+}
+
+.tutorial-box-container {
+    background-color: var(--color-main);
+    scroll-behavior: smooth;
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 110%;
+}
+
+.tutorial-button-position {
+    display: flex;
+    justify-content: center;
+    height: 80px;
+}
+
+.tutorial-title{
+    color: white;
+    font-size: 70px;
+    text-align: center;
+    font-weight: 500;
+    padding-top: 30px;
+}
+
+.tutorial-text{
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    padding-top: 70px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.tutorial-text-blue{
+    color: #4786FF;
+}
+
+.tutorial-content-flexrow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 50px;
+}
+
+.tutorial-content-basics{
+    width: 400px;
+    height: 200px;
+    text-align: center;
+}
+
+.tutorial-content-basics-text{
+    color: white;
+    font-size: 20px;
+}
+
+.tutorial-content-numbers{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.tutorial-images{
+    padding-top: 40px;
+    
+}
+
+.barn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 100%;
+    height: 700px;
+}
+
+.arrow-left{
+    transform: rotate(90deg);
+
+}
+
+.arrow-right{
+    transform: rotate(-90deg);
+}
+
+.invisible-button{
+    border: none;
+    background-color: transparent;
+    transition: 0.2s;
+    
+}
+
+.invisible-button:active {
+    transform: scale(0.85);
+}
+
+
 .menu-icon {
     width: 23px;
     margin-left: -3px;
