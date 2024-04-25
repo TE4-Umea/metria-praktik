@@ -5,6 +5,10 @@
             <p>Menu</p>
         </label>
 
+        <label for="tutorial" [ngClass]="['tutorial-button','background-box', 'button-animation']">
+            <p>Tutorial</p>
+        </label>
+
         <div [ngClass]="['weather-container','background-box']">
             <p class="game-info-small-text">Current weather</p>
             <div class="weather-icon-container">
@@ -264,6 +268,61 @@
 
     </div>
 </div>
+
+
+<input type="checkbox" class="dp-none" id="tutorial">
+<div [ngClass]="'tutorial-box'">
+    <div [ngClass]="'tutorial-box-container'" id="tutorialScroll">
+        <label class="close-tutorial" for="tutorial"><img src="../assets/images/icons/close.svg" alt="Close"></label>
+        <div [ngClass]="'barn'" #cookie>
+            <div>
+                <h2 class="tutorial-title">intro</h2>
+                <p class="tutorial-text">Hello and welcome to  <span class="tutorial-text-blue">CLASH OF LÄNS!</span></p>
+                <p class="tutorial-text">A turn-based strategy game where each player has to take over as many läns as possible to win.</p>
+            </div>
+            <div [ngClass]="'tutorial-button-position'">
+                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-right" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+            </div>
+        </div>
+
+        <div [ngClass]="'barn'" #beans>
+            <div>
+                <h2 class="tutorial-title">basics</h2>
+                <div class="tutorial-content-flexrow">
+                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">1. </span> Wait for your turn</p>
+                        <div class="tutorial-images">
+                            <img src="../assets/images/icons/player1.png" alt="player1"><img src="../assets/images/icons/player2.png" alt="player2"><img src="../assets/images/icons/player3.png" alt="player3">
+                        </div>
+                    </div>
+                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">2.  </span> Choose a <span class="tutorial-text-blue">län</span> to conquer</p></div>
+                </div>
+                <div class="tutorial-content-flexrow">
+                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">3. </span> Build on your <span class="tutorial-text-blue">län</span> <br/>to increase it's productivity</p></div>
+                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">4. </span> End your turn</p></div>
+                </div>
+            </div>
+            <div [ngClass]="'tutorial-button-position'">
+                <button class="invisible-button" (click)="scrollToElement(cookie)"><img class="arrow-left" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+                <button class="invisible-button" (click)="scrollToElement(ost)"><img class="arrow-right" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+            </div>
+        </div>
+
+        <div [ngClass]="'barn'" #ost>
+            <div>
+                <h2 class="tutorial-title">basics2</h2>
+            </div>
+            <div [ngClass]="'tutorial-button-position'">
+                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-left" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<label for="tutorial" class="tutorial-backdrop"></label>
+
+
+
+
+
 
 <div class="bottom-container">
     <div class="bottom-top">

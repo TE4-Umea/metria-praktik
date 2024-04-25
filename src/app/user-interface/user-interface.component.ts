@@ -240,6 +240,11 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    scrollToElement($element: HTMLDivElement): void {
+        console.log($element)
+        $element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    }
+    
     selectLan() {
         this.setLan.lan$.subscribe(lan => {
             if (this.lastSelectedLan !== lan) {
@@ -270,6 +275,7 @@ export class UserInterfaceComponent implements OnInit {
             return null
         }
     }
+
 
     onScreenCheckLanChoice() {
         this.lobby.getLobby().subscribe((data) => {
