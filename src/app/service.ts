@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Subject } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
@@ -83,6 +83,18 @@ export class SetShowEnemies {
 @Injectable({
     providedIn: 'root'
 })
+export class SetShowAttack {
+    private _showAttack = new BehaviorSubject<boolean>(false)
+    showAttack$ = this._showAttack.asObservable()
+
+    setShowAttack(showAttack: boolean) {
+        this._showAttack.next(showAttack)
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class SetLan {
     private _lan = new BehaviorSubject<string>('')
     lan$ = this._lan.asObservable()
@@ -103,4 +115,28 @@ export class SetIfDialogOpen {
         this._ifDialogOpen.next(ifDialogOpen)
     }
 
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NeighboringLan {
+    private _neighboringLan = new BehaviorSubject<string[]>([])
+    neighboringLan$ = this._neighboringLan.asObservable()
+
+    setNeighboringLan(neighboringLan: string[]) {
+        this._neighboringLan.next(neighboringLan)
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class MapService {
+    private mapUpdateRequest = new Subject<void>()
+    mapUpdateRequest$ = this.mapUpdateRequest.asObservable()
+
+    requestMapUpdate() {
+        this.mapUpdateRequest.next()
+    }
 }

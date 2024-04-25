@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatDialogRef, MatDialog } from '@angular/material/dialog'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
+import { interval } from 'rxjs'
 
 
 
@@ -29,26 +30,32 @@ export class LobbyScreenComponent implements OnInit {
     lobbyOwner: string = ''
     timeout: boolean = true
     players: string[] = []
+    stop: boolean = false
 
     ngOnInit() {
         this.refreshPage()
+        interval(10000).subscribe(() => {
+            this.refreshPage()
+        })
     }
 
     getPlayerStatus() {
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.lobby.getLobby().subscribe((data: any) => {
-            if (this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username === data.lobbyOwner) {
+            if (username === data.lobbyOwner) {
                 this.ready = true
             }
             this.lobbyOwner = data.lobbyOwner
             data.players.forEach((element: { status: string; username: string }) => {
                 console.log(element.status)
-                if (element.status === 'ready' || element.status === 'chosen') {
+                if (element.status === 'ready' && !this.stop || element.status === 'chosen' && !this.stop) {
                     this.ready = true
                     this.playersReady = true
                     this.players.push(element.username)
+                    this.stop = true
                 } else if (element.status === 'left') {
                     this.playersReady = false
-                    this.players = []
+                    this.players = ['Player Left']
                 }
             })
 

@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { Invite, Lobby, SignInService, SignUpService } from '../http.service'
 import { HttpClientModule } from '@angular/common/http'
 import { Router } from '@angular/router'
-import { Decoder, GetCookie, LobbyOwner_Invited } from '../service'
+import { Decoder, GetCookie, LobbyOwner_Invited, MapService } from '../service'
 import { MatOption } from '@angular/material/core'
 
 
@@ -160,9 +160,18 @@ export class SignUpDialog {
     confirmPasswordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20)])
 
     submitSignUp() {
+        // eslint-disable-next-line no-useless-escape
+        const specialChars = '/[$%^&*()+\-=\[\]{};\':"\\|,.<>\/]+/;åäö ÅÄÖ'
+        const isSpecialCharsPresent = specialChars.split('').some(char => this.usernameFormControl.value.includes(char) && this.passwordFormControl.value.includes(char))
+        if (isSpecialCharsPresent) {
+            const specialCharsError: string = 'Special characters are not allowed in username and password'
+            console.log(specialCharsError)
+            return
+        }
         if (this.passwordFormControl.value !== this.confirmPasswordFormControl.value) {
             const passwordDoesNotMatchError: string = 'Password does not match'
             console.log(passwordDoesNotMatchError)
+            return
         }
         else {
             this.signUpService.signUp(this.usernameFormControl.value, this.passwordFormControl.value)
@@ -212,8 +221,9 @@ export class SignInDialog {
     providers: [Lobby, Invite]
 })
 export class LobbySettings {
-    constructor(public dialogRef: MatDialogRef<LobbySettings>, private getCookie: GetCookie, private lobby: Lobby, private router: Router, private invite: Invite) { }
+    constructor(public dialogRef: MatDialogRef<LobbySettings>, private decoder: Decoder, private getCookie: GetCookie, private lobby: Lobby, private router: Router, private invite: Invite) { }
     selectedNumberOfPlayers: number = 0
+    username: string = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
 
     counter(i: number) {
         return new Array(i)
@@ -237,11 +247,12 @@ export class LobbySettings {
     providers: []
 })
 export class LogoutDialog {
-    constructor(public dialogRef: MatDialogRef<LogoutDialog>) { }
+    constructor(public dialogRef: MatDialogRef<LogoutDialog>, private mapService: MapService) { }
 
     submitLogout() {
         document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
         document.cookie = 'id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+        this.mapService.requestMapUpdate()
         window.location.reload()
     }
 

@@ -2,8 +2,8 @@
     "areas": [
         [
             {
-                "lan": "Gävleborg",
-                "owner": "timpan0404",
+                "lan": "Värmland",
+                "owner": "DiamondMiner74",
                 "buildings": [
                     {
                         "name": "Barracks",
@@ -31,7 +31,7 @@
         ],
         [
             {
-                "lan": "Västerbotten",
+                "lan": "Gävleborg",
                 "owner": "DiamondMiner74",
                 "buildings": [
                     {
@@ -40,7 +40,7 @@
                     },
                     {
                         "name": "Farm",
-                        "amount": 25
+                        "amount": 0
                     },
                     {
                         "name": "Factory",
@@ -54,18 +54,57 @@
                 "resourcesPerRound": {
                     "Army": 100,
                     "Money": 100,
-                    "BuildingMaterials": 18100
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Dalarna",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
                 }
             }
         ]
     ],
-    "round": 2,
+    "round": 1,
     "state": [
         {
-            "turn": "timpan0404"
+            "turn": "DiamondMiner74"
         }
     ],
     "resources": [
+        [
+            {
+                "owner": "DiamondMiner74",
+                "resources": {
+                    "Army": "4377555714100100100100100100100100",
+                    "Money": 16300,
+                    "BuildingMaterials": 16300
+                }
+            }
+        ],
         [
             {
                 "owner": "timpan0404",
@@ -73,16 +112,6 @@
                     "Army": 10000,
                     "Money": 10000,
                     "BuildingMaterials": 10000
-                }
-            }
-        ],
-        [
-            {
-                "owner": "DiamondMiner74",
-                "resources": {
-                    "Army": 10000,
-                    "Money": 1600,
-                    "BuildingMaterials": 8800
                 }
             }
         ]

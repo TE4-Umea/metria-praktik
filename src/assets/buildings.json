@@ -1,7 +1,7 @@
 [
     {
         "name": "Barracks",
-        "img": "barracks.png",
+        "img": "../assets/images/buildings/barakobama.png",
         "cost": {
             "BuildingMaterials": 250,
             "Money": 7000
@@ -13,19 +13,20 @@
     },
     {
         "name": "Farm",
-        "img": "farm.png",
+        "img": "../assets/images/buildings/",
         "cost": {
             "BuildingMaterials": 150,
             "Money": 1050
         },
         "output": {
+            "Money": 10,
             "BuildingMaterials": 1000
         },
         "tag": "Materials"
     },
     {
         "name": "Factory",
-        "img": "factory.png",
+        "img": "../assets/images/buildings/factory.png",
         "cost": {
             "BuildingMaterials": 300,
             "Money": 8500
@@ -37,7 +38,7 @@
     },
     {
         "name": "Bunker",
-        "img": "bunker.png",
+        "img": "../assets/images/buildings/bunker.png",
         "cost": {
             "BuildingMaterials": 50,
             "Money": 4500
