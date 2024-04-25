@@ -239,7 +239,7 @@ export class UserInterfaceComponent implements OnInit {
             this.showBuildings = show
         })
     }
-    
+
     selectLan() {
         this.setLan.lan$.subscribe(lan => {
             if (this.lastSelectedLan !== lan) {
@@ -457,7 +457,12 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     getEnemyArmySize(): number {
-        return this.enemyLan.includes(this.selectedLan) ? this.enemyResources.Army : this.getSelectedLanResources().Army
+        if (this.enemyLan.includes(this.selectedLan)) {
+            return this.enemyResources ? this.enemyResources.Army : 0
+        } else {
+            const selectedLanResources = this.getSelectedLanResources()
+            return selectedLanResources ? selectedLanResources.Army : 0
+        }
     }
 
     calculateSuccessRate(strengthRatio: number, baseSuccessRate: number): number {
@@ -479,12 +484,7 @@ export class UserInterfaceComponent implements OnInit {
 
     calculateAttackMinMaxPercentage() {
         const playerArmy = this.resources.Army
-        let enemyArmy
-        if (!this.enemyLan.includes(this.selectedLan)) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
+        const enemyArmy = this.getEnemyArmySize()
 
         const minStrengthRatio: number = Math.min(playerArmy, enemyArmy) / Math.max(playerArmy, enemyArmy)
         const maxStrengthRatio: number = Math.max(playerArmy, enemyArmy) / Math.min(playerArmy, enemyArmy)
