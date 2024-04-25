@@ -27,20 +27,242 @@
             </li>
         </ul>
     </div>
+</div>
 
 
-    <input type="checkbox" class="dp-none" id="menu">
-    <label for="menu" class="menu-backdrop">
-        <img [ngClass]="'logo'" src="../../assets/images/logo/ClashOfLans.svg" alt="Clash Of Läns">
-        <ul class="menu-list">
-            <li>
-                <a class="menu-item" (click)="this.router.navigate(['/'])">Back to main menu</a>
-            </li>
-            <li>
-                <a class="menu-item" href="#">Save</a>
-            </li>
-        </ul>
-    </label>
+<input type="checkbox" class="dp-none" id="menu">
+<div ngClass="menu">
+
+
+    <nav ngClass="menu-nav">
+        <button (click)="scrollToElement(advancedStats)">Advanced stats</button>
+        <button (click)="scrollToElement(howToPlay)">How to play</button>
+        <label for="menu">Return to game</label>
+        <a href="">Back to main menu</a>
+    </nav>
+
+    <div ngClass="menu-content">
+
+        <div ngClass="menu-content-container" #advancedStats>
+            <div ngClass="menu-content-inner-container">
+                <div ngClass="menu-content-flex">
+                    <fieldset ngClass="select-stat-outer">
+                        <legend>Choose county/player</legend>
+                        <select onchange="window.alert(this.value)" ngClass="select-stat-inner">
+                            <option selected value="0">Pure CSS Select</option>
+                            <option value="1"></option>
+                            <option value="2">No JS</option>
+                            <option value="3">Nice!</option>
+                        </select>
+                    </fieldset>
+
+                    <div [ngClass]="['menu-category-backdrop', 'chosen-lan']">
+                        <img ngClass="background-image" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
+                        <div>
+                            <p>Choosen Län</p>
+                            <h2 ngClass="menu-lan">Västerbotten</h2>
+                        </div>
+                        <div>
+                            <p>Owner</p>
+                            <h3 ngClass="menu-lan-owner">Beda</h3>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="['menu-category-backdrop', 'menu-resources']">
+                        <h3>Resources</h3>
+                        <div ngClass="menu-resources-container">
+                            <h4>Total resources</h4>
+                            <ul ngClass="menu-resources-list">
+                                <li>
+                                    <img src="../assets/images/icons/Weapons.svg">
+                                    <div>
+                                        <h5>Military</h5>
+                                        <p>200</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="../assets/images/icons/Money.svg">
+                                    <div>
+                                        <h5>Money</h5>
+                                        <p>200</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="../assets/images/icons/Metal.svg">
+                                    <div>
+                                        <h5>Materials</h5>
+                                        <p>200</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div ngClass="menu-resources-container">
+                            <h4>Resources per round</h4>
+                            <ul ngClass="menu-resources-list">
+                                <li>
+                                    <img src="../assets/images/icons/Weapons.svg">
+                                    <div>
+                                        <h5>Military</h5>
+                                        <p>200</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="../assets/images/icons/Money.svg">
+                                    <div>
+                                        <h5>Money</h5>
+                                        <p>200</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <img src="../assets/images/icons/Metal.svg">
+                                    <div>
+                                        <h5>Materials</h5>
+                                        <p>200</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div ngClass="menu-category-backdrop">
+                    <h3 ngClass="buildings-title">Buildings</h3>
+                    <div ngClass="buildings-grid">
+                        <div ngClass="building-card" style="border-top: 10px solid saddlebrown;">
+                            <div ngClass="building-card-top">
+                                <div>
+                                    <img src="../assets/images/icons/house.svg">
+                                    <h4>Building Title</h4>
+                                </div>
+                                <p>Own: 6</p>
+                            </div>
+                            <div ngClass="building-card-resources">
+                                <h5>Produces per round</h5>
+                                <div>
+                                    <div>
+                                        <img src="../assets/images/icons/Weapons.svg">
+                                        <p>0</p>
+                                    </div>
+                                    <div>
+                                        <img src="../assets/images/icons/Money.svg">
+                                        <p>100</p>
+                                    </div>
+                                    <div>
+                                        <img src="../assets/images/icons/Metal.svg">
+                                        <p>500</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div ngClass="menu-content-container" #howToPlay>
+            <div ngClass="menu-content-inner-container">
+                <div ngClass="menu-tutorials">
+                    <fieldset ngClass="menu-tutorials-subtitles">
+                        <legend>Hejsan hoppsan</legend>
+                        <ul ngClass="menu-tutorials-list">
+                            <li><button (click)="scrollToElement(Tutorial1)">Ababab</button></li>
+                            <li><button (click)="scrollToElement(Tutorial2)">Ababab</button></li>
+                        </ul>
+                    </fieldset>
+
+                    <fieldset ngClass="menu-tutorials-subtitles">
+                        <legend>Hejsan hoppsan</legend>
+                        <ul ngClass="menu-tutorials-list">
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                            <li><button>Ababab</button></li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div ngClass="menu-tutorials-content-container">
+                    <div #Tutorial1 ngClass="menu-tutorials-content">
+                        <div>
+                            <img src="../assets/images/tutorial-example.png">
+                            <div ngClass="menu-tutorials-content-text">
+                                <h2>Tutorial example</h2>
+                                <div ngClass="menu-tutorials-content-textfield">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rhoncus pharetra
+                                        consectetur. Sed ut ligula eu magna viverra ultrices. Pellentesque molestie elit
+                                        mi,
+                                        ac
+                                        aliquet dui condimentum eu. Curabitur scelerisque at nunc vel tempor. </p>
+                                    <p>Donec faucibus enim in nisi varius porta. Suspendisse potenti. Suspendisse
+                                        consectetur,
+                                        felis ac cursus pharetra, justo quam pretium mi, sed ornare magna sem ut arcu.
+                                        Nam
+                                        tristique in ligula in posuere. Fusce vel libero commodo, imperdiet nulla nec,
+                                        convallis
+                                        urna. Mauris pretium placerat venenatis. Aenean sollicitudin blandit dolor, et
+                                        pulvinar
+                                        neque interdum eu. Sed nec nulla metus. Integer porta orci ut arcu suscipit, in
+                                        ornare
+                                        sem maximus. Pellentesque egestas eros non erat luctus efficitur.</p>
+
+                                    <p>In placerat purus sit amet libero congue pulvinar. Proin tristique a arcu ac
+                                        laoreet.
+                                        Sed non facilisis lorem. </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div #Tutorial2 ngClass="menu-tutorials-content">
+                        <div>
+                            aaa
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div>
+                            <img src="../assets/images/tutorial-example.png">
+                            <div ngClass="menu-tutorials-content-text">
+                                <h2>Tutorial example</h2>
+                                <div ngClass="menu-tutorials-content-textfield">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rhoncus pharetra
+                                        consectetur. Sed ut ligula eu magna viverra ultrices. Pellentesque molestie elit
+                                        mi,
+                                        ac
+                                        aliquet dui condimentum eu. Curabitur scelerisque at nunc vel tempor. </p>
+                                    <p>Donec faucibus enim in nisi varius porta. Suspendisse potenti. Suspendisse
+                                        consectetur,
+                                        felis ac cursus pharetra, justo quam pretium mi, sed ornare magna sem ut arcu.
+                                        Nam
+                                        tristique in ligula in posuere. Fusce vel libero commodo, imperdiet nulla nec,
+                                        convallis
+                                        urna. Mauris pretium placerat venenatis. Aenean sollicitudin blandit dolor, et
+                                        pulvinar
+                                        neque interdum eu. Sed nec nulla metus. Integer porta orci ut arcu suscipit, in
+                                        ornare
+                                        sem maximus. Pellentesque egestas eros non erat luctus efficitur.</p>
+
+                                    <p>In placerat purus sit amet libero congue pulvinar. Proin tristique a arcu ac
+                                        laoreet.
+                                        Sed non facilisis lorem. </p>
+                                </div>
+                            </div>
+                        </div> -->
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <div class="bottom-container">
@@ -97,7 +319,8 @@
                             <p>{{ building.cost.Money }} kr</p>
                         </div>
                         <ul class="card-material-list">
-                            <li><img src="../assets/images/icons/Stone.svg">{{ building.cost.BuildingMaterials }}</li>
+                            <li><img src="../assets/images/icons/Stone.svg">{{ building.cost.BuildingMaterials }}
+                            </li>
                         </ul>
                     </div>
                 </div>
