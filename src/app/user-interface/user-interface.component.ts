@@ -239,11 +239,6 @@ export class UserInterfaceComponent implements OnInit {
             this.showBuildings = show
         })
     }
-
-    scrollToElement($element: HTMLDivElement): void {
-        console.log($element)
-        $element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
-    }
     
     selectLan() {
         this.setLan.lan$.subscribe(lan => {
