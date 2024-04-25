@@ -31,12 +31,11 @@
         </div>
 
         <div [ngClass]="'starting-screen-button-container'">
-            <button *ngIf="playersReady" [ngClass]="'starting-screen-button'" (click)="startGame()">Start game</button>
+            <button *ngIf="playersReady" [ngClass]="'starting-screen-button'" (click)="startGame()">Go to game</button>
             <button (click)="readyUp()" [ngClass]="'starting-screen-button'" *ngIf="!ready">Ready up!</button>
             <button [ngClass]="'starting-screen-button'" (click)="this.router.navigate(['/'])">Back to <br>main
                 screen</button>
             <button [ngClass]="'starting-screen-button'" (click)="cancelGame('450ms', '350ms')">Leave lobby</button>
-            <button [ngClass]="'starting-screen-button'" (click)="refreshPage()">Refresh</button>
 
 
         </div>
