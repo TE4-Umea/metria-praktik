@@ -20,7 +20,7 @@ import * as lanResources from '../../assets/lanResources.json'
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [CommonModule, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
+    imports: [CommonModule, FormsModule, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss',
 })
@@ -30,6 +30,7 @@ export class UserInterfaceComponent implements OnInit {
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
     resources: any = []
+    resourcesPerRound: any = []
     enemyResources: any = []
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
@@ -75,6 +76,9 @@ export class UserInterfaceComponent implements OnInit {
 
     updatedAreas: any = []
 
+    selectedArea: any = []
+    ownerOfLan: string = 'NPC'
+
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
@@ -86,6 +90,18 @@ export class UserInterfaceComponent implements OnInit {
         interval(15000).subscribe(() => {
             this.getData()
         })
+    }
+
+    updateResourcesPerRound() {
+        this.areas.forEach((area: any) => {
+            if (area.lan === this.selectedArea) {
+                this.resourcesPerRound = area.resourcesPerRound
+            }
+            if (area.lan === this.selectedArea && area !== undefined) {
+                this.ownerOfLan = area.owner
+            }
+        })
+
     }
 
     attack() {
@@ -184,21 +200,25 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
-                        if (this.round !== data.data.round) {
-                            data.data.areas.forEach((element: any) => {
-                                if (element[0].owner === username) {
-                                    this.resources = this.concatNumbersJSON(this.resources, element[0].resourcesPerRound)
-                                }
-                            })
-                        }
                     } else {
                         this.enemyResources = element[0].resources
                     }
                 })
+                if (this.round !== data.data.round) {
+                    this.areas = [...this.lanResources.default]
+                    data.data.areas.forEach((areasElement: any) => {
+                        const index = this.areas.findIndex((area: { lan: any }) => area.lan === areasElement[0].lan)
+                        if (index !== -1) {
+                            this.areas[index] = areasElement[0]
+                        }
+                        if (areasElement[0].owner === username) {
+                            this.resources = this.concatNumbersJSON(this.resources, areasElement[0].resourcesPerRound)
+                        }
+                    })
+                }
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.playerLan.push(element[0].lan)
-                        this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.newBuildingsOwned = element[0].buildings
                     } else {
                         this.enemyLan.push(element[0].lan)
@@ -264,7 +284,7 @@ export class UserInterfaceComponent implements OnInit {
 
     getSelectedLanResources() {
         if (!this.enemyLan.includes(this.selectedLan)) {
-            const lan = this.lanResources.default.find((l: { name: any }) => l.name === this.selectedLan)
+            const lan = this.lanResources.default.find((l: { lan: any }) => l.lan === this.selectedLan)
             return lan ? lan.resources : null
         } else {
             return null
