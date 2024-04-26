@@ -13,7 +13,7 @@
     },
     {
         "name": "Farm",
-        "img": "../assets/images/buildings/",
+        "img": "../assets/images/buildings/COEWW.png",
         "cost": {
             "BuildingMaterials": 150,
             "Money": 1050

@@ -1,170 +1,653 @@
 [
     {
-        "name": "Norrbotten",
+        "lan": "Norrbotten",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Västerbotten",
+        "lan": "Västerbotten",
         "resources": {
             "Army": 9000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Jämtland",
+        "lan": "Jämtland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Västernorrland",
+        "lan": "Västernorrland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Gävleborg",
+        "lan": "Gävleborg",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Dalarna",
+        "lan": "Dalarna",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Värmland",
+        "lan": "Värmland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Örebro",
+        "lan": "Örebro",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Västmanland",
+        "lan": "Västmanland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Uppsala",
+        "lan": "Uppsala",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Stockholm",
+        "lan": "Stockholm",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Södermanland",
+        "lan": "Södermanland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Östergötland",
+        "lan": "Östergötland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Jönköping",
+        "lan": "Jönköping",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Kronoberg",
+        "lan": "Kronoberg",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Kalmar",
+        "lan": "Kalmar",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Gotland",
+        "lan": "Gotland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Blekinge",
+        "lan": "Blekinge",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Skåne",
+        "lan": "Skåne",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Halland",
+        "lan": "Halland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     },
     {
-        "name": "Västra Götaland",
+        "lan": "Västra Götaland",
         "resources": {
             "Army": 5000,
             "BuildingMaterials": 5000,
             "Money": 5000
-        }
+        },
+        "resourcesPerRound": {
+            "Army": 100,
+            "BuildingMaterials": 100,
+            "Money": 100
+        },
+        "buildings": [
+            {
+                "name": "Barracks",
+                "amount": 1
+            },
+            {
+                "name": "Farm",
+                "amount": 1
+            },
+            {
+                "name": "Factory",
+                "amount": 1
+            },
+            {
+                "name": "Bunker",
+                "amount": 1
+            }
+        ]
     }
 ]
