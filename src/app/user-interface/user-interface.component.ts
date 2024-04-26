@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -78,6 +79,8 @@ export class UserInterfaceComponent implements OnInit {
 
     selectedArea: any = []
     ownerOfLan: string = 'NPC'
+    amountOfBuildings: any = []
+    resourcesPerArea: any = []
 
     ngOnInit() {
         this.getLobbyNames()
@@ -93,20 +96,57 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     updateResourcesPerRound() {
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
         this.areas.forEach((area: any) => {
             if (area.lan === this.selectedArea) {
+                if (area.owner === username) {
+                    this.resourcesPerArea = this.resources
+                } else if (area.owner === this.enemyPlayerNames[0]) {
+                    this.resourcesPerArea = this.enemyResources
+                } else {
+                    this.resourcesPerArea = area.resources
+                }
                 this.resourcesPerRound = area.resourcesPerRound
-            }
-            if (area.lan === this.selectedArea && area !== undefined) {
-                this.ownerOfLan = area.owner
+                this.amountOfBuildings = area.buildings.map((building: any) => {
+                    const buildingData = this.buildings.default.find((b: any) => b.name === building.name)
+                    return {
+                        name: building.name,
+                        amount: building.amount,
+                        outputPerRound: {
+                            Army: building.amount * (buildingData.output.Army || 0),
+                            Money: building.amount * (buildingData.output.Money || 0),
+                            BuildingMaterials: building.amount * (buildingData.output.BuildingMaterials || 0)
+                        }
+                    }
+                })
+                if (area.owner) {
+                    this.ownerOfLan = area.owner
+                } else {
+                    this.ownerOfLan = 'NPC'
+                }
+                console.log(this.amountOfBuildings, this.areas)
             }
         })
+    }
 
+    getBuildingColor(buildingName: string) {
+        switch (buildingName) {
+            case 'Farm':
+                return 'green'
+            case 'Factory':
+                return 'blue'
+            case 'Bunker':
+                return 'gray'
+            case 'Barracks':
+                return 'red'
+            default:
+                return 'saddlebrown'
+        }
     }
 
     attack() {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
-        const randomNumber = Math.random() * 10000
+        const randomNumber = Math.random() * 100
         if (randomNumber <= this.attackPercentage) {
             this.lobby.getLobby().subscribe((data) => {
                 this.updateAreas(data, username)

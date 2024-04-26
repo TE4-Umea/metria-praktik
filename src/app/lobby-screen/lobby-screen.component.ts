@@ -31,12 +31,20 @@ export class LobbyScreenComponent implements OnInit {
     timeout: boolean = true
     players: string[] = []
     stop: boolean = false
+    boolean: boolean = false
 
     ngOnInit() {
         this.refreshPage()
+        this.boolean = true
         interval(10000).subscribe(() => {
-            this.refreshPage()
+            if (this.boolean) {
+                this.refreshPage()
+            }
         })
+    }
+
+    ngOnDestroy() {
+        this.boolean = false
     }
 
     getPlayerStatus() {

@@ -79,21 +79,21 @@
                                     <img src="../assets/images/icons/Weapons.svg">
                                     <div>
                                         <h5>Military</h5>
-                                        <p>200</p>
+                                        <p>{{ resourcesPerArea.Army }}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <img src="../assets/images/icons/Money.svg">
                                     <div>
                                         <h5>Money</h5>
-                                        <p>200</p>
+                                        <p>{{ resourcesPerArea.Money }}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <img src="../assets/images/icons/Metal.svg">
                                     <div>
                                         <h5>Materials</h5>
-                                        <p>200</p>
+                                        <p>{{ resourcesPerArea.BuildingMaterials }}</p>
                                     </div>
                                 </li>
                             </ul>
@@ -130,33 +130,33 @@
                 <div ngClass="menu-category-backdrop">
                     <h3 ngClass="buildings-title">Buildings</h3>
                     <div ngClass="buildings-grid">
-                        <div ngClass="building-card" style="border-top: 10px solid saddlebrown;">
+                        <div *ngFor="let building of amountOfBuildings" ngClass="building-card"
+                            [style.border-top-color]="getBuildingColor(building.name)">
                             <div ngClass="building-card-top">
                                 <div>
                                     <img src="../assets/images/icons/house.svg">
-                                    <h4>Building Title</h4>
+                                    <h4>{{ building.name }}</h4>
                                 </div>
-                                <p>Own: 6</p>
+                                <p>Own: {{ building.amount }}</p>
                             </div>
                             <div ngClass="building-card-resources">
                                 <h5>Produces per round</h5>
                                 <div>
                                     <div>
                                         <img src="../assets/images/icons/Weapons.svg">
-                                        <p>0</p>
+                                        <p>{{ building.outputPerRound.Army }}</p>
                                     </div>
                                     <div>
                                         <img src="../assets/images/icons/Money.svg">
-                                        <p>100</p>
+                                        <p>{{ building.outputPerRound.Money }}</p>
                                     </div>
                                     <div>
                                         <img src="../assets/images/icons/Metal.svg">
-                                        <p>500</p>
+                                        <p>{{ building.outputPerRound.BuildingMaterials }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
