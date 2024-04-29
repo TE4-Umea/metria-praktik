@@ -314,52 +314,38 @@
                         <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">4. </span> End
                             your turn</p>
                         <div><img class="tutorial-images-4" src="../assets/images/icons/tut4.png" alt=""></div>
-                        <img src="../assets/images/icons/player1.png" alt="player1"><img
-                            src="../assets/images/icons/player2.png" alt="player2"><img
-                            src="../assets/images/icons/player3.png" alt="player3">
                     </div>
                 </div>
-                <div class="tutorial-content-basics">
-                    <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">2. </span> Choose
-                        a <span class="tutorial-text-blue">län</span> to conquer</p>
-                </div>
-            </div>
-            <div class="tutorial-content-flexrow">
-                <div class="tutorial-content-basics">
-                    <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">3. </span> Build
-                        on your <span class="tutorial-text-blue">län</span> <br />to increase it's productivity</p>
-                </div>
-                <div class="tutorial-content-basics">
-                    <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">4. </span> End
-                        your turn</p>
+                
+                <div [ngClass]="'tutorial-button-position'">
+                    <button class="invisible-button" (click)="scrollToElement(cookie)"><img class="arrow-left"
+                            src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+                            <button class="invisible-button" (click)="scrollToElement(ok)"><img class="arrow-right"
+                                src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
                 </div>
             </div>
         </div>
-        <div [ngClass]="'tutorial-button-position'">
-            <button class="invisible-button" (click)="scrollToElement(cookie)"><img class="arrow-left"
-                    src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
-            <button class="invisible-button" (click)="scrollToElement(ost)"><img class="arrow-right"
-                    src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+
+        <div [ngClass]="'barn'" #ok>
+            
+            
+                <h2 class="tutorial-title">basics</h2>
+                <div>
+                    <div>
+                        <p class="tutorial-text">After you have built your first buildings you can then plan attacks on your neightbouring Läns to conquer them as well yippiii!</p>
+                    </div>
+                    <div class="tutorial-img-attack-div"><img class="tutorial-img-attack"
+                            src="../assets/images/icons/tut.attack.png" alt=""></div>
+                </div>
+
+            <div [ngClass]="'tutorial-button-position'">
+                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-left"
+                        src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+            </div>
         </div>
     </div>
 
-    <div [ngClass]="'barn'" #ost>
-        <div>
-            <h2 class="tutorial-title">basics2</h2>
-            <div>
-                <div>
-                    <p class="tutorial-text">After you have built your first building you can then plan what other Läns
-                        to conquour by attacking your neightbouring Läns!</p>
-                </div>
-                <div class="tutorial-img-attack-div"><img class="tutorial-img-attack"
-                        src="../assets/images/icons/tut.attack.png" alt=""></div>
-            </div>
-        </div>
-        <div [ngClass]="'tutorial-button-position'">
-            <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-left"
-                    src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
-        </div>
-    </div>
+    
 </div>
 <label for="tutorial" class="tutorial-backdrop"></label>
 
