@@ -143,6 +143,25 @@ h4 {
     top: 30px;
 }
 
+.tutorial-img-size{
+    padding-top: 30px;
+    max-width: 300px;
+    max-height: 150px;
+}
+
+.tutorial-img-attack{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    width: 300px;
+    height: 250px;
+    border-radius: 25px;
+}
+
+.tutorial-img-attack-div{
+    display: flex;
+}
+
 .close-tutorial img {
     height: 40px;
 }
@@ -201,15 +220,20 @@ h4 {
     font-size: 20px;
 }
 
+
 .tutorial-content-numbers {
     font-size: 40px;
     font-weight: bold;
+  }
+
+
+.tutorial-images{
+    padding-top: 50px
 }
 
-.tutorial-images {
-    padding-top: 40px;
-
-}
+.tutorial-images-4{
+    padding-top: 80px
+ }
 
 .barn {
     display: flex;
