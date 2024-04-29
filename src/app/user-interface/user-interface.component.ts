@@ -82,6 +82,8 @@ export class UserInterfaceComponent implements OnInit {
     amountOfBuildings: any = []
     resourcesPerArea: any = []
 
+    updatePlayed: boolean = false
+
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
@@ -276,6 +278,10 @@ export class UserInterfaceComponent implements OnInit {
                 if (this.turn === username) {
                     this.player1Active = true
                     this.player2Active = false
+                    if (!this.updatePlayed) {
+                        this.mapService.requestMapUpdate()
+                        this.updatePlayed = true
+                    }
                 } else {
                     this.player2Active = true
                     this.player1Active = false
