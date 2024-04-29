@@ -2,7 +2,123 @@
     "areas": [
         [
             {
-                "lan": "Värmland",
+                "lan": "Dalarna",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Västerbotten",
+                "owner": "testPlayer2",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Jämtland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Jämtland",
+                "owner": "DiamondMiner74",
+                "buildings": [
+                    {
+                        "name": "Barracks",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Farm",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Factory",
+                        "amount": 0
+                    },
+                    {
+                        "name": "Bunker",
+                        "amount": 0
+                    }
+                ],
+                "resourcesPerRound": {
+                    "Army": 100,
+                    "Money": 100,
+                    "BuildingMaterials": 100
+                }
+            }
+        ],
+        [
+            {
+                "lan": "Jämtland",
                 "owner": "DiamondMiner74",
                 "buildings": [
                     {
@@ -60,7 +176,7 @@
         ],
         [
             {
-                "lan": "Dalarna",
+                "lan": "Västernorrland",
                 "owner": "DiamondMiner74",
                 "buildings": [
                     {
@@ -88,30 +204,30 @@
             }
         ]
     ],
-    "round": 1,
+    "round": 4,
     "state": [
         {
-            "turn": "DiamondMiner74"
+            "turn": "testPlayer2"
         }
     ],
     "resources": [
         [
             {
-                "owner": "DiamondMiner74",
+                "owner": "testPlayer2",
                 "resources": {
-                    "Army": "4377555714100100100100100100100100",
-                    "Money": 16300,
-                    "BuildingMaterials": 16300
+                    "Army": 791,
+                    "Money": 10900,
+                    "BuildingMaterials": 10900
                 }
             }
         ],
         [
             {
-                "owner": "timpan0404",
+                "owner": "DiamondMiner74",
                 "resources": {
-                    "Army": 10000,
-                    "Money": 10000,
-                    "BuildingMaterials": 10000
+                    "Army": 9727,
+                    "Money": 36400,
+                    "BuildingMaterials": 36400
                 }
             }
         ]

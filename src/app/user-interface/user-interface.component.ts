@@ -91,7 +91,6 @@ export class UserInterfaceComponent implements OnInit {
         this.toggleShowEnemies()
         this.selectLan()
         this.getData()
-        this.getDataOnce()
         interval(15000).subscribe(() => {
             this.getData()
         })
@@ -152,6 +151,7 @@ export class UserInterfaceComponent implements OnInit {
             this.lobby.getLobby().subscribe((data) => {
                 this.updateAreas(data, username)
                 if (!this.enemyLan.includes(this.selectedLan)) {
+                    console.log('new area')
                     const buildings: { name: string; amount: number }[] = []
                     this.buildings.default.forEach((building: { name: any }) => {
                         buildings.push({ 'name': building.name, 'amount': 0 })
@@ -168,6 +168,7 @@ export class UserInterfaceComponent implements OnInit {
                         this.mapService.requestMapUpdate()
                     })
                 } else {
+                    console.log('enemy area')
                     data.data.areas.forEach((element: any, index: number) => {
                         if (element[0].lan === this.selectedLan) {
                             data.data.areas[index][0].owner = username
@@ -278,16 +279,18 @@ export class UserInterfaceComponent implements OnInit {
                 if (this.turn === username) {
                     this.player1Active = true
                     this.player2Active = false
-                    if (!this.updatePlayed) {
-                        this.mapService.requestMapUpdate()
-                        this.updatePlayed = true
-                    }
+                    // if (!this.updatePlayed) {
+                    //     this.mapService.requestMapUpdate()
+                    //     this.updatePlayed = true
+                    // }
                 } else {
                     this.player2Active = true
                     this.player1Active = false
+                    // this.updatePlayed = false
                 }
             }
         })
+        this.getDataOnce()
     }
 
     toggleShowEnemies() {
