@@ -82,7 +82,7 @@ h4 {
     height: 100vh;
     top: 0;
     left: 0;
-    opacity: 0; 
+    opacity: 0;
     transition: 0.4s;
     pointer-events: none;
     display: flex;
@@ -118,7 +118,7 @@ h4 {
     pointer-events: auto;
 }
 
-.tutorial-box{
+.tutorial-box {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -127,7 +127,7 @@ h4 {
     width: 900px;
     height: 700px;
     background-color: transparent;
-    border-radius:20px;
+    border-radius: 20px;
     overflow: hidden;
 }
 
@@ -181,7 +181,7 @@ h4 {
     height: 80px;
 }
 
-.tutorial-title{
+.tutorial-title {
     color: white;
     font-size: 70px;
     text-align: center;
@@ -189,7 +189,7 @@ h4 {
     padding-top: 30px;
 }
 
-.tutorial-text{
+.tutorial-text {
     color: white;
     font-size: 40px;
     text-align: center;
@@ -198,33 +198,34 @@ h4 {
     padding-right: 50px;
 }
 
-.tutorial-text-blue{
+.tutorial-text-blue {
     color: #4786FF;
 }
 
-.tutorial-content-flexrow{
+.tutorial-content-flexrow {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     padding-top: 50px;
 }
 
-.tutorial-content-basics{
+.tutorial-content-basics {
     width: 400px;
     height: 200px;
     text-align: center;
 }
 
-.tutorial-content-basics-text{
+.tutorial-content-basics-text {
     color: white;
     font-size: 20px;
 }
 
 
-.tutorial-content-numbers{
+.tutorial-content-numbers {
     font-size: 40px;
     font-weight: bold;
-}
+  }
+
 
 .tutorial-images{
     padding-top: 50px
@@ -232,7 +233,7 @@ h4 {
 
 .tutorial-images-4{
     padding-top: 80px
-}
+ }
 
 .barn {
     display: flex;
@@ -242,20 +243,20 @@ h4 {
     height: 700px;
 }
 
-.arrow-left{
+.arrow-left {
     transform: rotate(90deg);
 
 }
 
-.arrow-right{
+.arrow-right {
     transform: rotate(-90deg);
 }
 
-.invisible-button{
+.invisible-button {
     border: none;
     background-color: transparent;
     transition: 0.2s;
-    
+
 }
 
 .invisible-button:active {
@@ -458,15 +459,18 @@ h4 {
     width: 100%;
     padding: 1.2rem 1rem 1.2rem 1rem;
     background: url(/../assets/images/icons/selectArrow.svg) no-repeat right 0.8em center / 1.6em;
-    color: var(--color-fg);
+    color: var(--color-primary);
     cursor: pointer;
     transition: 0.2s;
+
     &::-ms-expand {
         display: none;
     }
+
     &:focus {
         outline: none;
     }
+
     option {
         color: inherit;
     }
@@ -627,9 +631,9 @@ h4 {
     min-width: 100%;
     height: 100%;
     padding-top: 82px;
-} 
+}
 
-.menu-tutorials-content>div{
+.menu-tutorials-content>div {
     background-color: #00000046;
     min-width: calc(100% - 136px);
     height: calc(100% - 256px);
@@ -638,7 +642,7 @@ h4 {
     padding: 68px;
     border-radius: var(--border-radius-1);
     gap: 50px;
-} 
+}
 
 
 .menu-tutorials-content-text {
@@ -657,7 +661,7 @@ h4 {
     overflow-y: scroll;
 }
 
-.menu-tutorials-content img{
+.menu-tutorials-content img {
     max-width: 50%;
     min-height: 100%;
     object-fit: cover;

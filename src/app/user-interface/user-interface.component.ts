@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { CommonModule } from '@angular/common'
@@ -20,7 +21,7 @@ import * as lanResources from '../../assets/lanResources.json'
 @Component({
     selector: 'app-user-interface',
     standalone: true,
-    imports: [CommonModule, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
+    imports: [CommonModule, FormsModule, MatSlideToggleModule, DragScrollComponent, DragScrollItemDirective, MatButtonModule],
     templateUrl: './user-interface.component.html',
     styleUrl: './user-interface.component.scss',
 })
@@ -30,6 +31,7 @@ export class UserInterfaceComponent implements OnInit {
     @ViewChild('carousel', { read: DragScrollComponent }) ds!: DragScrollComponent
 
     resources: any = []
+    resourcesPerRound: any = []
     enemyResources: any = []
 
     information: { [info: string]: string | number } = { Weather: 'Sunny', Date: '2021-01-01', Round: 1, Level: 1 }
@@ -75,6 +77,11 @@ export class UserInterfaceComponent implements OnInit {
 
     updatedAreas: any = []
 
+    selectedArea: any = []
+    ownerOfLan: string = 'NPC'
+    amountOfBuildings: any = []
+    resourcesPerArea: any = []
+
     ngOnInit() {
         this.getLobbyNames()
         this.toggleBuildingsAndChooseLan('450ms', '350ms')
@@ -88,9 +95,57 @@ export class UserInterfaceComponent implements OnInit {
         })
     }
 
+    updateResourcesPerRound() {
+        const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
+        this.areas.forEach((area: any) => {
+            if (area.lan === this.selectedArea) {
+                if (area.owner === username) {
+                    this.resourcesPerArea = this.resources
+                } else if (area.owner === this.enemyPlayerNames[0]) {
+                    this.resourcesPerArea = this.enemyResources
+                } else {
+                    this.resourcesPerArea = area.resources
+                }
+                this.resourcesPerRound = area.resourcesPerRound
+                this.amountOfBuildings = area.buildings.map((building: any) => {
+                    const buildingData = this.buildings.default.find((b: any) => b.name === building.name)
+                    return {
+                        name: building.name,
+                        amount: building.amount,
+                        outputPerRound: {
+                            Army: building.amount * (buildingData.output.Army || 0),
+                            Money: building.amount * (buildingData.output.Money || 0),
+                            BuildingMaterials: building.amount * (buildingData.output.BuildingMaterials || 0)
+                        }
+                    }
+                })
+                if (area.owner) {
+                    this.ownerOfLan = area.owner
+                } else {
+                    this.ownerOfLan = 'NPC'
+                }
+            }
+        })
+    }
+
+    getBuildingColor(buildingName: string) {
+        switch (buildingName) {
+            case 'Farm':
+                return 'green'
+            case 'Factory':
+                return 'blue'
+            case 'Bunker':
+                return 'gray'
+            case 'Barracks':
+                return 'red'
+            default:
+                return 'saddlebrown'
+        }
+    }
+
     attack() {
         const username = this.decoder.decoder(this.getCookie.getCookie('token') || '').user_information.username
-        const randomNumber = Math.random() * 10000
+        const randomNumber = Math.random() * 100
         if (randomNumber <= this.attackPercentage) {
             this.lobby.getLobby().subscribe((data) => {
                 this.updateAreas(data, username)
@@ -184,21 +239,25 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.resources.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.resources = element[0].resources
-                        if (this.round !== data.data.round) {
-                            data.data.areas.forEach((element: any) => {
-                                if (element[0].owner === username) {
-                                    this.resources = this.concatNumbersJSON(this.resources, element[0].resourcesPerRound)
-                                }
-                            })
-                        }
                     } else {
                         this.enemyResources = element[0].resources
                     }
                 })
+                if (this.round !== data.data.round) {
+                    this.areas = [...this.lanResources.default]
+                    data.data.areas.forEach((areasElement: any) => {
+                        const index = this.areas.findIndex((area: { lan: any }) => area.lan === areasElement[0].lan)
+                        if (index !== -1) {
+                            this.areas[index] = areasElement[0]
+                        }
+                        if (areasElement[0].owner === username) {
+                            this.resources = this.concatNumbersJSON(this.resources, areasElement[0].resourcesPerRound)
+                        }
+                    })
+                }
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.playerLan.push(element[0].lan)
-                        this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.newBuildingsOwned = element[0].buildings
                     } else {
                         this.enemyLan.push(element[0].lan)
@@ -239,11 +298,12 @@ export class UserInterfaceComponent implements OnInit {
             this.showBuildings = show
         })
     }
-    
+
     selectLan() {
         this.setLan.lan$.subscribe(lan => {
             if (this.lastSelectedLan !== lan) {
                 this.selectedLan = lan
+                console.log(this.selectedLan)
                 this.calculateAttackPercentage()
                 this.calculateAttackMinMaxPercentage()
                 if (this.enemyLan.includes(lan)) {
@@ -264,7 +324,7 @@ export class UserInterfaceComponent implements OnInit {
 
     getSelectedLanResources() {
         if (!this.enemyLan.includes(this.selectedLan)) {
-            const lan = this.lanResources.default.find((l: { name: any }) => l.name === this.selectedLan)
+            const lan = this.lanResources.default.find((l: { lan: any }) => l.lan === this.selectedLan)
             return lan ? lan.resources : null
         } else {
             return null
@@ -428,9 +488,9 @@ export class UserInterfaceComponent implements OnInit {
                         for (const key in building.output) {
                             // eslint-disable-next-line no-prototype-builtins
                             if (resourcesObject.hasOwnProperty(key)) {
-                                resourcesObject[key] += building.output[key] // Add the building output to the existing resources
+                                resourcesObject[key] += building.output[key]
                             } else {
-                                resourcesObject[key] += building.output[key] // If the resource doesn't exist yet, add it
+                                resourcesObject[key] += building.output[key]
                             }
                         }
                         const updatedArea = {
@@ -457,7 +517,12 @@ export class UserInterfaceComponent implements OnInit {
     }
 
     getEnemyArmySize(): number {
-        return this.enemyLan.includes(this.selectedLan) ? this.enemyResources.Army : this.getSelectedLanResources().Army
+        if (this.enemyLan.includes(this.selectedLan)) {
+            return this.enemyResources ? this.enemyResources.Army : 0
+        } else {
+            const selectedLanResources = this.getSelectedLanResources()
+            return selectedLanResources ? selectedLanResources.Army : 0
+        }
     }
 
     calculateSuccessRate(strengthRatio: number, baseSuccessRate: number): number {
@@ -479,12 +544,7 @@ export class UserInterfaceComponent implements OnInit {
 
     calculateAttackMinMaxPercentage() {
         const playerArmy = this.resources.Army
-        let enemyArmy
-        if (!this.enemyLan.includes(this.selectedLan)) {
-            enemyArmy = this.getSelectedLanResources().Army
-        } else {
-            enemyArmy = this.enemyResources.Army
-        }
+        const enemyArmy = this.getEnemyArmySize()
 
         const minStrengthRatio: number = Math.min(playerArmy, enemyArmy) / Math.max(playerArmy, enemyArmy)
         const maxStrengthRatio: number = Math.max(playerArmy, enemyArmy) / Math.min(playerArmy, enemyArmy)
