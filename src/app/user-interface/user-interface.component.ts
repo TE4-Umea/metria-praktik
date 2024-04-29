@@ -303,6 +303,7 @@ export class UserInterfaceComponent implements OnInit {
         this.setLan.lan$.subscribe(lan => {
             if (this.lastSelectedLan !== lan) {
                 this.selectedLan = lan
+                console.log(this.selectedLan)
                 this.calculateAttackPercentage()
                 this.calculateAttackMinMaxPercentage()
                 if (this.enemyLan.includes(lan)) {
@@ -487,9 +488,9 @@ export class UserInterfaceComponent implements OnInit {
                         for (const key in building.output) {
                             // eslint-disable-next-line no-prototype-builtins
                             if (resourcesObject.hasOwnProperty(key)) {
-                                resourcesObject[key] += building.output[key] // Add the building output to the existing resources
+                                resourcesObject[key] += building.output[key]
                             } else {
-                                resourcesObject[key] += building.output[key] // If the resource doesn't exist yet, add it
+                                resourcesObject[key] += building.output[key]
                             }
                         }
                         const updatedArea = {
