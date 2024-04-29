@@ -124,7 +124,6 @@ export class UserInterfaceComponent implements OnInit {
                 } else {
                     this.ownerOfLan = 'NPC'
                 }
-                console.log(this.amountOfBuildings, this.areas)
             }
         })
     }
