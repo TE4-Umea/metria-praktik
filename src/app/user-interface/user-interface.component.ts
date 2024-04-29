@@ -52,6 +52,7 @@ export class UserInterfaceComponent implements OnInit {
     choosingLanScreen: boolean = true
 
     playerLan: string[] = []
+    playerLanImageLink: string[] = []
     enemyLan: string[] = []
     npcLan: string = ''
     enemy: boolean = false
@@ -72,6 +73,7 @@ export class UserInterfaceComponent implements OnInit {
     playerMaxPercentage: string = ''
     selectedLan: any
     lastSelectedLan: any
+    selectedLanImageLink: string[] = []
 
     updatedAreas: any = []
 
@@ -198,6 +200,7 @@ export class UserInterfaceComponent implements OnInit {
                 data.data.areas.forEach((element: any) => {
                     if (element[0].owner === username) {
                         this.playerLan.push(element[0].lan)
+                        this.playerLanImageLink.push('../assets/images/länsvapen/' + element[0].lan + '.png')
                         this.resourcesPerRoundObject = element[0].resourcesPerRound
                         this.newBuildingsOwned = element[0].buildings
                     } else {
@@ -244,6 +247,7 @@ export class UserInterfaceComponent implements OnInit {
         this.setLan.lan$.subscribe(lan => {
             if (this.lastSelectedLan !== lan) {
                 this.selectedLan = lan
+                this.selectedLanImageLink = ['../assets/images/länsvapen/' + this.selectedLan + '.png']
                 this.calculateAttackPercentage()
                 this.calculateAttackMinMaxPercentage()
                 if (this.enemyLan.includes(lan)) {

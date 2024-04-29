@@ -229,39 +229,6 @@
                             aaa
                         </div>
                     </div>
-
-
-
-                    <!-- <div>
-                            <img src="../assets/images/tutorial-example.png">
-                            <div ngClass="menu-tutorials-content-text">
-                                <h2>Tutorial example</h2>
-                                <div ngClass="menu-tutorials-content-textfield">
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rhoncus pharetra
-                                        consectetur. Sed ut ligula eu magna viverra ultrices. Pellentesque molestie elit
-                                        mi,
-                                        ac
-                                        aliquet dui condimentum eu. Curabitur scelerisque at nunc vel tempor. </p>
-                                    <p>Donec faucibus enim in nisi varius porta. Suspendisse potenti. Suspendisse
-                                        consectetur,
-                                        felis ac cursus pharetra, justo quam pretium mi, sed ornare magna sem ut arcu.
-                                        Nam
-                                        tristique in ligula in posuere. Fusce vel libero commodo, imperdiet nulla nec,
-                                        convallis
-                                        urna. Mauris pretium placerat venenatis. Aenean sollicitudin blandit dolor, et
-                                        pulvinar
-                                        neque interdum eu. Sed nec nulla metus. Integer porta orci ut arcu suscipit, in
-                                        ornare
-                                        sem maximus. Pellentesque egestas eros non erat luctus efficitur.</p>
-
-                                    <p>In placerat purus sit amet libero congue pulvinar. Proin tristique a arcu ac
-                                        laoreet.
-                                        Sed non facilisis lorem. </p>
-                                </div>
-                            </div>
-                        </div> -->
-
                 </div>
             </div>
         </div>
@@ -277,11 +244,13 @@
         <div [ngClass]="'barn'" #cookie>
             <div>
                 <h2 class="tutorial-title">intro</h2>
-                <p class="tutorial-text">Hello and welcome to  <span class="tutorial-text-blue">CLASH OF LÄNS!</span></p>
-                <p class="tutorial-text">A turn-based strategy game where each player has to take over as many läns as possible to win.</p>
+                <p class="tutorial-text">Hello and welcome to <span class="tutorial-text-blue">CLASH OF LÄNS!</span></p>
+                <p class="tutorial-text">A turn-based strategy game where each player has to take over as many läns as
+                    possible to win.</p>
             </div>
             <div [ngClass]="'tutorial-button-position'">
-                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-right" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-right"
+                        src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
             </div>
         </div>
 
@@ -289,21 +258,36 @@
             <div>
                 <h2 class="tutorial-title">basics</h2>
                 <div class="tutorial-content-flexrow">
-                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">1. </span> Wait for your turn</p>
+                    <div class="tutorial-content-basics">
+                        <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">1. </span> Wait
+                            for your turn</p>
                         <div class="tutorial-images">
-                            <img src="../assets/images/icons/player1.png" alt="player1"><img src="../assets/images/icons/player2.png" alt="player2"><img src="../assets/images/icons/player3.png" alt="player3">
+                            <img src="../assets/images/icons/player1.png" alt="player1"><img
+                                src="../assets/images/icons/player2.png" alt="player2"><img
+                                src="../assets/images/icons/player3.png" alt="player3">
                         </div>
                     </div>
-                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">2.  </span> Choose a <span class="tutorial-text-blue">län</span> to conquer</p></div>
+                    <div class="tutorial-content-basics">
+                        <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">2. </span> Choose
+                            a <span class="tutorial-text-blue">län</span> to conquer</p>
+                    </div>
                 </div>
                 <div class="tutorial-content-flexrow">
-                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">3. </span> Build on your <span class="tutorial-text-blue">län</span> <br/>to increase it's productivity</p></div>
-                    <div class="tutorial-content-basics"><p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">4. </span> End your turn</p></div>
+                    <div class="tutorial-content-basics">
+                        <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">3. </span> Build
+                            on your <span class="tutorial-text-blue">län</span> <br />to increase it's productivity</p>
+                    </div>
+                    <div class="tutorial-content-basics">
+                        <p class="tutorial-content-basics-text"><span class="tutorial-content-numbers">4. </span> End
+                            your turn</p>
+                    </div>
                 </div>
             </div>
             <div [ngClass]="'tutorial-button-position'">
-                <button class="invisible-button" (click)="scrollToElement(cookie)"><img class="arrow-left" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
-                <button class="invisible-button" (click)="scrollToElement(ost)"><img class="arrow-right" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+                <button class="invisible-button" (click)="scrollToElement(cookie)"><img class="arrow-left"
+                        src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+                <button class="invisible-button" (click)="scrollToElement(ost)"><img class="arrow-right"
+                        src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
             </div>
         </div>
 
@@ -312,7 +296,8 @@
                 <h2 class="tutorial-title">basics2</h2>
             </div>
             <div [ngClass]="'tutorial-button-position'">
-                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-left" src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
+                <button class="invisible-button" (click)="scrollToElement(beans)"><img class="arrow-left"
+                        src="../assets/images/icons/arrow.svg" alt="inte en knapp"></button>
             </div>
         </div>
     </div>
@@ -394,11 +379,11 @@
 
     <div *ngIf="showEnemies && !showBuildings && player1Active" class="attack-menu-container">
         <div class="attack-menu-lan-stats">
-            <img class="lans-weapon-background" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
+            <img class="lans-weapon-background" src="{{ playerLanImageLink }}">
             <div class="attack-menu-lan-flex-top">
                 <div class="attack-menu-lan">
                     <h3>{{ playerLan }}</h3>
-                    <img class="lans-weapon" src="../assets/images/länsvapen/Västerbottens_läns_vapen.png">
+                    <img class="lans-weapon" src="{{ playerLanImageLink }}">
                 </div>
                 <p *ngIf="showAttack">Player 1: Attacking</p>
             </div>
@@ -412,11 +397,11 @@
 
 
         <div class="attack-menu-lan-stats">
-            <img class="lans-weapon-background" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
+            <img class="lans-weapon-background" src="{{ selectedLanImageLink }}">
             <div class="attack-menu-lan-flex-top">
                 <div class="attack-menu-lan">
                     <h3>{{ selectedLan }}</h3>
-                    <img class="lans-weapon" src="../assets/images/länsvapen/Norrbottens_läns_vapen.png">
+                    <img class="lans-weapon" src="{{ selectedLanImageLink }}">
                 </div>
                 <p *ngIf="showAttack">Player 2: Defending</p>
             </div>
@@ -451,4 +436,15 @@
                 {{ selectedLan }}</button>
         </div>
     </div>
+</div>
+
+
+
+<div *ngIf="false" ngClass="victory-screen">
+
+    <div ngClass="victory-screen-banner">
+        <div ngClass="victory-screen-banner-background"></div>
+        <h2>VICTORY</h2>
+    </div>
+    <div ngClass="victory-screen-options"><a href="">Return to main menu</a></div>
 </div>
