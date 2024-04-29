@@ -220,7 +220,6 @@ h4 {
     font-size: 20px;
 }
 
-
 .tutorial-content-numbers {
     font-size: 40px;
     font-weight: bold;
@@ -1138,4 +1137,118 @@ h4 {
     .player:nth-child(3 of .player-small) {
         grid-area: player-small3;
     }
+}
+
+
+.victory-screen {
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000070;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    animation: showVictoryScreen 0.3s linear 1;
+}
+
+@keyframes showVictoryScreen {
+    0% {
+        opacity: 0;
+    }
+}
+
+
+.victory-screen-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110vw;
+    font-family: "Gupter", serif;
+    letter-spacing: 5px;
+    font-size: 55px;
+    padding: 24px 0;
+    color: var(--color-fg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1F2546;
+    border-top: solid 5px var(--color-fg);
+    border-bottom: solid 5px var(--color-fg);
+    box-shadow: 0px 7px 0px #1F2546, 0px -7px 0px #1F2546, 0px 0px 32px 7px #1d1d1d88;
+    animation: victoryBanner 0.9s linear 1;
+    overflow: hidden;
+}
+
+.victory-screen-banner-background {
+    background-color: #1F2546;
+    opacity: 1;
+    background: repeating-linear-gradient(-45deg, #242949, #242949 1.2vw, #1F2546 1.2vw, #1F2546 2.5vw);
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translateY(-50%);
+    width: 110vw ;
+    height: calc(100% - 24px);
+    animation: bannerBackground 1.2s infinite linear;
+}
+
+.victory-screen-banner h2 {
+    animation: victoryTitle 0.9s ease-in 1;
+    filter: drop-shadow( 0px 0px 10px #1F2546);
+}
+
+@keyframes bannerBackground {
+    100% {
+        left: 3.5vw;
+    }
+}
+
+@keyframes victoryBanner {
+    0% {
+        width: 0px;
+    }
+
+    10% {
+        width: 0px;
+    }
+}
+
+
+@keyframes victoryTitle {
+    0% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    45% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.victory-screen-options {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 22px;
+}
+
+.victory-screen-options a {
+    color: var(--color-fg);
+    text-decoration: none;
+    padding: 20px 25px;
+    background-color: #0000001d;
+    border-radius: var(--border-radius-1);
+    transition: 0.2s;
+}
+
+
+.victory-screen-options a:hover {
+    font-size: 97%;
+    filter: brightness(0.9);
 }
